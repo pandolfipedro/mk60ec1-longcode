@@ -57,7 +57,7 @@
     /* Notebook wide: sidebar fixa + editor ocupa o resto */
     .layout {
       display: grid;
-      grid-template-columns: minmax(300px, 340px) minmax(0, 1fr);
+      grid-template-columns: minmax(440px, 460px) minmax(0, 1fr);
       gap: 1rem;
       align-items: start;
     }
@@ -158,7 +158,8 @@
       padding: 0.7rem 0.8rem;
       font-family: var(--mono);
       font-size: 0.8125rem;
-      word-break: break-all;
+      white-space: nowrap;
+      overflow-x: auto;
       background: var(--surface2);
       border: 1px solid var(--border);
       border-radius: 6px;
@@ -417,6 +418,178 @@
       white-space: pre-wrap;
       color: var(--muted);
     }
+    .badge-common {
+      display: inline-block;
+      margin-left: 0.35rem;
+      padding: 0.1rem 0.35rem;
+      font-size: 0.625rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--success);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      border-radius: 4px;
+      vertical-align: middle;
+    }
+    .glossary { margin: 0.65rem 0 0; }
+    .glossary dt { font-weight: 600; font-size: 0.75rem; margin-top: 0.45rem; color: var(--text); }
+    .glossary dd { margin: 0.15rem 0 0; font-size: 0.75rem; color: var(--muted); line-height: 1.45; }
+    .checklist {
+      margin-top: 0.65rem;
+      padding: 0.65rem 0.75rem;
+      font-size: 0.75rem;
+      background: rgba(245, 158, 11, 0.08);
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      border-radius: 6px;
+      line-height: 1.5;
+    }
+    .checklist.hidden { display: none; }
+    .checklist-title { font-weight: 700; color: #fcd34d; margin-bottom: 0.35rem; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .checklist ul { margin: 0; padding-left: 1.1rem; color: var(--muted); }
+    .checklist li { margin-bottom: 0.2rem; }
+    .editor-empty {
+      grid-column: 1 / -1;
+      padding: 2rem 1.25rem;
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--muted);
+      background: var(--surface2);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      line-height: 1.55;
+    }
+    .byte-section {
+      grid-column: 1 / -1;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.12);
+      overflow: hidden;
+    }
+    .byte-section summary {
+      cursor: pointer;
+      padding: 0.55rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .byte-section summary::-webkit-details-marker { display: none; }
+    .byte-section summary::before {
+      content: '▸';
+      font-size: 0.6875rem;
+      transition: transform 0.15s;
+    }
+    .byte-section[open] summary::before { transform: rotate(90deg); }
+    .byte-section-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.65rem;
+      padding: 0.65rem;
+      border-top: 1px solid var(--border);
+    }
+    @media (min-width: 1400px) {
+      .byte-section-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+    @media (max-width: 1100px) {
+      .byte-section-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    .byte-section-grid .byte-card.span-2 { grid-column: span 2; }
+    @media (max-width: 1100px) {
+      .byte-section-grid .byte-card.span-2 { grid-column: span 1; }
+    }
+    .byte-plain {
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+      margin: 0;
+    }
+    .byte-note {
+      font-size: 0.6875rem;
+      color: var(--accent);
+      line-height: 1.35;
+      padding: 0.35rem 0.45rem;
+      background: rgba(59, 130, 246, 0.08);
+      border-radius: 4px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+    .byte-card.byte-diff {
+      border-color: rgba(245, 158, 11, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.15);
+    }
+    .byte-diff-badge {
+      font-size: 0.625rem;
+      font-family: var(--mono);
+      color: #fcd34d;
+      padding: 0.15rem 0.35rem;
+      background: rgba(245, 158, 11, 0.12);
+      border-radius: 3px;
+      line-height: 1.3;
+    }
+    .bit-advanced {
+      margin-top: 0.25rem;
+      padding-top: 0.35rem;
+      border-top: 1px dashed var(--border);
+    }
+    .bit-advanced summary {
+      cursor: pointer;
+      font-size: 0.6875rem;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .mirror-pairs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .mirror-pair {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.5rem;
+      font-size: 0.75rem;
+    }
+    .mirror-pair-label {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      color: var(--mirror);
+      min-width: 5.5rem;
+    }
+    .hex-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-bottom: 0.75rem;
+      padding: 0.45rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .hex-strip.hidden { display: none; }
+    .hex-strip-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.1rem;
+      padding: 0.2rem 0.25rem;
+      min-width: 1.75rem;
+      font-family: var(--mono);
+      font-size: 0.6875rem;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text);
+    }
+    .hex-strip-cell:hover { border-color: var(--accent); }
+    .hex-strip-cell.diff { border-color: rgba(245, 158, 11, 0.55); color: #fcd34d; }
+    .hex-strip-cell.auto { opacity: 0.75; }
+    .hex-strip-idx { font-size: 0.5625rem; color: var(--muted); font-family: var(--font); }
     .footer-note { margin-top: 1rem; font-size: 0.75rem; color: var(--muted); text-align: center; }
   </style>
 </head>
@@ -432,6 +605,35 @@
 
     <div class="layout">
       <aside class="sidebar">
+        <details class="help" open>
+          <summary>Como usar</summary>
+          <ol>
+            <li>Cole o <strong>VIN</strong> e escolha o part number do módulo (CC/BL/AD)</li>
+            <li>Clique <strong>Calcular</strong> (ou <strong>Importar hex</strong> se já tem coding)</li>
+            <li>Ajuste bytes <strong>16+</strong> se necessário</li>
+            <li>Compare com o hex lido no VCDS (campo opcional abaixo)</li>
+            <li><strong>Copie</strong> e grave no <strong>03-ABS</strong> · login <strong>20795</strong></li>
+          </ol>
+        </details>
+
+        <details class="help">
+          <summary>Termos comuns</summary>
+          <dl class="glossary">
+            <dt>G85</dt><dd>Sensor de ângulo do volante - o ESP usa para saber para onde você está virando.</dd>
+            <dt>Espelho</dt><dd>Byte calculado automaticamente a partir de outro (ex.: byte 14 espelha o 6).</dd>
+            <dt>VIN (bytes 1–13)</dt><dd>Parte do long code derivada do chassi - recalculada ao informar o VIN.</dd>
+            <dt>HHC</dt><dd>Hill Hold Control - segura o carro em ladeira por alguns segundos.</dd>
+            <dt>PLA (byte 17 ABS)</dt><dd>Assistente que <strong>estaciona sozinho</strong> (módulo J791, PLA 2.0+) - NÃO é sensor que apita. Jetta BR com 8K/OPS tem sensores no módulo 09, PLA aqui fica OFF.</dd>
+            <dt>ACC</dt><dd>Cruise adaptativo - radar dianteiro; desmarque se o carro não tiver.</dd>
+            <dt>XDS</dt><dd>Controle de tração extra em curva - comum no CC.</dd>
+            <dt>MCB</dt><dd>Multi-Collision Braking - frenagem automática pós-colisão via módulo airbag.</dd>
+            <dt>AK / byte 18</dt><dd>Sensores ABS direcionais (ativos) - só com PLA 2.0 ou ACC. Errado = DTC de roda.</dd>
+            <dt>EPS / J500</dt><dd>Direção elétrica - G85 integrado na caixa de direção (não na coluna).</dd>
+            <dt>Long code</dt><dd>Sequência hex gravada no módulo 03 via Coding-07 no VCDS.</dd>
+            <dt>MK60EC1</dt><dd>Família ABS/ESP 1K0907379 usada no Jetta importado BR.</dd>
+          </dl>
+        </details>
+
         <section class="panel">
           <h3 class="panel-title">Entrada</h3>
           <div class="field">
@@ -458,6 +660,12 @@
 
         <section class="panel">
           <h3 class="panel-title">Long code</h3>
+          <div class="field">
+            <label for="car-hex">Hex lido no VCDS (opcional)</label>
+            <textarea id="car-hex" rows="2" placeholder="Coding-07 do carro - para comparar diferenças"></textarea>
+            <p class="hint">Bytes diferentes ficam destacados no editor.</p>
+          </div>
+          <div id="checklist" class="checklist hidden"></div>
           <output id="hex-out" class="hex-bar">-</output>
           <p id="hex-meta" class="hex-meta"></p>
           <div class="btn-row">
@@ -482,7 +690,7 @@
 
         <details class="help">
           <summary>Migrar long code</summary>
-          <p class="hint" style="margin:0.5rem 0 0.65rem">Rotas comuns BR: <strong>AD→CC</strong>, <strong>AD→BL</strong>, <strong>BJ→BL</strong>, <strong>BJ→CC</strong>, <strong>BL→CC</strong>. AH ≈ AD.</p>
+          <p class="hint" style="margin:0.5rem 0 0.65rem">Rotas comuns BR<span class="badge-common">mais comum</span>: <strong>AD→CC</strong>, <strong>AD→BL</strong>, <strong>BJ→BL</strong>, <strong>BJ→CC</strong>, <strong>BL→CC</strong>. AH ≈ AD.</p>
           <div class="field" style="margin-top:0.65rem">
             <label for="migrate-hex">Hex atual</label>
             <textarea id="migrate-hex" rows="2" placeholder="113B400C492300FD…"></textarea>
@@ -524,6 +732,7 @@
             </div>
           </div>
           <button type="button" id="btn-migrate" class="btn">Migrar</button>
+          <p class="hint" style="margin-top:0.5rem">Após migrar, o resultado é aplicado automaticamente no editor abaixo.</p>
           <pre id="migrate-log" class="migrate-log"></pre>
         </details>
       </aside>
@@ -532,10 +741,13 @@
         <div class="editor-head">
           <h2>Long Coding Helper</h2>
           <div class="legend">
+            <span><span class="dot dot-vin"></span> VIN</span>
+            <span><span class="dot dot-mirror"></span> Espelho</span>
             <span><span class="dot dot-edit"></span> Editável</span>
           </div>
         </div>
-        <p class="editor-intro">Abaixo só os bytes editáveis. VIN e espelhos ficam na faixa automática - recalculados ao calcular ou alterar bytes 0/2/4/6.</p>
+        <p class="editor-intro">Três tipos de byte: <strong style="color:var(--vin)">VIN</strong> (1,3,5,7,9,11,13) vêm do chassi · <strong style="color:var(--mirror)">espelho</strong> (8,10,12,14) copiam 0,2,4,6 · <strong style="color:var(--success)">editável</strong> (cards abaixo). A faixa automática recalcula ao calcular ou alterar bytes fonte.</p>
+        <div id="hex-strip" class="hex-strip hidden"></div>
         <div id="auto-bytes" class="auto-bytes hidden"></div>
         <div id="byte-grid" class="byte-grid"></div>
       </main>
@@ -552,8 +764,8 @@
 
   /** Padrão HW Jetta BR - bytes 16+ (ref. codings reais fórum + etz2k/DRIVE2) */
   const JETTA_HW = {
-    CC: { 16: 0xE1, 17: 0x00, 18: 0x00, 19: 0x20 },
-    BL: { 16: 0xE1, 17: 0x00, 18: 0x00 },
+    CC: { 16: 0xE1, 17: 0x08, 18: 0x00, 19: 0x20 },
+    BL: { 16: 0xE1, 17: 0x08, 18: 0x00 },
     AD: { 16: 0x35 },
   };
 
@@ -574,6 +786,31 @@
     { l: 'Traseiro dir. (RR)', help: 'MVB 114.', std: 0x00, active: 0x40, inv: 0xc0 },
   ];
 
+  const MIRROR_PAIR_LABELS = [
+    { src: 0, dst: 8, label: 'Chassis' },
+    { src: 2, dst: 10, label: 'Freios' },
+    { src: 4, dst: 12, label: 'G85 / G608' },
+    { src: 6, dst: 14, label: 'Direção / ROP' },
+  ];
+
+  const BYTE_GROUPS = {
+    AD: [
+      { id: 'chassis', title: 'Carro, freios e direção', bytes: [0, 2, 4, 6, 15] },
+      { id: 'features', title: 'Equipamentos (HHC, ACC…)', bytes: [16] },
+    ],
+    BL: [
+      { id: 'chassis', title: 'Carro, freios e direção', bytes: [0, 2, 4, 6, 15] },
+      { id: 'features', title: 'Equipamentos (HHC, XDS, PLA 2.0…)', bytes: [16, 17] },
+      { id: 'sensors', title: 'Sensores de roda ABS', bytes: [18] },
+    ],
+    CC: [
+      { id: 'chassis', title: 'Carro, freios e direção', bytes: [0, 2, 4, 6, 15] },
+      { id: 'features', title: 'Equipamentos (HHC, XDS, PLA 2.0…)', bytes: [16, 17] },
+      { id: 'sensors', title: 'Sensores de roda ABS', bytes: [18] },
+      { id: 'esp', title: 'Botão ESP', bytes: [19] },
+    ],
+  };
+
   const BYTE_DEFS = {
     1: { name: 'VIN pos. 7 - plataforma', help: 'Calculado automaticamente a partir do VIN (par 7–8).', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
     3: { name: 'VIN pos. 8 - motor', help: 'Calculado do 8º caractere do VIN.', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
@@ -588,6 +825,7 @@
     14: { name: 'Espelho de byte 6', help: 'Calculado do byte 6 (espelho de bits). LBL LC,14: bit4=G85 coluna, bits6–7=ROP. Jetta factory = 0x00.', kind: 'mirror', modules: ['AD', 'BL', 'CC'] },
     0: {
       name: 'Chassis / freio / direção',
+      plain: 'Identifica plataforma PQ35, volante à esquerda e tipo de freio. Jetta 2.5 BR = 0x11.',
       help: 'Define plataforma PQ35, cilindro mestre e lado do volante. Jetta 2.5 BR = 0x11.',
       kind: 'enum',
       modules: ['AD', 'BL', 'CC'],
@@ -599,6 +837,7 @@
     },
     2: {
       name: 'Freios F / R',
+      plain: 'Tamanho dos discos dianteiro e traseiro. Sedan 2.5 = 288/253 mm.',
       help: 'Diâmetro dos discos. Sedan 2.5 BR = 288/253 mm (0x40). Variant = 312/253 (0x60).',
       kind: 'enum',
       modules: ['AD', 'BL', 'CC'],
@@ -611,7 +850,8 @@
     },
     4: {
       name: 'G608 / G85',
-      help: 'Sensor de vácuo (G608) e sensor de angle de direção (G85). Jetta 2.5 tem G85, sem G608 = 0x4A.',
+      plain: 'Diz ao ABS se tem sensor de vácuo (G608) e sensor de volante (G85). Jetta 2.5 = tem G85, sem G608 → 0x4A.',
+      help: 'G608 = sensor de vácuo do freio. G85 = sensor de ângulo do volante. Jetta 2.5 tem G85 integrado na direção elétrica, sem G608 = 0x4A.',
       kind: 'enum',
       modules: ['AD', 'BL', 'CC'],
       values: [
@@ -622,18 +862,22 @@
     },
     6: {
       name: 'ROP / EDS / G85 coluna',
-      help: 'Ref. LBL LC,06. Byte 14 espelha este byte. Jetta 2.5 padrão = 0x00 (G85 na caixa, não na coluna). 0x08 aqui → byte 14 vira 0x10.',
+      plain: 'Jetta com direção elétrica (EPS): deixe tudo desmarcado (0x00). Bit G85 na coluna só para rack hidráulico antigo.',
+      note: 'Byte 14 = espelho automático deste byte. Jetta EPS = ambos 0x00.',
+      help: 'Ref. LBL LC,06. Byte 14 espelha este byte. Jetta 2.5 padrão = 0x00 (G85 integrado na caixa EPS). 0x08 aqui → byte 14 vira 0x10.',
       kind: 'bits',
       modules: ['AD', 'BL', 'CC'],
+      advancedLabel: 'Opções para Touran/Caddy/Yeti',
       bits: [
-        { m: 0x01, l: 'ROP-1 (Yeti)', help: 'Bits 0–1: Roll-Over Prevention. Jetta = 00.' },
-        { m: 0x02, l: 'ROP-2/3', help: 'Use só Touran/Caddy - Jetta deixa desmarcado.' },
-        { m: 0x04, l: 'EDS Touran/Yeti', help: 'Bit 2 - variante EDS. Não usar no Jetta.' },
-        { m: 0x08, l: 'G85 na coluna', help: 'Bit 3 - G85 no volante/coluna. Jetta Mk5 = G85 na caixa → deixar OFF (0x00).' },
+        { m: 0x08, l: 'G85 na coluna', help: 'Bit 3 - G85 externo no volante/coluna. Jetta EPS = G85 na caixa → deixar OFF.' },
+        { m: 0x01, l: 'ROP-1 (Yeti)', help: 'Bits 0–1: Roll-Over Prevention. Jetta = 00.', advanced: true },
+        { m: 0x02, l: 'ROP-2/3', help: 'Use só Touran/Caddy - Jetta deixa desmarcado.', advanced: true },
+        { m: 0x04, l: 'EDS Touran/Yeti', help: 'Bit 2 - variante EDS. Não usar no Jetta.', advanced: true },
       ],
     },
     15: {
       name: 'Tração / CBC / volante',
+      plain: 'Lado do volante, CBC e DSR. Jetta importado BR = 0x41.',
       help: 'LHD, CBC, DSR. Base Jetta BR importado = 0x41.',
       kind: 'enum',
       modules: ['AD', 'BL', 'CC'],
@@ -644,38 +888,44 @@
     },
     16: {
       name: 'HHC / TPMS / ACC',
-      help: 'Ref. LBL CC 60EC1. Jetta 2.5 BR = 0xA1 (HHC + sem ACC + MCB off). 0xE1 = A1 + bit6 desliga aviso frenagem emergência.',
+      plain: 'O que o ABS espera do carro: ladeira (HHC), ACC, aviso de frenada forte, MCB…',
+      help: 'Ref. LBL CC 60EC1. Jetta 2.5 BR = 0xE1 (HHC + sem ACC + MCB off + sem aviso frenagem emerg.).',
       kind: 'bits',
       modules: ['AD', 'BL', 'CC'],
+      advancedLabel: 'Opções avançadas',
       bits: [
-        { m: 0x01, l: 'HHC', help: 'Hill Hold Control [PR-UG1/UG4]. Bit 0 - LBL LC,16,0.' },
-        { m: 0x02, l: 'Auto-Hold EPB', help: 'Freio estacionamento eletromecânico -J540. Bit 1 - LBL LC,16,1.' },
-        { m: 0x04, l: 'Avoidance Feature', help: 'Ausweich Feature. Bit 2 - raro Jetta BR.' },
+        { m: 0x01, l: 'HHC', help: 'Hill Hold Control (segura em ladeira) [PR-UG1/UG4]. Bit 0 - LBL LC,16,0.' },
         { m: 0x20, l: 'Sem ACC / Front Assist', help: 'Bit 5=1 desativa interface ACC -J428. Marque se não tiver ACC.' },
         { m: 0x40, l: 'Sem aviso frenagem emerg.', help: 'Bit 6=1 desliga flash rápido do brake light em frenagem forte.' },
         { m: 0x80, l: 'Airbag sem MCB', help: 'Bit 7=1 se módulo airbag não suporta Multi-Collision Braking.' },
+        { m: 0x02, l: 'Auto-Hold EPB', help: 'Freio estacionamento eletromecânico -J540. Bit 1 - LBL LC,16,1.', advanced: true },
+        { m: 0x04, l: 'Avoidance Feature', help: 'Ausweich Feature. Bit 2 - raro Jetta BR.', advanced: true },
       ],
       enums: {
         AD: [{ v: 0x35, l: 'AD + HHC', help: '0x34 base AD com HHC.' }],
-        BL: [{ v: 0xA1, l: 'BL 2.5 BR (0xA1)', help: 'HHC + sem ACC + MCB - LBL Jetta.' }],
-        CC: [{ v: 0xA1, l: 'CC 2.5 BR (0xA1)', help: 'Igual BL - preset Jetta importado BR.' }, { v: 0xE1, l: 'CC alternativo (0xE1)', help: 'A1 + bit6 aviso frenagem off.' }],
+        BL: [{ v: 0xE1, l: 'BL 2.5 BR (0xE1)', help: 'HHC + sem ACC + MCB + sem aviso frenagem - preset Jetta.' }],
+        CC: [{ v: 0xE1, l: 'CC 2.5 BR (0xE1)', help: 'Preset Jetta importado BR.' }, { v: 0xA1, l: 'CC alternativo (0xA1)', help: 'Sem bit6 aviso frenagem off.' }],
       },
     },
     17: {
-      name: 'PLA / ACC / XDS',
-      help: 'Assistente de estacionamento (bit 0), XDS (bit 3 = 0x08). Jetta BR sem PLA costuma ter 0x08 (XDS) ou 0x00. Com PLA: 0x09 (PLA+XDS).',
+      name: 'PLA 2.0 / ACC / XDS',
+      plain: 'Jetta importado com sensores dianteiros/traseiros (8K/OPS) NÃO tem PLA aqui - deixe PLA desmarcado. Padrão = só XDS (0x08).',
+      note: 'PLA ≠ sensores que apitam. Sensores 8K/OPS ficam no módulo 09 (BCM). Este bit é só para PLA 2.0+ (J791) que estaciona o carro sozinho - raro no Jetta BR.',
+      help: 'Bit 0 = PLA 2.0+ com intervenção de freio (J791, PR-7X5). Bit 3 = XDS. Jetta 2.5 BR com 8K = 0x08 (XDS on, PLA off). Só marque PLA se o carro estacionar semi-automaticamente de fábrica.',
       kind: 'bits',
       modules: ['BL', 'CC'],
+      advancedLabel: 'Opções avançadas',
       bits: [
-        { m: 0x01, l: 'PLA', help: 'Park Assist - sensores estacionamento. Jetta com PLA = bit 0.' },
-        { m: 0x02, l: 'ACC Follow-To-Stop', help: 'CC 20B - cruise adaptativo (raro BR).' },
-        { m: 0x04, l: 'Reset iTPMS no MFA', help: 'RKA+ via painel - CC/BL recentes.' },
-        { m: 0x08, l: 'XDS', help: 'Expansão controle tração em curva - comum CC Jetta (0x08 = só XDS).' },
-        { m: 0x10, l: 'AWV / EDF', help: 'Alerta colisão - raro Jetta BR.' },
+        { m: 0x01, l: 'PLA 2.0 (estaciona sozinho)', help: 'NÃO marque se só tem sensores 8K/OPS (bip ao estacionar). Só para PLA de fábrica com módulo J791 - o carro vira o volante sozinho na vaga.' },
+        { m: 0x08, l: 'XDS', help: 'Expansão controle tração em curva - padrão Jetta CC (0x08 = só XDS).' },
+        { m: 0x02, l: 'ACC Follow-To-Stop', help: 'CC 20B - cruise adaptativo (raro BR).', advanced: true },
+        { m: 0x04, l: 'Reset iTPMS no MFA', help: 'RKA+ via painel - CC/BL recentes.', advanced: true },
+        { m: 0x10, l: 'AWV / EDF', help: 'Alerta colisão - raro Jetta BR.', advanced: true },
       ],
     },
     18: {
-      name: 'Tipo sensor ABS por roda',
+      name: 'Sensores de velocidade das rodas',
+      plain: 'Tipo de sensor em cada roda. Jetta sem PLA/ACC = 0x00. Valor errado = DTC de roda traseira.',
       help: 'NÃO confundir com byte 18 do módulo 09 (BCM)! No ABS MK60EC1: tipo de sensor de velocidade. Jetta BR factory = 0x00 (standard). 0x55 só com sensores AK (ACC/PLA2). Errar aqui gera DTC roda traseira.',
       kind: 'wss',
       modules: ['BL', 'CC'],
@@ -684,17 +934,19 @@
     },
     19: {
       name: 'Botão ESP',
+      plain: 'O botão no console é gravado ESP (não ASR OFF). Jetta BR = Com botão ESP (0x20).',
       help: 'Só CC 20B. Nibble alto (bits 4–7): o que o botão ESP (E256) no console faz. Jetta BR = Com botão ESP (0x20). iTPMS = checkbox abaixo.',
       kind: 'byte19',
       modules: ['CC'],
+      advancedLabel: 'Opções avançadas',
       escModes: [
-        { v: 0x20, l: 'Com botão ESP', help: 'Padrão Jetta BR - botão gravado “ESP” no console. Pressão curta (~1s) desliga tração (ASR); ESP permanece ativo.' },
+        { v: 0x20, l: 'Com botão ESP', help: 'Padrão Jetta BR - botão gravado ESP no console. Pressão curta (~1s) desliga tração (ASR); ESP permanece ativo.' },
         { v: 0x60, l: 'Ciclos sport', help: 'Pressão curta (~1s) → ESP Sport · longa (~3s) → ESP OFF. Config sport (GTI, Leon Cupra).' },
         { v: 0x00, l: 'Sem botão', help: 'Sem E256 no console. Nibble alto zerado. Nota: 0x10 clássico costuma falhar no CC H46.' },
       ],
       bits: [
         { m: 0x02, l: 'iTPMS ativo', help: 'PR-7K6 - pressão indireta via ABS (bit separado do botão).' },
-        { m: 0x08, l: 'Lane Assist J1086', help: 'Assistente de faixa - raro no Jetta.' },
+        { m: 0x08, l: 'Lane Assist J1086', help: 'Assistente de faixa - raro no Jetta.', advanced: true },
       ],
     },
   };
@@ -1011,7 +1263,7 @@
       m.padEnd(work, 19, 'AD→BL: +2 bytes');
       // BL sem byte 19 - ESP/TPMS legado ficam em byte 16
       if (work[16] === 0x34) m.step(work, 16, 0xe1, 'BL Jetta 2.5 BR (0xE1)');
-      if (work.length >= 18) m.step(work, 17, work[17] ?? 0x00, 'Byte 17 - PLA off (Jetta 8K/OPS)');
+      if (work.length >= 18) m.step(work, 17, work[17] ?? 0x08, 'Byte 17 - XDS on, PLA off (0x08 Jetta)');
       if (work.length >= 19) m.step(work, 18, work[18] ?? 0x00, 'Byte 18 sensores standard (0x00 Jetta BR)');
       m.warnings.push('G251 presente no BL - faça Basic Settings G85 após instalar.');
       return work.slice(0, 19);
@@ -1207,7 +1459,7 @@
   };
 
   /* ─── UI ─── */
-  let state = { bytes: [], module: 'CC', profile: null };
+  let state = { bytes: [], module: 'CC', profile: null, referenceBytes: null, ready: false };
 
   const $ = (id) => document.getElementById(id);
 
@@ -1228,31 +1480,108 @@
 
   function getModuleLen() { return PROFILE_LEN[MODULE_PROFILE[state.module]]; }
 
+  function syncReferenceBytes() {
+    const raw = $('car-hex')?.value.trim();
+    if (!raw) { state.referenceBytes = null; return; }
+    const parsed = parseHexCoding(raw);
+    state.referenceBytes = parsed && parsed.length ? parsed : null;
+  }
+
+  function byteDiff(i) {
+    if (!state.referenceBytes || i >= state.referenceBytes.length || i >= state.bytes.length) return null;
+    if (state.referenceBytes[i] === state.bytes[i]) return null;
+    return { car: toHexByte(state.referenceBytes[i]), edit: toHexByte(state.bytes[i]) };
+  }
+
+  function buildChecklistWarnings() {
+    const items = [];
+    const b = state.bytes;
+    const mod = state.module;
+    if (!b.length || !state.ready) return items;
+
+    items.push('Confira bytes 16+ antes de gravar no VCDS.');
+
+    if ((mod === 'BL' || mod === 'CC') && b.length > 18 && b[18] !== 0x00) {
+      const pla = b.length > 17 && (b[17] & 0x01);
+      const acc = b.length > 17 && (b[17] & 0x02);
+      if (!pla && !acc) items.push('Byte 18 ≠ 0x00 sem PLA/ACC - risco de DTC de sensor de roda.');
+    }
+
+    if (b.length > 6 && (b[6] & 0x08)) {
+      items.push('Byte 6: G85 na coluna ligado - provável erro em Jetta com direção elétrica (EPS).');
+    }
+
+    if (state.referenceBytes) {
+      const diffsLow = [];
+      for (let i = 0; i < Math.min(15, b.length, state.referenceBytes.length); i++) {
+        if (b[i] !== state.referenceBytes[i]) diffsLow.push(i);
+      }
+      if (diffsLow.length) {
+        items.push(`Diferença vs carro nos bytes ${diffsLow.join(', ')} - confira VIN e espelhos (0–14).`);
+      }
+    }
+
+    if (state.migratedModule) {
+      items.push('Após troca de módulo: faça Basic Settings G85 (40168) se necessário.');
+    }
+
+    return items;
+  }
+
+  function updateChecklist() {
+    const box = $('checklist');
+    if (!box) return;
+    const items = buildChecklistWarnings();
+    if (!items.length || !state.ready) {
+      box.classList.add('hidden');
+      box.innerHTML = '';
+      return;
+    }
+    box.classList.remove('hidden');
+    box.innerHTML = '<div class="checklist-title">Antes de copiar</div><ul>'
+      + items.map((t) => `<li>${t}</li>`).join('') + '</ul>';
+  }
+
   function syncOutput() {
     $('hex-out').textContent = state.bytes.length ? formatHexCoding(state.bytes) : '-';
-    $('btn-copy').disabled = !state.bytes.length;
+    $('btn-copy').disabled = !state.bytes.length || !state.ready;
     const meta = [];
     if (state.profile) meta.push(state.profile.label);
     meta.push(`${state.bytes.length}B · ${state.module} · HW Jetta`);
     $('hex-meta').textContent = meta.join(' · ');
     $('module-badge').textContent = `1K0907379${state.module}`;
+    updateChecklist();
+  }
+
+  function renderHexStrip() {
+    const strip = $('hex-strip');
+    if (!strip || !state.bytes.length || !state.ready) {
+      if (strip) strip.classList.add('hidden');
+      return;
+    }
+    strip.classList.remove('hidden');
+    strip.innerHTML = '';
+    for (let i = 0; i < state.bytes.length; i++) {
+      const cell = document.createElement('button');
+      cell.type = 'button';
+      cell.className = 'hex-strip-cell';
+      if (isAutoByte(i)) cell.classList.add('auto');
+      const diff = byteDiff(i);
+      if (diff) cell.classList.add('diff');
+      cell.innerHTML = `<span class="hex-strip-idx">${i}</span>${toHexByte(state.bytes[i])}`;
+      cell.title = diff ? `Carro: ${diff.car} · Editor: ${diff.edit}` : `Byte ${i}`;
+      cell.addEventListener('click', () => {
+        const target = document.getElementById(`byte-card-${i}`);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      strip.appendChild(cell);
+    }
   }
 
   function renderAutoBytes() {
     const box = $('auto-bytes');
-    const autoSlice = state.bytes.slice(1, 15);
-    const hasAutoData = autoSlice.some((b) => b !== 0);
-    if (!box || !state.bytes.length || (!state.profile && !hasAutoData)) {
+    if (!box || !state.bytes.length || !state.ready) {
       if (box) box.classList.add('hidden');
-      return;
-    }
-    const chips = [];
-    for (let i = 1; i < state.bytes.length && i <= 14; i++) {
-      if (!isAutoByte(i)) continue;
-      chips.push({ i, hex: toHexByte(state.bytes[i]), kind: VIN_DERIVED.has(i) ? 'vin' : 'mirror' });
-    }
-    if (!chips.length) {
-      box.classList.add('hidden');
       return;
     }
     box.classList.remove('hidden');
@@ -1268,194 +1597,292 @@
     head.append(note);
     box.appendChild(head);
 
+    const pairsWrap = document.createElement('div');
+    pairsWrap.className = 'mirror-pairs';
+    for (const { src, dst, label } of MIRROR_PAIR_LABELS) {
+      if (src >= state.bytes.length || dst >= state.bytes.length) continue;
+      const row = document.createElement('div');
+      row.className = 'mirror-pair';
+      const lbl = document.createElement('span');
+      lbl.className = 'mirror-pair-label';
+      lbl.textContent = label;
+      const srcChip = document.createElement('span');
+      srcChip.className = 'auto-chip';
+      srcChip.innerHTML = `<span class="auto-chip-idx">${src}</span><span class="auto-chip-val">${toHexByte(state.bytes[src])}</span>`;
+      const arrow = document.createElement('span');
+      arrow.textContent = '↔';
+      arrow.style.color = 'var(--muted)';
+      const dstChip = document.createElement('span');
+      dstChip.className = 'auto-chip mirror';
+      dstChip.innerHTML = `<span class="auto-chip-idx">${dst}</span><span class="auto-chip-val">${toHexByte(state.bytes[dst])}</span>`;
+      row.append(lbl, srcChip, arrow, dstChip);
+      pairsWrap.appendChild(row);
+    }
+    box.appendChild(pairsWrap);
+
+    const vinHead = document.createElement('div');
+    vinHead.className = 'auto-bytes-head';
+    vinHead.style.marginTop = '0.5rem';
+    vinHead.textContent = 'Bytes VIN';
+    box.appendChild(vinHead);
+
     const row = document.createElement('div');
     row.className = 'auto-chips';
-    for (const c of chips) {
+    for (let i = 1; i < state.bytes.length && i <= 14; i++) {
+      if (!VIN_DERIVED.has(i)) continue;
       const chip = document.createElement('span');
-      chip.className = 'auto-chip' + (c.kind === 'mirror' ? ' mirror' : '');
-      chip.title = c.kind === 'vin' ? 'Derivado do VIN' : 'Espelho automático';
-      chip.innerHTML = `<span class="auto-chip-idx">${c.i}</span><span class="auto-chip-val">${c.hex}</span>`;
+      chip.className = 'auto-chip';
+      chip.title = 'Derivado do VIN';
+      chip.innerHTML = `<span class="auto-chip-idx">${i}</span><span class="auto-chip-val">${toHexByte(state.bytes[i])}</span>`;
       row.appendChild(chip);
     }
     box.appendChild(row);
+  }
+
+  function appendOneBitRow(list, bit, i, val) {
+    const row = document.createElement('label');
+    row.className = 'bit-row';
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.checked = (val & bit.m) === bit.m;
+    const txt = document.createElement('span');
+    txt.className = 'bit-text';
+    txt.append(document.createTextNode(bit.l + ' '));
+    if (bit.help) txt.append(makeTip(bit.help));
+    const mask = document.createElement('span');
+    mask.className = 'bit-mask';
+    mask.textContent = toHexByte(bit.m);
+    txt.append(mask);
+    row.append(cb, txt);
+    cb.addEventListener('change', () => {
+      setByte(i, cb.checked ? (state.bytes[i] | bit.m) : (state.bytes[i] & ~bit.m));
+    });
+    list.appendChild(row);
+  }
+
+  function renderByteCard(i, mod) {
+    const def = BYTE_DEFS[i];
+    if (!def || !def.modules.includes(mod) || i >= state.bytes.length) return null;
+
+    const val = state.bytes[i] ?? 0;
+    const diff = byteDiff(i);
+    const card = document.createElement('article');
+    card.id = `byte-card-${i}`;
+    card.className = 'byte-card editable' + (i === 18 ? ' span-2' : '') + (diff ? ' byte-diff' : '');
+
+    const head = document.createElement('div');
+    head.className = 'byte-head';
+
+    const title = document.createElement('div');
+    const lbl = document.createElement('div');
+    lbl.className = 'byte-label';
+    lbl.textContent = 'Byte ' + i;
+    const nameRow = document.createElement('div');
+    nameRow.className = 'byte-name-row';
+    const name = document.createElement('span');
+    name.className = 'byte-name';
+    name.textContent = def.name;
+    nameRow.append(name);
+    if (def.help) nameRow.append(makeTip(def.help));
+    title.append(lbl, nameRow);
+
+    const hexInput = document.createElement('input');
+    hexInput.className = 'byte-hex-input';
+    hexInput.type = 'text';
+    hexInput.maxLength = 2;
+    hexInput.value = toHexByte(val);
+    hexInput.setAttribute('aria-label', 'Hex byte ' + i);
+
+    head.append(title, hexInput);
+    card.appendChild(head);
+
+    if (def.plain) {
+      const plain = document.createElement('p');
+      plain.className = 'byte-plain';
+      plain.textContent = def.plain;
+      card.appendChild(plain);
+    }
+
+    if (def.note) {
+      const note = document.createElement('div');
+      note.className = 'byte-note';
+      note.textContent = def.note;
+      card.appendChild(note);
+    }
+
+    if (diff) {
+      const badge = document.createElement('div');
+      badge.className = 'byte-diff-badge';
+      badge.textContent = `Carro: ${diff.car} · Editor: ${diff.edit}`;
+      card.appendChild(badge);
+    }
+
+    if (def.values) {
+      const sel = document.createElement('select');
+      sel.className = 'enum-select';
+      for (const opt of def.values) {
+        const o = document.createElement('option');
+        o.value = toHexByte(opt.v);
+        o.textContent = `${toHexByte(opt.v)} - ${opt.l}`;
+        if (opt.v === val) o.selected = true;
+        sel.appendChild(o);
+      }
+      sel.addEventListener('change', () => setByte(i, parseInt(sel.value, 16)));
+      card.appendChild(sel);
+    }
+
+    if (def.kind === 'byte19') {
+      const sel = document.createElement('select');
+      sel.className = 'enum-select';
+      const hi = val & 0xf0;
+      for (const m of def.escModes) {
+        const o = document.createElement('option');
+        o.value = toHexByte(m.v);
+        o.textContent = m.l;
+        const match = m.v === 0x00 ? hi === 0x00 : (hi === (m.v & 0xf0));
+        if (match) o.selected = true;
+        sel.appendChild(o);
+      }
+      sel.addEventListener('change', () => {
+        const cur = state.bytes[i];
+        const pick = parseInt(sel.value, 16);
+        setByte(i, (cur & 0x0f) | (pick & 0xf0));
+      });
+      card.appendChild(sel);
+    }
+
+    if (def.enums?.[mod]) {
+      const q = document.createElement('select');
+      q.className = 'enum-select';
+      q.innerHTML = '<option value="">Preset…</option>';
+      for (const e of def.enums[mod]) {
+        const o = document.createElement('option');
+        o.value = toHexByte(e.v);
+        o.textContent = e.l;
+        q.appendChild(o);
+      }
+      q.addEventListener('change', () => { if (q.value) setByte(i, parseInt(q.value, 16)); });
+      card.appendChild(q);
+    }
+
+    if (def.kind === 'wss' && def.wheels) {
+      if (def.presets?.length) {
+        const q = document.createElement('select');
+        q.className = 'enum-select';
+        const custom = document.createElement('option');
+        custom.value = '';
+        custom.textContent = '- preset -';
+        q.appendChild(custom);
+        for (const p of def.presets) {
+          const o = document.createElement('option');
+          o.value = toHexByte(p.v);
+          o.textContent = `${toHexByte(p.v)} - ${p.l}`;
+          if (p.v === val) o.selected = true;
+          q.appendChild(o);
+        }
+        q.addEventListener('change', () => { if (q.value) setByte(i, parseInt(q.value, 16)); });
+        card.appendChild(q);
+      }
+      const row = document.createElement('div');
+      row.className = 'bit-list';
+      for (const w of def.wheels) {
+        const curN = wssWheelType(val, w);
+        const wrap = document.createElement('div');
+        wrap.className = 'wss-row';
+        const lblW = document.createElement('span');
+        lblW.className = 'bit-text';
+        lblW.textContent = w.l + ' ';
+        if (w.help) lblW.append(makeTip(w.help));
+        const sel = document.createElement('select');
+        sel.className = 'enum-select';
+        ['0 - standard', '1 - ativo (AK)', '2 - invertido'].forEach((lbl, t) => {
+          const o = document.createElement('option');
+          o.value = String(t);
+          o.textContent = lbl;
+          if (t === curN) o.selected = true;
+          sel.appendChild(o);
+        });
+        sel.addEventListener('change', () => {
+          setByte(i, setWssWheel(state.bytes[i], w, parseInt(sel.value, 10)));
+        });
+        wrap.append(lblW, sel);
+        row.appendChild(wrap);
+      }
+      card.appendChild(row);
+    }
+
+    if (def.bits && def.kind !== 'wss') {
+      const list = document.createElement('div');
+      list.className = 'bit-list';
+      const mainBits = def.bits.filter((b) => !b.advanced);
+      const advBits = def.bits.filter((b) => b.advanced);
+      mainBits.forEach((bit) => appendOneBitRow(list, bit, i, val));
+      if (advBits.length) {
+        const advDetails = document.createElement('details');
+        advDetails.className = 'bit-advanced';
+        const sum = document.createElement('summary');
+        sum.textContent = def.advancedLabel || 'Opções avançadas';
+        advDetails.appendChild(sum);
+        const inner = document.createElement('div');
+        inner.className = 'bit-list';
+        advBits.forEach((bit) => appendOneBitRow(inner, bit, i, val));
+        advDetails.appendChild(inner);
+        list.appendChild(advDetails);
+      }
+      card.appendChild(list);
+    }
+
+    const dec = document.createElement('div');
+    dec.className = 'byte-decode';
+    dec.textContent = decodeByteValue(def, val, mod);
+    card.appendChild(dec);
+
+    hexInput.addEventListener('change', () => {
+      const p = parseInt(hexInput.value, 16);
+      if (!Number.isNaN(p)) setByte(i, p);
+      else hexInput.value = toHexByte(state.bytes[i]);
+    });
+
+    return card;
   }
 
   function renderByteGrid() {
     const grid = $('byte-grid');
     if (!grid) return;
     grid.innerHTML = '';
+    renderHexStrip();
     renderAutoBytes();
 
+    if (!state.ready) {
+      const empty = document.createElement('div');
+      empty.className = 'editor-empty';
+      empty.innerHTML = 'Informe o VIN e clique <strong>Calcular</strong>,<br>ou use <strong>Importar hex</strong> se já tem o coding do carro.';
+      grid.appendChild(empty);
+      return;
+    }
+
     const mod = state.module;
-    const indices = EDITABLE_INDICES[mod] || [];
+    const groups = BYTE_GROUPS[mod] || [{ title: 'Bytes editáveis', bytes: EDITABLE_INDICES[mod] || [] }];
 
-    for (const i of indices) {
-      if (i >= state.bytes.length) continue;
-      const def = BYTE_DEFS[i];
-      if (!def || !def.modules.includes(mod)) continue;
+    for (const group of groups) {
+      const visible = group.bytes.filter((i) => i < state.bytes.length && BYTE_DEFS[i]?.modules.includes(mod));
+      if (!visible.length) continue;
 
-      const val = state.bytes[i] ?? 0;
-      const card = document.createElement('article');
-      card.className = 'byte-card editable' + (i === 18 ? ' span-2' : '');
+      const section = document.createElement('details');
+      section.className = 'byte-section';
+      section.open = true;
+      const sum = document.createElement('summary');
+      sum.textContent = group.title;
+      section.appendChild(sum);
 
-      const head = document.createElement('div');
-      head.className = 'byte-head';
-
-      const title = document.createElement('div');
-      const lbl = document.createElement('div');
-      lbl.className = 'byte-label';
-      lbl.textContent = 'Byte ' + i;
-      const nameRow = document.createElement('div');
-      nameRow.className = 'byte-name-row';
-      const name = document.createElement('span');
-      name.className = 'byte-name';
-      name.textContent = def.name;
-      nameRow.append(name);
-      if (def.help) nameRow.append(makeTip(def.help));
-      title.append(lbl, nameRow);
-
-      const hexInput = document.createElement('input');
-      hexInput.className = 'byte-hex-input';
-      hexInput.type = 'text';
-      hexInput.maxLength = 2;
-      hexInput.value = toHexByte(val);
-      hexInput.setAttribute('aria-label', 'Hex byte ' + i);
-
-      head.append(title, hexInput);
-      card.appendChild(head);
-
-      if (def.values) {
-        const sel = document.createElement('select');
-        sel.className = 'enum-select';
-        for (const opt of def.values) {
-          const o = document.createElement('option');
-          o.value = toHexByte(opt.v);
-          o.textContent = `${toHexByte(opt.v)} - ${opt.l}`;
-          if (opt.v === val) o.selected = true;
-          sel.appendChild(o);
-        }
-        sel.addEventListener('change', () => setByte(i, parseInt(sel.value, 16)));
-        card.appendChild(sel);
+      const inner = document.createElement('div');
+      inner.className = 'byte-section-grid';
+      for (const i of visible) {
+        const card = renderByteCard(i, mod);
+        if (card) inner.appendChild(card);
       }
-
-      if (def.kind === 'byte19') {
-        const sel = document.createElement('select');
-        sel.className = 'enum-select';
-        const hi = val & 0xf0;
-        for (const m of def.escModes) {
-          const o = document.createElement('option');
-          o.value = toHexByte(m.v);
-          o.textContent = m.l;
-          const match = m.v === 0x00 ? hi === 0x00 : (hi === (m.v & 0xf0));
-          if (match) o.selected = true;
-          sel.appendChild(o);
-        }
-        sel.addEventListener('change', () => {
-          const cur = state.bytes[i];
-          const pick = parseInt(sel.value, 16);
-          setByte(i, (cur & 0x0f) | (pick & 0xf0));
-        });
-        card.appendChild(sel);
-      }
-
-      if (def.enums?.[mod]) {
-        const q = document.createElement('select');
-        q.className = 'enum-select';
-        q.innerHTML = '<option value="">Preset…</option>';
-        for (const e of def.enums[mod]) {
-          const o = document.createElement('option');
-          o.value = toHexByte(e.v);
-          o.textContent = e.l;
-          q.appendChild(o);
-        }
-        q.addEventListener('change', () => { if (q.value) setByte(i, parseInt(q.value, 16)); });
-        card.appendChild(q);
-      }
-
-      if (def.kind === 'wss' && def.wheels) {
-        if (def.presets?.length) {
-          const q = document.createElement('select');
-          q.className = 'enum-select';
-          const custom = document.createElement('option');
-          custom.value = '';
-          custom.textContent = '- preset -';
-          q.appendChild(custom);
-          for (const p of def.presets) {
-            const o = document.createElement('option');
-            o.value = toHexByte(p.v);
-            o.textContent = `${toHexByte(p.v)} - ${p.l}`;
-            if (p.v === val) o.selected = true;
-            q.appendChild(o);
-          }
-          q.addEventListener('change', () => { if (q.value) setByte(i, parseInt(q.value, 16)); });
-          card.appendChild(q);
-        }
-        const row = document.createElement('div');
-        row.className = 'bit-list';
-        for (const w of def.wheels) {
-          const curN = wssWheelType(val, w);
-          const wrap = document.createElement('div');
-          wrap.className = 'wss-row';
-          const lblW = document.createElement('span');
-          lblW.className = 'bit-text';
-          lblW.textContent = w.l + ' ';
-          if (w.help) lblW.append(makeTip(w.help));
-          const sel = document.createElement('select');
-          sel.className = 'enum-select';
-          ['0 - standard', '1 - ativo (AK)', '2 - invertido'].forEach((lbl, t) => {
-            const o = document.createElement('option');
-            o.value = String(t);
-            o.textContent = lbl;
-            if (t === curN) o.selected = true;
-            sel.appendChild(o);
-          });
-          sel.addEventListener('change', () => {
-            setByte(i, setWssWheel(state.bytes[i], w, parseInt(sel.value, 10)));
-          });
-          wrap.append(lblW, sel);
-          row.appendChild(wrap);
-        }
-        card.appendChild(row);
-      }
-
-      if (def.bits && def.kind !== 'wss') {
-        const list = document.createElement('div');
-        list.className = 'bit-list';
-        for (const bit of def.bits) {
-          const row = document.createElement('label');
-          row.className = 'bit-row';
-          const cb = document.createElement('input');
-          cb.type = 'checkbox';
-          cb.checked = (val & bit.m) === bit.m;
-          const txt = document.createElement('span');
-          txt.className = 'bit-text';
-          txt.append(document.createTextNode(bit.l + ' '));
-          if (bit.help) txt.append(makeTip(bit.help));
-          const mask = document.createElement('span');
-          mask.className = 'bit-mask';
-          mask.textContent = toHexByte(bit.m);
-          txt.append(mask);
-          row.append(cb, txt);
-          cb.addEventListener('change', () => {
-            setByte(i, cb.checked ? (state.bytes[i] | bit.m) : (state.bytes[i] & ~bit.m));
-          });
-          list.appendChild(row);
-        }
-        card.appendChild(list);
-      }
-
-      const dec = document.createElement('div');
-      dec.className = 'byte-decode';
-      dec.textContent = decodeByteValue(def, val, mod);
-      card.appendChild(dec);
-
-      hexInput.addEventListener('change', () => {
-        const p = parseInt(hexInput.value, 16);
-        if (!Number.isNaN(p)) setByte(i, p);
-        else hexInput.value = toHexByte(state.bytes[i]);
-      });
-
-      grid.appendChild(card);
+      section.appendChild(inner);
+      grid.appendChild(section);
     }
   }
 
@@ -1468,6 +1895,7 @@
 
   function calculateBase() {
     hideAlerts();
+    syncReferenceBytes();
     const vin = normalizeVin($('vin').value);
     state.module = $('module').value;
     if (!isValidVin(vin)) {
@@ -1478,10 +1906,12 @@
     if (result.error) { showError(result.error); return; }
     state.bytes = result.bytes;
     state.profile = result.profile;
+    state.ready = true;
+    state.migratedModule = false;
     $('profile-hint').textContent = result.profile.label;
     renderByteGrid();
     syncOutput();
-    $('alert-info').textContent = 'Padrão Jetta: byte 16 = 0xE1 (HHC + sem aviso frenagem emerg.), PLA off, sensores 0x00, botão ESP 0x20.';
+    $('alert-info').textContent = 'Padrão Jetta: byte 16 = 0xE1, byte 17 = 0x08 (XDS), PLA off, sensores 0x00, botão ESP 0x20.';
     $('alert-info').classList.remove('hidden');
   }
 
@@ -1507,12 +1937,15 @@
   }
 
   function loadFromHex() {
+    syncReferenceBytes();
     const raw = ($('migrate-hex')?.value.trim() || $('hex-out')?.textContent.trim() || '').replace(/^-$/, '');
     const parsed = parseHexCoding(raw);
     if (!parsed) { showError('Cole hex válido ou calcule primeiro'); return; }
     if (parsed.length !== getModuleLen()) { showError(`Esperado ${getModuleLen()} bytes - recebeu ${parsed.length}`); return; }
     hideAlerts();
     state.bytes = applyMirrorPairs(parsed);
+    state.ready = true;
+    state.migratedModule = false;
     renderByteGrid();
     syncOutput();
   }
@@ -1542,7 +1975,10 @@
       lines.push('Avisos:', ...r.warnings.map((w) => ' • ' + w), '');
     }
     if (r.steps?.length) {
-      lines.push('Passos:', ...r.steps.map((s) => `  byte ${s.byteIndex}: ${s.before} → ${s.after} - ${s.reason}`));
+      lines.push('Alterações:', ...r.steps.map((s) => {
+        const label = BYTE_DEFS[s.byteIndex]?.name || `byte ${s.byteIndex}`;
+        return `  ${label}: ${s.before} → ${s.after} (${s.reason})`;
+      }));
     }
     log.textContent = lines.join('\n');
     $('migrate-hex').value = formatHexCoding(r.bytes);
@@ -1553,15 +1989,23 @@
       state.module = editorMod;
       const elen = getModuleLen();
       state.bytes = r.bytes.length === elen ? r.bytes : r.bytes.slice(0, elen);
+      state.ready = true;
+      state.migratedModule = true;
       if (r.bytes.length !== elen) {
         lines.push('', `Nota: editor ${editorMod} usa ${elen}B - hex completo (${r.bytes.length}B) está no campo acima.`);
         log.textContent = lines.join('\n');
       }
       renderByteGrid();
       syncOutput();
-      $('alert-info').textContent = `Migrado ${from}→${to}. Revise bytes 16+ e confira G85 se trocou módulo.`;
+      $('alert-info').textContent = `Migrado ${from}→${to}. Resultado aplicado no editor. Revise bytes 16+ e confira G85 se trocou módulo.`;
       $('alert-info').classList.remove('hidden');
     }
+  }
+
+  function onCarHexInput() {
+    syncReferenceBytes();
+    renderByteGrid();
+    syncOutput();
   }
 
   function init() {
@@ -1571,10 +2015,21 @@
     $('btn-sync-mirrors')?.addEventListener('click', () => { state.bytes = applyMirrorPairs(state.bytes); renderByteGrid(); syncOutput(); });
     $('btn-migrate')?.addEventListener('click', runMigrate);
     $('vin')?.addEventListener('input', onVinInput);
-    $('module')?.addEventListener('change', () => { state.module = $('module').value; if (state.profile) calculateBase(); else { state.bytes = new Array(getModuleLen()).fill(0); renderByteGrid(); syncOutput(); } });
+    $('car-hex')?.addEventListener('input', onCarHexInput);
+    $('module')?.addEventListener('change', () => {
+      state.module = $('module').value;
+      if (state.profile) calculateBase();
+      else {
+        state.bytes = new Array(getModuleLen()).fill(0);
+        state.ready = false;
+        renderByteGrid();
+        syncOutput();
+      }
+    });
     $('extra-variant')?.addEventListener('change', calculateBase);
     state.module = $('module').value;
     state.bytes = new Array(getModuleLen()).fill(0);
+    state.ready = false;
     renderByteGrid();
     syncOutput();
   }
