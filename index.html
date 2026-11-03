@@ -1,2043 +1,318 @@
 <!doctype html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="MK60EC1 - editor de long coding ABS/ESP Jetta BR 2009–2016" />
-  <title>MK60EC1 Long Code Editor</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-    :root {
-      --bg: #0f1419;
-      --surface: #1a2332;
-      --surface2: #243044;
-      --surface3: #2a3648;
-      --border: #2d3f56;
-      --text: #e8edf4;
-      --muted: #8b9cb3;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --success: #22c55e;
-      --warning: #f59e0b;
-      --error: #ef4444;
-      --vin: #6366f1;
-      --mirror: #8b5cf6;
-      --radius: 10px;
-      --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      --mono: 'Cascadia Code', 'Consolas', monospace;
-    }
-    html { font-size: 16px; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-    .app {
-      max-width: 1560px;
-      margin: 0 auto;
-      padding: 1.25rem 1.25rem 1.5rem;
-    }
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="MK60EC1 Coding Studio por Pedro Pandolfi: presets Jetta 2.5, Jetta TSI e Fusca TSI, câmbio manual/swap, editor avançado e comparação offline."><meta name="author" content="Pedro Pandolfi (@pandolfipedro)"><meta name="application-name" content="MK60EC1 Coding Studio"><meta property="og:title" content="MK60EC1 Coding Studio · Pedro Pandolfi"><meta property="og:description" content="Presets Jetta e Fusca, manual ou automático, editor de bytes e comparação offline."><meta property="og:type" content="website"><meta name="color-scheme" content="dark light"><title>MK60EC1 Coding Studio · Pedro Pandolfi</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%2355dfbf'/%3E%3Cpath d='M9 29V11h5l6 10 6-10h5v18h-5V20l-6 9-6-9v9Z' fill='%230c2528'/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0b141c;--panel:#111f2a;--raised:#172b38;--input:#0b1721;--border:#29414e;--fg:#edf4f7;--muted:#a1b4c2;--accent:#64e3bd;--accent-fg:#092f27;--purple:#baadfa;--amber:#f0c77b;--danger:#ffa6a6;--shadow:0 15px 45px #0002;--mono:Consolas,'Cascadia Code',monospace}
+[data-theme=light]{--bg:#edf3f3;--panel:#fff;--raised:#e6efef;--input:#f4f8f8;--border:#c7d7d7;--fg:#18303a;--muted:#526976;--accent:#087f64;--accent-fg:#fff;--purple:#7151a7;--amber:#895c12;--danger:#b33a3a;--shadow:0 10px 30px #18303a09}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--fg);background:radial-gradient(ellipse at 90% 0%,#2c6a7420,transparent 45%),var(--bg);font:14px/1.6 'Segoe UI',system-ui,sans-serif}button,input,select,textarea{font:inherit}button,summary,select{cursor:pointer}button{touch-action:manipulation}button:disabled{opacity:.4;cursor:not-allowed}a{color:var(--accent);text-underline-offset:3px}button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:3px}input,select,textarea{min-width:0;width:100%;background:var(--input);border:1px solid var(--border);border-radius:9px;color:var(--fg);padding:10px 12px}textarea{resize:vertical;min-height:100px;font:12px/1.7 var(--mono)}select{font-size:13px}input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent);flex-shrink:0}h1,h2,h3,p{margin-top:0}h1{font-size:23px;letter-spacing:-.7px;margin:0}h2{font-size:19px;letter-spacing:-.4px;margin-bottom:5px}h3{font-size:14px;margin-bottom:10px}.shell{max-width:1500px;padding:28px 30px 38px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;border-bottom:1px solid var(--border);padding-bottom:23px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:13px}.mark{display:grid;place-items:center;background:var(--accent);color:var(--accent-fg);border-radius:12px;font-size:26px;font-weight:900;width:45px;height:45px;flex-shrink:0}.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:2px;font-weight:700;color:var(--accent);margin-bottom:6px}.tagline{color:var(--muted);font-size:11px}.toolbar,.actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.btn{background:var(--raised);border:1px solid var(--border);border-radius:9px;color:var(--fg);padding:9px 13px;font-size:12px;font-weight:650;white-space:nowrap}.btn:hover:not(:disabled){border-color:var(--accent)}.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}.ghost{background:transparent}.wide{width:100%;margin-top:10px}.badge{font:11px var(--mono);border:1px solid var(--border);border-radius:30px;padding:7px 11px;color:var(--accent);background:var(--raised)}.intro{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:22px}.intro p{color:var(--muted);font-size:13px;max-width:650px;margin:0}.hw-key{display:flex;gap:9px;flex-wrap:wrap}.hw-key>span{border:1px solid var(--border);border-radius:10px;padding:9px 13px;display:flex;flex-direction:column;font:11px var(--mono);color:var(--muted)}.hw-key b{color:var(--fg);font-size:15px;margin-top:2px}.workspace{display:grid;grid-template-columns:320px minmax(0,1fr);gap:22px;align-items:start}.sidebar{display:grid;gap:16px}.panel{background:var(--panel);border:1px solid var(--border);border-radius:15px;box-shadow:var(--shadow);padding:21px;min-width:0}.section-label{display:flex;align-items:center;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);font-weight:750;margin-bottom:16px}.section-label .num{display:grid;place-items:center;width:22px;height:22px;background:var(--raised);border-radius:6px;color:var(--accent);font:10px var(--mono)}.field{display:block;margin-bottom:14px}.field>span{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px}.field:last-child{margin:0}.hint{font-size:11px;color:var(--muted);line-height:1.7;margin:7px 0 0}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.mono{font-family:var(--mono)}#vin{letter-spacing:.5px;font-size:13px}.hw-summary{padding:12px;border:1px solid var(--border);background:var(--input);border-radius:9px;font-size:11px;margin:12px 0;color:var(--muted)}.hw-summary b{color:var(--accent)}details summary{font-size:12px;font-weight:650;list-style-position:outside;margin-left:12px}details .detail-body{margin-top:15px}.main{display:grid;gap:17px;min-width:0}.output-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}.output-head .eyebrow{margin:0}.output-head p{margin:0;color:var(--muted);font-size:11px}.code-output{display:block;overflow-wrap:anywhere;word-break:break-all;font:clamp(14px,1.7vw,23px)/1.8 var(--mono);letter-spacing:1px;color:var(--accent);border:1px solid var(--border);border-radius:10px;background:var(--input);padding:14px 17px;min-height:66px}.output-meta{display:flex;flex-wrap:wrap;gap:16px;font-size:11px;color:var(--muted);margin:11px 0 15px}.output-meta b{color:var(--fg);font-weight:600}.notices{display:grid;gap:7px;margin-top:14px}.notice{border-left:3px solid var(--amber);background:color-mix(in srgb,var(--amber) 6%,transparent);padding:9px 12px;font-size:11px;border-radius:0 7px 7px 0;color:var(--amber)}.notice.error{border-color:var(--danger);color:var(--danger);background:color-mix(in srgb,var(--danger) 6%,transparent)}.notice.info{border-color:var(--purple);color:var(--purple);background:color-mix(in srgb,var(--purple) 6%,transparent)}.tabs{display:flex;gap:5px;overflow-x:auto;border-bottom:1px solid var(--border);padding-bottom:11px;margin-bottom:20px}.tab{background:transparent;border:0;border-radius:8px;padding:9px 14px;color:var(--muted);font-size:12px;font-weight:650;white-space:nowrap}.tab[aria-selected=true]{background:var(--raised);color:var(--accent)}.view[hidden]{display:none}.editor-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.editor-heading p{font-size:12px;color:var(--muted);margin:0}.legend{display:flex;gap:13px;font-size:10px;color:var(--muted)}.legend i{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:4px}.vin-color{background:var(--purple)}.mirror-color{background:#73adfa}.edit-color{background:var(--accent)}.byte-strip{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:7px;margin-bottom:23px}.byte{border:1px solid var(--border);background:var(--input);border-radius:8px;color:var(--fg);min-width:0;padding:8px 3px;position:relative}.byte small{display:block;font:9px var(--mono);color:var(--muted);margin-bottom:3px}.byte b{font:600 16px var(--mono)}.byte.vin b{color:var(--purple)}.byte.mirror b{color:#73adfa}.byte.selected{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 9%,var(--input));box-shadow:0 0 0 1px var(--accent)}.byte.changed:after{content:'';position:absolute;top:5px;right:5px;width:4px;height:4px;background:var(--amber);border-radius:50%}.byte.pending small:after{content:' •';color:var(--amber)}.inspector{background:var(--input);border:1px solid var(--border);border-radius:12px;overflow:hidden}.inspector-head{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:18px 20px;border-bottom:1px solid var(--border);background:linear-gradient(110deg,#33716712,transparent)}.inspector-head h3{font-size:17px;margin:0}.inspector-meta{font:10px var(--mono);color:var(--muted);margin-top:4px}.inspector-hex{font:600 26px var(--mono);color:var(--accent);width:72px;text-align:center;background:var(--raised);padding:9px;border-color:var(--border)}.inspector-body{padding:18px 20px}.bit-strip{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin-bottom:13px}.bit{border:1px solid var(--border);background:var(--panel);border-radius:7px;color:var(--muted);padding:7px 2px;font:11px var(--mono)}.bit span{display:block;font-size:9px;opacity:.75}.bit b{display:block;font-size:17px;font-weight:500;margin-top:3px}.bit[aria-pressed=true]{color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--panel));border-color:color-mix(in srgb,var(--accent) 50%,var(--border))}.fields{display:grid;gap:14px;margin-top:19px}.control-label{display:flex;justify-content:space-between;gap:10px;font-size:12px;font-weight:600;margin-bottom:6px}.mask{font:10px var(--mono);color:var(--muted);white-space:nowrap}.check{display:flex;gap:11px;align-items:flex-start;background:var(--panel);border:1px solid var(--border);border-radius:9px;padding:12px;font-size:12px}.check input{margin-top:3px}.check .hint{font-size:10px;margin-top:3px}.choice-summary{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.7;overflow-wrap:anywhere}#vin-inline{display:none}#vin-inline .code-output{font-size:12px;letter-spacing:.2px;padding:10px;min-height:0}#vin-inline .hint{font-size:10px}.function-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0 22px}.function-card{background:var(--input);border:1px solid var(--border);border-radius:11px;padding:15px;min-width:0}.function-card label{display:block;font-size:12px;font-weight:650;margin-bottom:9px}.function-card .hint{font-size:10px}.function-group{font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;margin:21px 0 8px}#advanced-editor{border-top:1px solid var(--border);padding-top:18px;margin-top:20px}#advanced-editor>summary{color:var(--muted)}.source-note{font-size:10px;color:var(--muted);margin-top:15px}.inline-status{font-size:11px;color:var(--amber)}.empty{padding:47px 25px;text-align:center;border:1px dashed var(--border);border-radius:12px;color:var(--muted)}.empty .schematic{font:22px var(--mono);color:var(--accent);letter-spacing:5px;margin:0 0 18px}.empty h3{font-size:16px;color:var(--fg);margin-bottom:7px}.empty p{max-width:450px;margin:0 auto 15px;font-size:12px}.foot-actions{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:14px}.table-wrap{overflow:auto;max-height:500px;border:1px solid var(--border);border-radius:9px;margin-top:16px}table{border-collapse:collapse;width:100%;font-size:12px}th,td{text-align:left;border-bottom:1px solid var(--border);padding:9px 11px;white-space:nowrap}th{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);background:var(--raised);position:sticky;top:0}td.diff{color:var(--amber)}td code{font:12px var(--mono)}.migration-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.migration-grid .full{grid-column:1/-1}.migration-log{font:11px/1.9 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;border:1px solid var(--border);border-radius:9px;background:var(--input);padding:15px;margin-top:14px}.reference-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.reference-card{background:var(--input);border:1px solid var(--border);border-radius:10px;padding:17px}.reference-card p{font-size:12px;color:var(--muted);margin-bottom:8px}.reference-card .eyebrow{margin-bottom:9px}.source-table{margin-top:18px}.bottom{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:10px;color:var(--muted);padding-top:23px;margin-top:25px;border-top:1px solid var(--border)}.toast{position:fixed;bottom:23px;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:11px 20px;border-radius:10px;font-size:12px;box-shadow:var(--shadow);z-index:20;max-width:min(92vw,650px)}.skip{position:absolute;left:16px;top:-80px}.skip:focus{top:10px;background:var(--panel);padding:10px;z-index:40}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
+@media(min-width:1280px){.sidebar{position:sticky;top:20px}.fields{grid-template-columns:1fr 1fr}.fields>.control:first-child:last-child{grid-column:1/-1}}
+@media(max-width:1050px){.workspace{grid-template-columns:280px minmax(0,1fr)}.shell{padding:22px}.hw-key>span{padding:7px 9px}.intro p{max-width:420px}.byte-strip{grid-template-columns:repeat(7,minmax(0,1fr))}}
+@media(max-width:800px){#vin-inline:not([hidden]){display:block;border:1px solid var(--border);border-radius:10px;padding:12px;margin:12px 0;background:var(--input)}.workspace{grid-template-columns:1fr}.sidebar{grid-template-columns:1fr 1fr;align-items:start}.sidebar>.panel:first-child{grid-row:span 2}.intro{align-items:flex-start;flex-direction:column;gap:15px}.byte-strip{grid-template-columns:repeat(10,minmax(0,1fr))}.code-output{font-size:19px}.topbar{align-items:flex-start}.tagline{font-size:10px}.fields{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.function-grid{grid-template-columns:1fr}.shell{padding:18px 13px}.topbar{gap:12px;flex-wrap:wrap;padding-bottom:18px;margin-bottom:18px}h1{font-size:21px}.topbar>.toolbar{width:100%;justify-content:space-between}.panel{padding:17px}.sidebar{display:flex;flex-direction:column}.sidebar>.panel{width:100%}.byte-strip{grid-template-columns:repeat(6,minmax(0,1fr));gap:6px}.byte b{font-size:15px}.output-head{align-items:flex-start}.code-output{font-size:16px;letter-spacing:.5px}.editor-heading{align-items:flex-start;flex-direction:column}.fields,.reference-grid,.migration-grid{grid-template-columns:1fr}.migration-grid .full{grid-column:auto}.inspector-head,.inspector-body{padding:16px}.inspector-head h3{font-size:15px}.inspector-hex{width:60px;font-size:23px}.tabs{gap:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));overflow:visible}.tab{padding:8px 4px;font-size:10px;white-space:normal}.hw-key{width:100%}.hw-key>span{flex:1;min-width:85px}.hw-key b{font-size:14px}.foot-actions{align-items:flex-start;flex-wrap:wrap}.actions .btn{font-size:11px}.row{gap:10px}.bottom{font-size:10px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
-    .header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 0.5rem 1.5rem;
-      margin-bottom: 1rem;
-      padding-bottom: 0.85rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
-    .header-note { margin: 0; font-size: 0.8125rem; color: var(--muted); }
+/* Refinamento de fluxo e hierarquia */
+:root{--accent:#65e1bd;--border:#263e4b;--panel:#11212d;--input:#0c1923;--raised:#1b3241}
+[data-theme=light]{--accent:#087f64;--border:#c7d7d7;--panel:#fff;--input:#f4f8f8;--raised:#e6efef}
+.shell{max-width:1450px;padding-top:26px}.topbar{padding-bottom:20px;margin-bottom:25px}.intro{margin-bottom:25px}.intro h2{font-size:27px;letter-spacing:-.8px;margin-bottom:4px}.intro p{font-size:12px}.hw-key>span{background:var(--panel);border-radius:11px;font-size:10px;padding:10px 13px}.hw-key b{font-size:13px}.workspace{grid-template-columns:300px minmax(0,1fr);gap:23px}.panel{border-radius:17px}.sidebar{gap:13px}.section-label{font-size:9px;letter-spacing:1.7px;margin-bottom:16px}.hw-summary{background:none;border:0;padding:0;margin:12px 0 17px;font-size:10px}.module-details{margin:8px 0 3px}.module-details>summary{font-size:10px;font-weight:500;color:var(--muted)}.module-details .detail-body{padding:12px;background:var(--input);border-radius:10px}.import-panel,.session-panel{padding:16px 19px}.import-panel>details>summary,.session-panel>details>summary{font-size:12px;font-weight:600}.main{gap:17px}.code-output{font-size:clamp(14px,1.55vw,22px);padding:16px 18px;border-radius:12px;letter-spacing:.75px}.coding-panel{border-top:2px solid color-mix(in srgb,var(--accent) 65%,var(--border))}.coding-panel .output-head{margin-bottom:14px}.coding-panel .output-head .eyebrow{font-size:11px}.coding-panel .output-head p{margin-top:5px;font-size:10px}.output-meta{font-size:10px;margin:10px 0 14px;gap:17px}.actions{gap:7px}.actions>.btn{font-size:11px}#copy{padding:11px 19px}.btn{transition:background .15s,border-color .15s,transform .15s}.btn:active:not(:disabled){transform:translateY(1px)}.tabs{border:0;background:var(--input);border-radius:11px;padding:5px;gap:5px;margin-bottom:25px}.tab{flex:1;font-size:11px;padding:10px 12px}.tab[aria-selected=true]{background:var(--raised);box-shadow:0 2px 6px #0001}.function-group{font-size:10px;letter-spacing:1.3px;color:var(--muted);margin-top:20px}.function-grid{gap:12px;margin-top:12px}.function-card{background:color-mix(in srgb,var(--input) 65%,var(--panel));padding:17px;border-radius:12px}.function-card label{font-size:12px;margin-bottom:12px}.function-card select{background:var(--panel);border-color:var(--border);min-height:43px;font-size:12px;padding:10px 11px}.function-card:focus-within{border-color:color-mix(in srgb,var(--accent) 60%,var(--border))}.function-help{margin-top:9px}.function-help>summary{font-size:10px;color:var(--muted);font-weight:400}.function-help p{margin:6px 0 0}.review-notices{border-top:1px solid var(--border);padding-top:10px}.review-notices>summary{font-size:10px;color:var(--muted);font-weight:500}.review-notices .detail-body{display:grid;gap:6px}.notices:empty{display:none}.profile-chips{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}.profile-chips span{border:1px solid var(--border);background:var(--input);border-radius:20px;color:var(--muted);font-size:10px;padding:4px 9px}.source-note{font-size:9px}.empty{padding:40px 22px}.empty h3{font-size:16px}.empty p{font-size:11px}
+@media(max-width:1050px){.workspace{grid-template-columns:270px minmax(0,1fr)}}
+@media(max-width:800px){.workspace{grid-template-columns:1fr}.sidebar{display:grid;grid-template-columns:1fr 1fr}.intro h2{font-size:24px}}
+@media(max-width:540px){.sidebar{display:flex}.intro h2{font-size:24px}.intro{gap:15px}.hw-key>span{padding:8px}.hw-key b{font-size:12px}.tabs{gap:2px;padding:4px}.tab{font-size:10px;padding:9px 3px}.function-card{padding:16px}.output-head{flex-wrap:wrap}.code-output{font-size:15px}.panel{padding:17px}.import-panel,.session-panel{padding:16px}.actions>.btn{font-size:10px}.profile-chips{gap:5px}.bottom{margin-top:20px}}
+@media(prefers-reduced-motion:reduce){.btn{transition:none}}
 
-    /* Notebook wide: sidebar fixa + editor ocupa o resto */
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(440px, 460px) minmax(0, 1fr);
-      gap: 1rem;
-      align-items: start;
-    }
-    @media (max-width: 960px) {
-      .layout { grid-template-columns: 1fr; }
-    }
 
-    .sidebar { display: flex; flex-direction: column; gap: 0.85rem; }
+.vehicle-presets{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin:0 0 22px}.preset-card{padding:18px 21px;background:var(--panel);color:var(--fg);border:1px solid var(--border);border-radius:14px;text-align:left;position:relative;transition:border-color .15s,background .15s}.preset-card strong{display:block;font-size:21px;letter-spacing:-.5px;margin:7px 0 3px}.preset-card small{color:var(--muted);font-size:11px}.preset-kicker{font:10px var(--mono);color:var(--muted);letter-spacing:1px}.preset-card[aria-pressed=true]{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--panel));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 30%,transparent)}.preset-card[aria-pressed=true]::after{content:'✓';position:absolute;right:17px;top:16px;color:var(--accent)}.preset-card[aria-pressed=true] .preset-kicker{color:var(--accent)}.advanced-btn{border-color:color-mix(in srgb,var(--accent) 45%,var(--border));color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--panel))}.author-card{padding:20px;border:1px solid var(--border);border-radius:12px;margin-top:16px;background:var(--input)}.author-card strong{font-size:22px;color:var(--accent)}.author-card p{font-size:12px;color:var(--muted);margin:5px 0 10px}.tagline a{color:var(--muted)}#preview-assumptions p{margin-bottom:8px}#advanced-editor{scroll-margin-top:20px}.sidebar{position:static}
+@media(max-width:800px){.preset-card{padding:16px}.preset-card strong{font-size:18px}.preset-card small{font-size:10px}.sidebar{display:flex;flex-direction:column}.sidebar>.panel{width:100%}}
+@media(max-width:540px){.vehicle-presets{gap:7px}.preset-card{padding:12px 10px;border-radius:10px}.preset-card strong{font-size:15px;line-height:1.3;margin:8px 0}.preset-card small{font-size:9px;line-height:1.4;display:block}.preset-kicker{font-size:9px}.preset-card[aria-pressed=true]::after{right:9px;top:9px;font-size:10px}.editor-heading{gap:12px;align-items:flex-start;flex-direction:column}.advanced-btn{font-size:11px}.vehicle-presets{margin-bottom:16px}}
 
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1rem 1.1rem;
-    }
-    .panel-title {
-      margin: 0 0 0.75rem;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
+</style></head><body><a href="#editor-main" class="skip">Ir para o editor</a>
+<div class="shell"><header class="topbar"><div class="brand"><span class="mark" aria-hidden="true">M</span><div><div class="eyebrow">MK60EC1 · ABS / ESP</div><h1>MK60EC1 <span style="font-weight:400;color:var(--muted)">Coding Studio</span></h1><div class="tagline">Por <a href="https://github.com/pandolfipedro" target="_blank" rel="noopener">Pedro Pandolfi</a> · Seu módulo. Suas configurações.</div></div></div><div class="toolbar"><span class="badge">Offline · sem instalação</span><button class="btn ghost" id="theme">Tema claro</button></div></header>
+<section class="intro" aria-label="Comprimentos por hardware"><div><h2>Configure do seu jeito.</h2><p>Escolha o carro, configure o câmbio e gere uma base para o seu módulo.</p></div><div class="hw-key"><span>H35 / H45<b>18 bytes · 36 hex</b></span><span>H30 / H31<b>19 bytes · 38 hex</b></span><span>H46<b>20 bytes · 40 hex</b></span></div></section>
+<section class="vehicle-presets" aria-label="Presets de veículo"><button class="preset-card" data-preset="jetta25" aria-pressed="true"><span class="preset-kicker">2.5 MPI</span><strong>Jetta 2.5</strong><small>Mk5 / 1K · manual ou 09G</small></button><button class="preset-card" data-preset="jetta-tsi" aria-pressed="false"><span class="preset-kicker">2.0 TSI</span><strong>Jetta TSI</strong><small>Mk6 / PQ35 · manual ou DSG</small></button><button class="preset-card" data-preset="fusca-tsi" aria-pressed="false"><span class="preset-kicker">2.0 TSI</span><strong>Fusca TSI</strong><small>5C / AT · manual ou DSG</small></button></section>
+<div class="workspace"><aside class="sidebar"><section class="panel"><div class="section-label">Configuração do carro</div><p id="preset-summary" class="hint"></p><label class="field" style="margin-top:15px"><span>Câmbio instalado hoje</span><select id="gearbox"></select></label><p id="gearbox-help" class="hint"></p><label id="rear-axle-field" class="field" style="margin-top:15px" hidden><span>Eixo traseiro / carroceria</span><select id="rear-axle"><option value="multilink">Multilink</option><option value="torsion">Eixo de torção</option></select></label><button id="apply-gearbox" class="btn ghost wide" disabled>Aplicar câmbio à edição</button><details style="margin-top:12px"><summary>Sobre câmbio e swaps</summary><p class="hint">Nestes perfis 2.5 MPI e 2.0 TSI, manual e automático compartilham EDS 2. A ação preserva os outros bits e registra o câmbio; não usa o bit 7 do byte 16 como seletor universal. Um swap também pode exigir revisão de HBV, ECU, Gateway, sensores e adaptações fora desta calculadora.</p></details></section><section class="panel"><div class="section-label"><span class="num">01</span> Identificação do módulo</div><label class="field"><span>Módulo ABS</span><select id="module" aria-describedby="hardware-summary"></select></label><details class="module-details"><summary>Detalhes do módulo</summary><div class="detail-body"><label class="field"><span>Hardware · ajuste manual</span><select id="hardware"><option value="35">H35 · 18 bytes</option><option value="45">H45 · 18 bytes</option><option value="30">H30 · 19 bytes</option><option value="31">H31 · 19 bytes</option><option value="46">H46 · 20 bytes</option></select></label><p id="software-detail" class="hint"></p><p class="hint">O hardware é selecionado junto com o módulo. Use o ajuste manual apenas para conferir uma identificação diferente.</p></div></details><div id="hardware-summary" class="hw-summary"></div><label class="field"><span>Chassi (VIN)</span><input id="vin" class="mono" maxlength="17" spellcheck="false" autocomplete="off" placeholder="17 caracteres do chassi"><small id="vin-count" class="hint">0 / 17 caracteres</small></label><div id="vin-inline" hidden><div class="eyebrow">Prévia do preset · sem HHC</div><output class="code-output" id="vin-inline-code"></output><p class="hint" id="vin-inline-count"></p><button class="btn primary wide" id="apply-vin-inline">Aplicar esta base</button></div><div class="actions"><button class="btn" id="apply-vin">Aplicar bytes VIN</button><button class="btn ghost" id="draft-vin">Ver base do preset</button></div><p class="hint">Presets são pontos de partida editáveis para MK60EC1. Confirme o hardware, os freios e os códigos PR. Não se aplicam a plataformas MQB ou módulos de outras famílias.</p></section>
+<section class="panel import-panel"><details id="import-details"><summary>Já tem o coding original?</summary><div class="detail-body"><div class="section-label">Importar ou comparar</div><label class="field"><span>Cole somente o hexadecimal</span><textarea id="original" spellcheck="false" placeholder="Cole os 36, 38 ou 40 dígitos do Coding-07"></textarea></label><p id="input-count" class="hint">18 bytes = 36 dígitos hexadecimais.</p><button id="import-code" class="btn primary wide">Importar sem alterar bytes</button><div class="actions" style="margin-top:10px"><button id="use-reference" class="btn ghost">Usar para comparar</button><button id="restore" class="btn ghost" disabled>Restaurar original</button></div><details style="margin-top:18px"><summary>Importar Auto-Scan do VCDS</summary><div class="detail-body"><label class="field"><span>Bloco Address 03 + linha VIN, se disponível</span><textarea id="autoscan" rows="6" spellcheck="false" placeholder="Address 03: ABS Brakes (J104)&#10;Part No SW: 1K0 907 379 AD&#10;Component: ESP MK60EC1 H35 0109&#10;Coding: ..."></textarea></label><button class="btn wide" id="import-scan">Ler identificação e coding</button><p class="hint">A importação identifica o hardware na linha Component, não no campo “Part No HW”.</p></div></details></div></details></section>
+<section class="panel session-panel"><details><summary>Salvar e abrir projeto</summary><div class="detail-body"><div class="actions"><button id="save-session" class="btn">Salvar sessão JSON</button><button id="load-session" class="btn ghost">Abrir sessão</button><input type="file" id="session-file" accept="application/json,.json" hidden></div><p class="hint">Inclui VIN, módulo, original e edição. Os dados permanecem locais até você compartilhar o arquivo.</p></div></details></section></aside>
+<main class="main" id="editor-main"><section id="vin-preview-panel" class="panel" hidden aria-label="Prévia automática Jetta Mk5"><div class="output-head"><div><div class="eyebrow">Prévia do preset</div><h2 id="preview-title" style="margin:7px 0 0">Jetta 2.5 MPI</h2></div><span class="badge" id="vin-preview-count"></span></div><div id="preview-chips" class="profile-chips"></div><output id="vin-preview-code" class="code-output" aria-label="Coding provisório Jetta Mk5"></output><div class="actions" style="margin-top:13px"><button id="apply-vin-preview" class="btn primary">Aplicar esta base no editor</button><span class="hint" id="vin-preview-detail"></span></div><details style="margin-top:12px"><summary>O que esta base considera</summary><div id="preview-assumptions" class="detail-body hint"></div></details></section><div id="vin-preview-error" class="notice" hidden role="status"></div><section class="panel coding-panel" aria-label="Coding atual"><div class="output-head"><div><div class="eyebrow">Seu coding</div><p id="origin-label">Nenhum coding carregado</p></div><span id="status-badge" class="badge">Aguardando entrada</span></div><output id="hex-out" class="code-output" aria-label="Coding hexadecimal atual">—</output><div class="output-meta"><span>Hardware <b id="meta-hw">H35</b></span><span>Comprimento <b id="meta-length">—</b></span><span>Diferenças <b id="meta-diffs">—</b></span></div><div class="actions"><button id="copy" class="btn primary" disabled>Copiar coding</button><button id="report" class="btn" disabled>Exportar revisão TXT</button><button id="undo" class="btn ghost" disabled aria-label="Desfazer última alteração">↶ Desfazer</button><button id="redo" class="btn ghost" disabled aria-label="Refazer alteração">↷ Refazer</button><button id="open-advanced" class="btn advanced-btn" disabled aria-controls="advanced-editor">▦ Editor avançado</button><button id="mirror-all" class="btn ghost" disabled>Corrigir espelhos</button></div><div id="notices" class="notices" aria-live="polite"></div></section>
+<section class="panel"><nav class="tabs" role="tablist" aria-label="Ferramentas"><button role="tab" aria-selected="true" aria-controls="view-editor" id="tab-editor" class="tab" data-view="editor">Funções</button><button role="tab" aria-selected="false" aria-controls="view-compare" id="tab-compare" class="tab" data-view="compare" tabindex="-1">Comparação</button><button role="tab" aria-selected="false" aria-controls="view-migrate" id="tab-migrate" class="tab" data-view="migrate" tabindex="-1">Migração</button><button role="tab" aria-selected="false" aria-controls="view-reference" id="tab-reference" class="tab" data-view="reference" tabindex="-1">Referências</button></nav>
+<div id="view-editor" class="view" role="tabpanel" aria-labelledby="tab-editor"><div class="editor-heading"><div><h2>Ajuste as funções</h2><p>As alterações aparecem no coding automaticamente.</p></div><button id="advanced-shortcut" class="btn advanced-btn" disabled aria-controls="advanced-editor">Abrir editor avançado ↗</button></div><div id="empty" class="empty"><div class="schematic" aria-hidden="true">[ 00 → 17 ]</div><h3>Comece pelo coding do módulo</h3><p>Selecione um preset e informe o VIN para visualizar a base. Para importar, abra “Já tem o coding original?” na lateral.</p><button id="example" class="btn ghost">Explorar exemplo de bancada</button><p class="hint" style="margin-top:10px">O exemplo usa dados sintéticos e não é uma recomendação para o seu carro.</p></div><div id="function-controls" hidden></div><details id="advanced-editor" hidden><summary>Editor avançado · bytes e bits</summary><div id="editor-content" class="detail-body" hidden><div id="byte-strip" class="byte-strip" aria-label="Bytes do coding"></div><article class="inspector"><div class="inspector-head"><div><div id="byte-eyebrow" class="eyebrow"></div><h3 id="byte-title"></h3><div id="byte-meta" class="inspector-meta"></div></div><label><span class="sr-only">Hexadecimal do byte selecionado</span><input id="byte-hex" class="inspector-hex" maxlength="2" spellcheck="false" aria-label="Hexadecimal do byte selecionado"></label></div><div class="inspector-body"><div id="bit-strip" class="bit-strip" aria-label="Bits do byte selecionado"></div><div id="byte-info" class="hint"></div><div id="fields" class="fields"></div><div class="foot-actions"><div class="actions"><button id="previous" class="btn ghost" aria-label="Byte anterior">← Anterior</button><button id="next" class="btn ghost" aria-label="Próximo byte">Próximo →</button></div><button id="review-byte" class="btn ghost" hidden>Marcar byte como conferido</button></div><div class="source-note">Bits numerados de 7 a 0. Máscaras em hexadecimal. Descrições técnicas: LBL de etz2k; diferenças por hardware e firmware exigem conferência.</div></div></article></div></details></div>
+<div id="view-compare" class="view" role="tabpanel" aria-labelledby="tab-compare" hidden><h2>Original × edição</h2><p class="hint">Compara todos os bytes, inclusive acréscimos e remoções. XOR mostra os bits alterados.</p><label class="check" style="margin-top:15px"><input type="checkbox" id="diff-only"><span>Mostrar somente diferenças</span></label><div id="compare-table"></div></div>
+<div id="view-migrate" class="view" role="tabpanel" aria-labelledby="tab-migrate" hidden><h2>Migração com prévia</h2><p class="hint">As regras abaixo seguem o post #1 do tópico 31859 da Ross-Tech. O resultado só entra no editor ao clicar em Aplicar prévia.</p><div class="migration-grid" style="margin-top:18px"><label class="field"><span>Índice de origem</span><select id="migrate-from"></select></label><label class="field"><span>Índice de destino</span><select id="migrate-to"></select></label><label class="field full"><span>Coding de origem</span><textarea id="migrate-input" spellcheck="false" placeholder="Cole o coding original ou use a edição atual"></textarea><button class="btn ghost" id="migrate-use-current" style="margin-top:8px">Usar coding em edição</button></label><label class="field"><span>NIRA iTPMS no destino de 19 bytes</span><select id="mig-nira"><option value="">Não informado</option><option value="no">Não será usado</option><option value="yes">Será usado</option></select></label><label class="field"><span>Carro tinha Stopping Distance Shortening (AWV)?</span><select id="mig-awv"><option value="">Não informado</option><option value="no">Não</option><option value="yes">Sim</option></select></label><label class="field"><span>Airbag / MCB no destino CC</span><select id="mig-mcb"><option value="">Não informado</option><option value="no">Airbag sem suporte a MCB</option><option value="yes">Airbag com suporte a MCB</option></select></label><label class="field"><span>iTPMS no destino CC</span><select id="mig-tpms"><option value="">Escolher</option><option value="0">00 · Desativado / PR-7K0</option><option value="1">01 · ECE-R64 / PR-7K1</option><option value="2">02 · FMVSS138 / PR-7K6</option><option value="3">03 · Padrão / PR-7K9</option></select></label><label class="field full"><span>Botão ESC no destino CC</span><select id="mig-esc"><option value="">Escolher</option><option value="16">10 · Sem botão</option><option value="32">20 · Curto: ASR OFF</option><option value="48">30 · Curto: ESC Sport</option><option value="64">40 · Curto: ESC OFF</option><option value="80">50 · ASR OFF / ESC OFF · Scirocco</option><option value="96">60 · ESC Sport / ESC OFF · Cupra</option><option value="112">70 · ASR OFF / ESC OFF</option><option value="128">80 · ESC Sport / ESC OFF · A3/Golf R</option><option value="144">90 · ASR OFF / ESC Sport · GTI</option></select></label></div><div class="actions"><button id="migrate-preview" class="btn primary">Gerar prévia</button><button id="migrate-apply" class="btn" disabled>Aplicar prévia no editor</button></div><div id="migration-log" class="migration-log" hidden></div><p class="hint">Não há conversão automática para gerações anteriores nem para rotas sem roteiro explícito. O formato de 17 bytes foi removido.</p></div>
+<div id="view-reference" class="view" role="tabpanel" aria-labelledby="tab-reference" hidden><h2>Sobre o projeto</h2><div class="author-card"><strong>Pedro Pandolfi</strong><p>Autor e desenvolvedor do MK60EC1 Coding Studio</p><a href="https://github.com/pandolfipedro/mk60ec1-longcode" target="_blank" rel="noopener">@pandolfipedro · projeto no GitHub ↗</a></div><h3 style="margin-top:22px">Hardware, fontes e limites</h3><div class="reference-grid" style="margin-top:17px"><div class="reference-card"><div class="eyebrow">Comprimento</div><h3>Uma regra em todo o aplicativo</h3><p>H35/H45 = 18 bytes. H30/H31 = 19 bytes. H46 = 20 bytes. Geração, importação, editor e exportação usam essa mesma tabela.</p><a href="https://forums.ross-tech.com/index.php?threads/31859/" target="_blank" rel="noopener">Tópico Ross-Tech · etz2k ↗</a></div><div class="reference-card"><div class="eyebrow">Definição de bits</div><h3>LBL por geração</h3><p>O mesmo bit pode mudar de função. O byte 16 bit 7, por exemplo, tem descrições diferentes nos formatos de 18, 19 e 20 bytes.</p><a href="https://drive.google.com/file/d/1SdginSNSRONFsnsrUl9FuTc-zC2yw92X/view" target="_blank" rel="noopener">LBL compartilhado no tópico ↗</a></div><div class="reference-card"><div class="eyebrow">Direção corrigida</div><h3>Byte 15 · bits 6–7</h3><p>40 = volante à esquerda / PR-L0L. 80 = volante à direita / PR-L0R, conforme o LBL. A descrição invertida da calculadora anterior foi substituída.</p></div><div class="reference-card"><div class="eyebrow">Procedimento</div><h3>Conferência no módulo real</h3><p>O aplicativo monta e compara bytes. Não valida a instalação, compatibilidade de bomba, sensores, aceitação pelo ABS ou Basic Settings. Preserve o Auto-Scan original.</p><a href="https://vagflashfile.com/long-coding/mk60" target="_blank" rel="noopener">Calculadora de referência inicial ↗</a></div></div><h3 style="margin-top:24px">Índices 1K0 907 379 · tabela de referência</h3><div id="module-table"></div><p class="hint">O software exibido na tabela é a referência do tópico, não uma identificação automática da versão instalada. BB/BF e módulos de outras famílias não receberam valores presumidos.</p></div>
+</section></main></div><footer class="bottom"><span>MK60EC1 Coding Studio 3.0 · 02/11/2026 · <a href="https://github.com/pandolfipedro" target="_blank" rel="noopener">Criado por Pedro Pandolfi (@pandolfipedro)</a><br>Arquivo único · sem dependências externas · funciona offline</span><span>Dados e identificação permanecem no navegador.<br>Autoria e desenvolvimento: Pedro Pandolfi. Referências técnicas na aba Referências.</span></footer></div><div id="toast" class="toast" role="status" hidden></div>
+<script>
+const LBL_FIELDS=[{"byte":0,"mask":15,"bits":"0–3","type":"select","options":[{"value":1,"label":"TMC D22,2  /  10\" single brake servo (LHD)"},{"value":2,"label":"TMC D22,2  /  11\" single brake servo (LHD) (Caddy,Touran)"},{"value":3,"label":"TMC D22,2  /  7\"/8\" tandem brake servo (RHD)"},{"value":4,"label":"TMC D23,8  /  10\" single brake servo (LHD)"},{"value":5,"label":"TMC D23,8  /  11\" single brake servo (LHD) (Passat NMS)"},{"value":6,"label":"TMC D23,8  /  7\"/8\" tandem brake servo (RHD)"}]},{"byte":0,"mask":240,"bits":"4–7","type":"select","options":[{"value":16,"label":"A3(8P) / Golf,Jetta,JSW(1K+5K) / Leon(1P) / Octavia(1Z)"},{"value":32,"label":"Golf Plus (5M/52) / Altea & Toledo (5P)"},{"value":48,"label":"Touran (1T3)"},{"value":64,"label":"Caddy (2K,2C)"},{"value":80,"label":"Eos (1F/AH)"},{"value":96,"label":"Caddy Maxi (2K,2C)"},{"value":112,"label":"Scirocco (13)"},{"value":128,"label":"Superb (3T)"},{"value":144,"label":"Yeti (5L)"},{"value":160,"label":"Jetta Mk6 (162)  [PR-0N4 = 4-link rear suspension]"},{"value":176,"label":"Jetta Mk6 (162)  [PR-0N9 = lightweight rear axle,  NAR >>MY'13]"},{"value":192,"label":"Passat NMS (A3)"},{"value":208,"label":"???"},{"value":224,"label":"Beetle Mk2 (5C)  [PR-0N9 = lightweight rear axle,  some >>MY'13]"},{"value":240,"label":"Beetle Mk2 (5C)  [PR-0N4 = 4-link rear suspension]"}]},{"byte":1,"mask":255,"bits":"0–7","type":"select","options":[{"value":59,"label":"\"1\""},{"value":60,"label":"\"2\""},{"value":61,"label":"\"3\""},{"value":63,"label":"\"5\""},{"value":66,"label":"\"8\""},{"value":75,"label":"\"A\""},{"value":80,"label":"\"F\""},{"value":85,"label":"\"K\""},{"value":88,"label":"\"N\""},{"value":93,"label":"\"S\""}]},{"byte":2,"mask":1,"bits":"0","type":"checkbox","label":"rear brake pad lining"},{"byte":2,"mask":2,"bits":"1","type":"checkbox","label":"front brake pad lining"},{"byte":2,"mask":28,"bits":"2–4","type":"select","options":[{"value":0,"label":"disk"},{"value":4,"label":"drum"}]},{"byte":2,"mask":224,"bits":"5–7","type":"select","options":[{"value":32,"label":"FS-III-54 15\"      (Piston=D54/Disk=D280)    (PR-1ZF.1ZM,1ZQ)"},{"value":64,"label":"FN3-54 15\"        (Piston=D54/Disk=D288)    (PR-1ZE,1ZP)"},{"value":96,"label":"FN3-54 16\"        (Piston=D54/Disk=D312)    (PR-1ZA,1ZB,1LJ,1LV)"},{"value":192,"label":"FN3-57 16\"        (Piston=D57/Disk=D312)    (PR-??? [Passat-NMS])"},{"value":128,"label":"FNR-G-57 17\"   (Piston=D57/Disk=D345)    (PR-1LB,1LK,1ZK)"},{"value":224,"label":"FNR-G-57 17\"   (Piston=D57/Disk=D345)    (PR-1LB,1LK,1ZK)     (new, only SW:0152>>)"},{"value":160,"label":"TRW C60 17\"     (Piston=D60/Disk=D340)    (PR-1LA/1LW)"}]},{"byte":3,"mask":255,"bits":"0–7","type":"select","options":[{"value":245,"label":"\"3\""},{"value":246,"label":"\"4\""},{"value":248,"label":"\"6\""},{"value":3,"label":"\"A\""},{"value":4,"label":"\"B\""},{"value":5,"label":"\"C\""},{"value":6,"label":"\"D\""},{"value":7,"label":"\"E\""},{"value":8,"label":"\"F\""},{"value":10,"label":"\"H\""},{"value":12,"label":"\"J\""},{"value":13,"label":"\"K\""},{"value":14,"label":"\"L\""},{"value":15,"label":"\"M\""},{"value":18,"label":"\"P\""},{"value":22,"label":"\"T\""},{"value":28,"label":"\"Z\""}]},{"byte":4,"mask":7,"bits":"0–2","type":"select","options":[{"value":1,"label":"Standard/Sport suspension (PR-2UA,2UC)"},{"value":2,"label":"Comfort/Rough-road suspension (PR-2UB,2UD)"},{"value":7,"label":"not used?"}]},{"byte":4,"mask":56,"bits":"3–5","type":"select","options":[{"value":8,"label":"w/o HBV  (PR-1AT)"},{"value":16,"label":"HBV-1   (PR-1AS)   (1.2TSI[81kw] / 1.4TSI[90/92kw] / 2.0i[85kw] with AT/DSG )"},{"value":24,"label":"HBV-2   (only Superb 4x4,LHD [PR-1X1/L0L])"},{"value":32,"label":"HBV-3   (PR-1AS)   (1.2TSI[77kw] / 1.4TSI[118kw] with AT/DSG )"},{"value":40,"label":"HBV-4   (not used?)"}]},{"byte":4,"mask":192,"bits":"6–7","type":"select","options":[{"value":0,"label":"TSA with steering intervention (electr.-steering)"},{"value":64,"label":"w/o TSA"},{"value":128,"label":"TSA w/o steering intervention (hydr.-steering)"}]},{"byte":5,"mask":255,"bits":"0–7","type":"select","options":[{"value":34,"label":"\"0\""},{"value":35,"label":"\"1\""},{"value":36,"label":"\"2\""},{"value":37,"label":"\"3\""},{"value":38,"label":"\"4\""},{"value":39,"label":"\"5\""},{"value":40,"label":"\"6\""},{"value":41,"label":"\"7\""},{"value":42,"label":"\"8\""},{"value":43,"label":"\"9\""}]},{"byte":6,"mask":3,"bits":"0–1","type":"select","options":[{"value":0,"label":"w/o ROP (Roll-Over-Prevention)"},{"value":1,"label":"ROP-1   [from -AS /-AT]       (for Yeti MY'11+)"},{"value":2,"label":"ROP-2   [from -AS /-AT]       (for Touran)"},{"value":3,"label":"ROP-3   [from -AS /-AT]       (for Caddy)"}]},{"byte":6,"mask":4,"bits":"2","type":"checkbox","label":"variant of EDS (Electronic Differential Lock)   [from -AH /-AJ]                      (Touran & Yeti FWD)"},{"byte":6,"mask":8,"bits":"3","type":"checkbox","label":"Steering-Angle Sensor -G85 on steering column   [from -AS /-AT]            (Hydr.-Pwr -[PR-1N1] / APA-BS - / ZF-Gen1&2 - Steering rack)"},{"byte":6,"mask":32,"bits":"5","type":"checkbox","label":"Jetta Hybrid model   [only -AR]"},{"byte":6,"mask":128,"bits":"7","type":"checkbox","label":"2-stage ESC-OFF function   [from -BH /-BJ, SW120+]                                 (only off till hard braking + steering)"},{"byte":7,"mask":255,"bits":"0–7","type":"select","options":[{"value":250,"label":"\"0\""},{"value":251,"label":"\"1\""},{"value":252,"label":"\"2\""},{"value":253,"label":"\"3\""},{"value":254,"label":"\"4\""},{"value":255,"label":"\"5\""},{"value":0,"label":"\"6\""},{"value":1,"label":"\"7\""},{"value":2,"label":"\"8\""},{"value":3,"label":"\"9\""}]},{"byte":8,"mask":15,"bits":"0–3","type":"select","options":[{"value":8,"label":"A3(8P) / Golf,Jetta,JSW(1K+5K) / Leon(1P) / Octavia(1Z)"},{"value":4,"label":"Golf Plus (5M/52) / Altea & Toledo (5P)"},{"value":12,"label":"Touran (1T3)"},{"value":2,"label":"Caddy (2K,2C)"},{"value":10,"label":"Eos (1F/AH)"},{"value":6,"label":"Caddy Maxi (2K,2C)"},{"value":14,"label":"Scirocco (13)"},{"value":1,"label":"Superb (3T)"},{"value":9,"label":"Yeti (5L)"},{"value":5,"label":"Jetta Mk6 (162)  [PR-0N4 = 4-link rear suspension]"},{"value":13,"label":"Jetta Mk6 (162)  [PR-0N9 = lightweight rear axle]"},{"value":3,"label":"Passat NMS (A3)"},{"value":11,"label":"???"},{"value":7,"label":"Beetle Mk2 (5C)  [PR-0N9 = lightweight rear axle]"},{"value":15,"label":"Beetle Mk2 (5C)  [PR-0N4 = 4-link rear suspension]"}]},{"byte":8,"mask":240,"bits":"4–7","type":"select","options":[{"value":128,"label":"TMC D22,2 | 10\"  single brake servo"},{"value":64,"label":"TMC D22,2 | 11\"  single brake servo"},{"value":192,"label":"TMC D22,2 | 7\"/8\" tandem brake servo"},{"value":32,"label":"TMC D23,8 | 10\"  single brake servo"},{"value":160,"label":"TMC D23,8 | 11\"  single brake servo"},{"value":96,"label":"TMC D23,8 | 7\"/8\" tandem brake servo"}]},{"byte":9,"mask":255,"bits":"0–7","type":"select","options":[{"value":11,"label":"\"0\""},{"value":12,"label":"\"1\""},{"value":13,"label":"\"2\""},{"value":14,"label":"\"3\""},{"value":15,"label":"\"4\""},{"value":16,"label":"\"5\""},{"value":17,"label":"\"6\""},{"value":18,"label":"\"7\""},{"value":19,"label":"\"8\""},{"value":20,"label":"\"9\""}]},{"byte":10,"mask":7,"bits":"0–2","type":"select","options":[{"value":4,"label":"FS-III-54    15\""},{"value":2,"label":"FN3-54      15\""},{"value":6,"label":"FN3-54      16\""},{"value":3,"label":"FN3-57      16\""},{"value":1,"label":"FNR-G-57  17\""},{"value":7,"label":"FNR-G-57  17\"  (new, only SW:0152>>)"},{"value":5,"label":"TRW C60   17\""}]},{"byte":10,"mask":56,"bits":"3–5","type":"select","options":[{"value":0,"label":"disk"},{"value":32,"label":"drum"}]},{"byte":10,"mask":64,"bits":"6","type":"checkbox","label":"front brake pad lining"},{"byte":10,"mask":128,"bits":"7","type":"checkbox","label":"rear brake pad lining"},{"byte":11,"mask":255,"bits":"0–7","type":"select","options":[{"value":228,"label":"\"0\""},{"value":229,"label":"\"1\""},{"value":230,"label":"\"2\""},{"value":231,"label":"\"3\""},{"value":232,"label":"\"4\""},{"value":233,"label":"\"5\""},{"value":234,"label":"\"6\""},{"value":235,"label":"\"7\""},{"value":236,"label":"\"8\""},{"value":237,"label":"\"9\""}]},{"byte":12,"mask":3,"bits":"0–1","type":"select","options":[{"value":0,"label":"TSA with steering intervention (electr.-steering)"},{"value":2,"label":"w/o TSA"},{"value":1,"label":"TSA w/o steering intervention (hydr.-steering)"}]},{"byte":12,"mask":28,"bits":"2–4","type":"select","options":[{"value":16,"label":"w/o HBV     (PR-1AT)"},{"value":8,"label":"HBV-1 (PR-1AS)"},{"value":24,"label":"HBV-2 (only Skoda Superb 4x4 with LHD)"},{"value":4,"label":"HBV-3 (PR-1AS)"},{"value":20,"label":"HBV-4 (not used?)"}]},{"byte":12,"mask":224,"bits":"5–7","type":"select","options":[{"value":128,"label":"Standard/Sport suspension"},{"value":64,"label":"Comfort/Rough-road suspension"},{"value":224,"label":"not used?"}]},{"byte":13,"mask":255,"bits":"0–7","type":"select","options":[{"value":25,"label":"\"0\""},{"value":26,"label":"\"1\""},{"value":27,"label":"\"2\""},{"value":28,"label":"\"3\""},{"value":29,"label":"\"4\""},{"value":30,"label":"\"5\""},{"value":31,"label":"\"6\""},{"value":32,"label":"\"7\""},{"value":33,"label":"\"8\""},{"value":34,"label":"\"9\""}]},{"byte":14,"mask":1,"bits":"0","type":"checkbox","label":"2-stage ESC OFF function"},{"byte":14,"mask":4,"bits":"2","type":"checkbox","label":"Jetta Hybrid model"},{"byte":14,"mask":16,"bits":"4","type":"checkbox","label":"Steering-Angle Sensor -G85 (on the steering column)"},{"byte":14,"mask":32,"bits":"5","type":"checkbox","label":"EDS-Variant"},{"byte":14,"mask":192,"bits":"6–7","type":"select","options":[{"value":0,"label":"w/o ROP"},{"value":128,"label":"ROP-1 (Yeti MY'11+)"},{"value":64,"label":"ROP-2 (Touran)"},{"value":192,"label":"ROP-3 (Caddy)"}]},{"byte":15,"mask":7,"bits":"0–2","type":"select","options":[{"value":0,"label":"EDS 1 (1.2-1.6l Otto with DSG & MT)"},{"value":1,"label":"EDS 2 (all other engines [1.2-1.6l Otto with AT / 1.8-3.6l Otto / 1.6-1.9l TDI])"},{"value":2,"label":"EDS 3 (2.0l TDI)"},{"value":4,"label":"EDS 4 (1.4l Hybrid model [only HW:46])"}]},{"byte":15,"mask":8,"bits":"3","type":"checkbox","label":"Offroad-Function  [PR-8LG]  /  HDC (Hill Descent Control)"},{"byte":15,"mask":16,"bits":"4","type":"checkbox","label":"Start/Stop vehicle  [PR-7L6]"},{"byte":15,"mask":32,"bits":"5","type":"checkbox","label":"disable DSR (Driver Steering Recommendation)   [PR-1N1 or Steering rack w/o DSR2 support]"},{"byte":15,"mask":192,"bits":"6–7","type":"select","options":[{"value":64,"label":"Model: Left-Hand-Drive [PR-L0L]"},{"value":128,"label":"Model: Right-Hand-Drive [PR-L0R]"}]},{"byte":16,"mask":1,"bits":"0","type":"checkbox","label":"HHC (Hill Hold Control]  [PR-UG1 / PR-UG4 if incl. XDS]"},{"byte":16,"mask":6,"bits":"1–2","type":"select","options":[{"value":0,"label":"Standard option (nothing active)"},{"value":2,"label":"Continental Teves DDS    (PR-7K6)   [18-Byte Var. & -AH/-AJ]     |    Auto-Hold (EPB, -J540)                  [only 20-Byte Var.]"},{"value":4,"label":"Continental Teves DDS+ (PR-7K9)                                                    |    Avoidance Feature                          [only 20-Byte Var.]"},{"value":6,"label":"NIRA Dynamics TPI          (PR-7K6)   [19-Byte Var.]                         |    Auto-Hold + Avoidance Feature  [only 20-Byte Var.]"}]},{"byte":16,"mask":24,"bits":"3–4","type":"select","options":[{"value":0,"label":"w/o ESC-Button   [19-Byte Var. excl. -AH/-AJ]                               |    only possible setting for 20-Byte-Variant!"},{"value":8,"label":"ESC-OFF                                  [18-Byte Var. & -AH/-AJ]"},{"value":16,"label":"ASR-OFF (display flashes)"},{"value":24,"label":"ESC-OFF (2-stage?)  [18-Byte Var.]     |  ESC-OFF (display flashes)   [19-Byte Var.]"}]},{"byte":16,"mask":32,"bits":"5","type":"checkbox","label":"disable brake-torque-interface (w/o ACC/Front Assist -J428)"},{"byte":16,"mask":64,"bits":"6","type":"checkbox","label":"disable emergency brake warning function  (only EOS MY'09 & some Octavia MY'08 &'09)"},{"byte":16,"mask":128,"bits":"7","type":"checkbox","label":"DSG ?  [18-Byte Var.]    |    FMVSS138 enhanced NIRA TPI  [19-Byte Var. excl. -AH/-AJ]    |    Airbag w/o MCB support  [20-Byte Var.]"},{"byte":17,"mask":1,"bits":"0","type":"checkbox","label":"PLA (Park Steering Assist -J791) with brake intervention (V2.0-3.0)  (PR-7X5/7X6) [19 & 20-Byte Var.]"},{"byte":17,"mask":2,"bits":"1","type":"checkbox","label":"ACC-FTS  (works not correct)  [20-Byte Var.]"},{"byte":17,"mask":4,"bits":"2","type":"checkbox","label":"iTPMS reset via DIS (req. NIRA TPI active)  [19 & 20-Byte Var.]"},{"byte":17,"mask":8,"bits":"3","type":"checkbox","label":"XDS (Extended Electronic Differential Lock, MY'10+)  [PR-UG3 / incl. HHC = PR-UG4]"},{"byte":17,"mask":16,"bits":"4","type":"checkbox","label":"AWV1 (brake prefill)         [>>SW:121]\t\t\t|\tEDF  (Beetle, Golf Cabrio, Jetta[16], Passat-NMS)  [SW:133>>]"},{"byte":17,"mask":32,"bits":"5","type":"checkbox","label":"AWV1 (HBA switchover)  [>>SW:121]\t\t\t|\tAWV1 (HBA switchover & brake prefill)                       [SW:133>>]"},{"byte":17,"mask":64,"bits":"6","type":"checkbox","label":"AWV2 (warning jerk)"},{"byte":17,"mask":128,"bits":"7","type":"checkbox","label":"AWV3 (deceleration)"},{"byte":18,"mask":3,"bits":"0–1","type":"select","options":[{"value":0,"label":"WSS-Sensor front left (standard Speed-Protocol)"},{"value":1,"label":"WSS-Sensor front left (AK-Protocol)"},{"value":3,"label":"WSS-Sensor front left (AK-Protocol [inverted turn direction])"}]},{"byte":18,"mask":12,"bits":"2–3","type":"select","options":[{"value":0,"label":"WSS-Sensor front right (standard Speed-Protocol)"},{"value":4,"label":"WSS-Sensor front right (AK-Protocol)"},{"value":12,"label":"WSS-Sensor front right (AK-Protocol [inverted turn direction])"}]},{"byte":18,"mask":48,"bits":"4–5","type":"select","options":[{"value":0,"label":"WSS-Sensor rear left (standard Speed-Protocol)"},{"value":16,"label":"WSS-Sensor rear left (AK-Protocol)"},{"value":48,"label":"WSS-Sensor rear left (AK-Protocol [inverted turn direction])"}]},{"byte":18,"mask":192,"bits":"6–7","type":"select","options":[{"value":0,"label":"WSS-Sensor rear right (standard Speed-Protocol)"},{"value":64,"label":"WSS-Sensor rear right (AK-Protocol)"},{"value":192,"label":"WSS-Sensor rear right (AK-Protocol [inverted turn direction])"}]},{"byte":19,"mask":3,"bits":"0–1","type":"select","options":[{"value":0,"label":"w/o iTPMS(RKA+)    (PR-7K0)"},{"value":1,"label":"NIRA Dynamics TPI [ECE-R64] (PR-7K1)"},{"value":2,"label":"NIRA Dynamics TPI [FMVSS138] (PR-7K6)"},{"value":3,"label":"NIRA Dynamics TPI [standard] (PR-7K9)"}]},{"byte":19,"mask":4,"bits":"2","type":"checkbox","label":"VAQ differencial"},{"byte":19,"mask":8,"bits":"3","type":"checkbox","label":"RCTA with brake intervention (Blindspotdetection, PR-7Y8) (J1086)"},{"byte":19,"mask":240,"bits":"4–7","type":"select","options":[{"value":16,"label":"w/o ESC-Button"},{"value":32,"label":"press 1s = ASR OFF"},{"value":48,"label":"press 1s = ESC SPORT"},{"value":64,"label":"press 1s = ESC OFF"},{"value":80,"label":"press 1s = ASR OFF      /  press >3s = ESC OFF       (Scirocco'14-'17)"},{"value":96,"label":"press 1s = ESC SPORT  /  press >3s = ESC OFF       (Cupra'14)"},{"value":112,"label":"press 1s = ASR OFF      /  press >3s = ESC OFF"},{"value":128,"label":"press 1s = ESC SPORT  /  press >3s = ESC OFF       (A3,S3,RS3 / Golf-R, GTI-CS)"},{"value":144,"label":"press 1s = ASR OFF      /  press >3s = ESC SPORT  (GTI)"}]}];
+/* MK60EC1 Coding Studio 3.0 — Copyright (c) 2026 Pedro Pandolfi (@pandolfipedro). */
+const HW_LENGTH=Object.freeze({'35':18,'45':18,'30':19,'31':19,'46':20});
+const MODULES=Object.freeze([
+ {suffix:'AD',hw:'35',g251:false,sw:'0104–0109'}, {suffix:'CD',hw:'35',g251:false,sw:'0120'},
+ {suffix:'AE',hw:'35',g251:true,sw:'0104–0109'}, {suffix:'CE',hw:'35',g251:true,sw:'0120'},
+ {suffix:'AN',hw:'45',g251:false,sw:'0107–0109'}, {suffix:'AP',hw:'45',g251:true,sw:'0107–0109'},
+ {suffix:'AM',hw:'45',g251:true,sw:'0108–0109'}, {suffix:'BA',hw:'45',g251:true,sw:'0106–0109'},
+ {suffix:'AH',hw:'30',g251:false,sw:'0107'}, {suffix:'AJ',hw:'30',g251:true,sw:'0107'},
+ {suffix:'AS',hw:'30',g251:false,sw:'0105'}, {suffix:'AT',hw:'30',g251:true,sw:'0105'},
+ {suffix:'BC',hw:'30',g251:true,sw:'0106'}, {suffix:'BD',hw:'31',g251:false,sw:'0108'},
+ {suffix:'BE',hw:'31',g251:true,sw:'0108'}, {suffix:'BG',hw:'31',g251:true,sw:'0106'},
+ {suffix:'BH',hw:'31',g251:false,sw:'0121'}, {suffix:'BJ',hw:'31',g251:true,sw:'0121'},
+ {suffix:'BK',hw:'31',g251:false,sw:'0152'}, {suffix:'BL',hw:'31',g251:true,sw:'0152'},
+ {suffix:'AR',hw:'31',g251:true,sw:'0135'},
+ {suffix:'BM',hw:'46',g251:true,sw:'0164'}, {suffix:'BS',hw:'46',g251:true,sw:'0166'},
+ {suffix:'BR',hw:'46',g251:true,sw:'0172'}, {suffix:'CA',hw:'46',g251:true,sw:'0173'},
+ {suffix:'CB',hw:'46',g251:true,sw:'0174'}, {suffix:'CC',hw:'46',g251:true,sw:'0175'}
+]);
+const MIRRORS=[[0,8],[2,10],[4,12],[6,14]], VIN_BYTES=[1,3,5,7,9,11,13];
+const NAMES=['Plataforma e servo-freio','VIN · posição 7','Freios','VIN · posição 8','Suspensão, HBV e TSA','VIN · posição 13','ROP, G85 e ESC','VIN · posição 14','Espelho do byte 0','VIN · posição 15','Espelho do byte 2','VIN · posição 16','Espelho do byte 4','VIN · posição 17','Espelho do byte 6','EDS, direção e assistências','ESC, pneus e interfaces','XDS, PLA e assistentes','Sensores das quatro rodas','iTPMS e botão ESC'];
+const FIELD_NAMES={
+ '0:15':'Cilindro mestre / servo-freio','0:240':'Plataforma / eixo traseiro',
+ '2:1':'Configuração da pastilha traseira','2:2':'Configuração da pastilha dianteira','2:28':'Freio traseiro','2:224':'Pinça / freio dianteiro',
+ '4:7':'Suspensão','4:56':'Assistência hidráulica HBV','4:192':'Estabilização de reboque TSA',
+ '6:3':'Prevenção de capotamento ROP','6:4':'Variante EDS (Touran / Yeti FWD)','6:8':'G85 físico na coluna de direção','6:32':'Jetta Hybrid (somente AR)','6:128':'ESC OFF em dois estágios (BH/BJ+, SW 0120+)',
+ '15:7':'EDS conforme torque de arrancada','15:8':'Off-road / controle de descida HDC','15:16':'Start/Stop (PR-7L6; conferir versão antiga)','15:32':'Desativar recomendação de direção DSR','15:192':'Lado da direção',
+ '16:1':'HHC · assistência de saída em rampa','16:6':'Variante do monitoramento dos pneus','16:24':'Função do botão ESC / ASR','16:32':'Sem interface ACC / Front Assist','16:64':'Desativar sinalização de frenagem de emergência','16:128':'Função do bit 7 por geração',
+ '17:1':'PLA 2.0/3.0 com intervenção de freio','17:2':'ACC Follow-To-Stop','17:4':'Reset do iTPMS pelo painel','17:8':'XDS · bloqueio eletrônico em curva','17:16':'AWV1 / EDF (depende do firmware)','17:32':'AWV1 · comutação do HBA','17:64':'AWV2 · aviso por frenagem','17:128':'AWV3 · desaceleração',
+ '18:3':'Dianteira esquerda · G47','18:12':'Dianteira direita · G45','18:48':'Traseira esquerda · G46','18:192':'Traseira direita · G44',
+ '19:3':'Variante do iTPMS','19:4':'Diferencial VAQ (conforme LBL)','19:8':'RCTA / ponto cego com intervenção de freio','19:240':'Função do botão ESC'
+};
+function hex(n){return n.toString(16).toUpperCase().padStart(2,'0');}
+function format(bytes,spaced=false){return bytes.map(hex).join(spaced?' ':'');}
+function parseCoding(text){if(typeof text!=='string')throw Error('Informe um coding hexadecimal.');const h=text.trim().replace(/\s/g,'');if(!h||!/^[0-9a-f]+$/i.test(h))throw Error('Use apenas dígitos hexadecimais (0–9, A–F) e espaços.');if(h.length%2)throw Error('Coding incompleto: cada byte deve ter dois dígitos.');if(![36,38,40].includes(h.length))throw Error(`Recebidos ${h.length/2} bytes. MK60EC1 usa 18, 19 ou 20 bytes conforme o hardware.`);return h.match(/../g).map(x=>parseInt(x,16));}
+function mirror(n){let b=0;for(let i=0;i<8;i++)b|=((n>>i)&1)<<(7-i);return b;}
+function syncMirrors(bytes){const out=[...bytes];for(const[a,b]of MIRRORS)if(b<out.length)out[b]=mirror(out[a]);return out;}
+function masked(current,mask,value){return ((current&~mask)|(value&mask))&255;}
+function moduleInfo(suffix){return MODULES.find(x=>x.suffix===suffix)||null;}
+function lengthFor(hw){if(!HW_LENGTH[hw])throw Error('Hardware não reconhecido.');return HW_LENGTH[hw];}
+function normalizeVin(v){return String(v).trim().replace(/\s/g,'').toUpperCase();}
+function vinValues(input){const vin=normalizeVin(input);if(!/^[A-HJ-NPR-Z0-9]{17}$/.test(vin))throw Error('VIN precisa ter 17 caracteres, sem I, O ou Q.');if(!/^\d{5}$/.test(vin.slice(12)))throw Error('As posições 13 a 17 do VIN precisam ser numéricas para esta tabela.');const map1={'1':59,'2':60,'3':61,'5':63,'8':66,A:75,F:80,K:85,N:88,S:93};const map3={'3':245,'4':246,'5':247,'6':248,'8':250,A:3,B:4,C:5,D:6,E:7,F:8,H:10,J:12,K:13,L:14,M:15,P:18,T:22,Z:28};if(map1[vin[6]]===undefined||map3[vin[7]]===undefined)throw Error('Posições 7/8 do VIN sem correspondência na tabela. Importe o coding original.');return {1:map1[vin[6]],3:map3[vin[7]],5:0x22+Number(vin[12]),7:(0xFA+Number(vin[13]))&255,9:0x0B+Number(vin[14]),11:0xE4+Number(vin[15]),13:0x19+Number(vin[16])};}
+function applyVin(bytes,vin){const out=[...bytes],values=vinValues(vin);for(const[k,v]of Object.entries(values))out[Number(k)]=v;return out;}
+function parseScan(input){const text=String(input);const address=text.match(/Address\s+03\s*:[\s\S]*?(?=\nAddress\s+[0-9A-F]{2}\s*:|$)/i);if(!address)throw Error('Não encontrei o bloco Address 03: ABS Brakes. Cole o Auto-Scan com os rótulos originais do VCDS.');const block=address[0];if(!/MK60EC1/i.test(block))throw Error('O bloco 03 não identifica MK60EC1.');const coding=block.match(/Coding:\s*([0-9A-F]+)\s*$/im);if(!coding)throw Error('Não encontrei a linha Coding no bloco 03.');const bytes=parseCoding(coding[1]);const component=block.match(/Component:[^\r\n]*\bH(\d{2})\s+(\d{4})/i);if(!component||!HW_LENGTH[component[1]])throw Error('Não foi possível identificar H30, H31, H35, H45 ou H46 na linha Component.');const hw=component[1];if(bytes.length!==lengthFor(hw))throw Error(`Auto-Scan inconsistente: H${hw} espera ${lengthFor(hw)} bytes, mas Coding contém ${bytes.length}.`);const part=block.match(/Part No SW:\s*1K0\s*907\s*379\s*([A-Z]{2})/i);const vin=text.match(/\bVIN:\s*([A-HJ-NPR-Z0-9]{17})\b/i);return {bytes,hw,sw:component[2],suffix:part?.[1]?.toUpperCase()||'',vin:vin?.[1]||''};}
+function getFields(index,hw,suffix){const len=lengthFor(hw);let fields=LBL_FIELDS.filter(f=>f.byte===index).map(f=>({...f,options:f.options?.map(o=>({...o}))}));
+ if(VIN_BYTES.includes(index))return [];
+ if(index===16){
+  const pneu=fields.find(f=>f.mask===6),esc=fields.find(f=>f.mask===24),bit7=fields.find(f=>f.mask===128);
+  if(len===20){pneu.label='Auto-Hold / função de desvio';pneu.options=[{value:0,label:'00 · Nenhuma'},{value:2,label:'02 · Auto-Hold / EPB'},{value:4,label:'04 · Avoidance Feature'},{value:6,label:'06 · Auto-Hold + Avoidance'}];esc.options=[{value:0,label:'00 · Função movida para o byte 19'}];bit7.label='Airbag sem suporte a MCB';}
+  else {pneu.options=[{value:0,label:'00 · Nenhum monitoramento ativo'},{value:2,label:'02 · Continental Teves DDS'},{value:4,label:'04 · Continental Teves DDS+'},...(len===19?[{value:6,label:'06 · NIRA Dynamics TPI'}]:[])];bit7.label=len===18?'DSG? · interpretação não confirmada no LBL':(['AH','AJ'].includes(suffix)?'Bit 7 · confirmar no LBL específico':'NIRA TPI ampliado · FMVSS138');}
+ }
+ if(index===15){const side=fields.find(f=>f.mask===192);side.options=[{value:0,label:'00 · Valor não definido na tabela de direção'},{value:64,label:'40 · Volante à esquerda · PR-L0L'},{value:128,label:'80 · Volante à direita · PR-L0R'}];}
+ if(index===18)for(const f of fields)f.options=f.options.map((o,i)=>({value:o.value,label:['Padrão · somente velocidade','AK · direção + detecção de parada','AK · direção invertida'][i]}));
+ if(index===19){const esc=fields.find(f=>f.mask===240);esc.options=[{value:0,label:'00 · Não definido'}, {value:16,label:'10 · Sem botão ESC'}, {value:32,label:'20 · Curto: ASR OFF'}, {value:48,label:'30 · Curto: ESC Sport'}, {value:64,label:'40 · Curto: ESC OFF'}, {value:80,label:'50 · Curto: ASR OFF / longo: ESC OFF (Scirocco)'}, {value:96,label:'60 · Curto: ESC Sport / longo: ESC OFF (Cupra)'}, {value:112,label:'70 · Curto: ASR OFF / longo: ESC OFF'}, {value:128,label:'80 · Curto: ESC Sport / longo: ESC OFF (A3/Golf R)'}, {value:144,label:'90 · Curto: ASR OFF / longo: ESC Sport (GTI)'}];}
+ return fields;
+}
+function validate(bytes,hw,suffix,sw,vin){let items=[];const len=lengthFor(hw);if(bytes.length!==len)items.push({type:'error',text:`H${hw}: esperado ${len} bytes / ${len*2} dígitos; recebido ${bytes.length}.`});const info=moduleInfo(suffix);if(info&&info.hw!==hw)items.push({type:'warning',text:`Sufixo ${suffix}: a tabela indica H${info.hw}. Foi selecionado H${hw}; confira o Auto-Scan.`});
+ for(const[a,b]of MIRRORS)if(b<bytes.length&&mirror(bytes[a])!==bytes[b])items.push({type:'warning',text:`Espelho ${a} → ${b}: ${hex(bytes[b])}; esperado ${hex(mirror(bytes[a]))}.`});
+ if(bytes[16]&1&&info?.g251===false)items.push({type:'warning',text:`${suffix} consta sem G251 na referência. HHC marcado exige conferência do hardware.`});
+ if(len===20){if(bytes[6]&128)items.push({type:'warning',text:'H46: ESC OFF do byte 6 foi movido para o byte 19.'});if(bytes[16]&24)items.push({type:'warning',text:'H46: bits 3–4 do byte 16 devem estar zerados; use o byte 19.'});if(!(bytes[19]&240))items.push({type:'warning',text:'Byte 19: escolha a configuração do botão ESC.'});}
+ if(len===18&&bytes[17]&1)items.push({type:'warning',text:'PLA com intervenção de freio é descrito para versões de 19/20 bytes.'});
+ if(['AD','AE','AN','AP','CD','CE'].includes(suffix)&&(bytes[17]&8))items.push({type:'warning',text:'XDS selecionado: a calculadora de referência não o indica para '+suffix+'. Confirme o LBL específico.'});
+ if(bytes.length>18&&bytes[18]!==0)items.push({type:'info',text:'Sensores AK/invertidos selecionados: confirme o protocolo de cada roda nos valores de medição.'});
+ if(vin){const pair=normalizeVin(vin).slice(6,8),early=['1K','AJ','8P','FM','1P','5P','1Z','5L','2K','1F','AH','13'];let supported=[...early];if(!['AD','CD','AE','CE','AN','AP'].includes(suffix))supported.push('3T','1T');if(!['AD','CD','AE','CE','AN','AP','AM','BA'].includes(suffix))supported.push('A3');if(['AS','AT','BC','BD','BE','BG','BH','BJ','BK','BL','AR','BM','BR','BS','CA','CB','CC'].includes(suffix))supported.push('AT');if(['AR','BK','BL','BM','BR','BS','CA','CB','CC'].includes(suffix))supported.push('16');if(info&&!supported.includes(pair))items.push({type:'warning',text:`Plataforma VIN ${pair}: não consta na whitelist publicada para ${suffix}.`});try {const values=vinValues(vin),different=Object.keys(values).filter(k=>bytes[k]!==values[k]);if(different.length)items.push({type:'warning',text:'VIN diverge do coding nos bytes '+different.join(', ')+'.'});}catch(e){items.push({type:'warning',text:e.message});}}
+ return items;
+}
+/* Explicit upgrade routes from etz2k, Ross-Tech thread 31859 post #1.
+   No blanket Jetta presets and no automatic reverse conversion. */
+function migrate(bytes,from,to,settings={}){const old=moduleInfo(from),target=moduleInfo(to);if(!old||!target)throw Error('Selecione índices de origem e destino conhecidos.');const a=lengthFor(old.hw),b=lengthFor(target.hw);if(bytes.length!==a)throw Error(`${from}/H${old.hw} precisa de ${a} bytes; recebido ${bytes.length}.`);if(b<a)throw Error('Conversão para geração anterior não possui regra reversa validada nesta referência. O original foi preservado.');
+ const stage=s=>['AD','CD','AE','CE','AN','AP','AM','BA'].includes(s)?0:['AH','AJ'].includes(s)?1:['AS','AT','BC','BD','BE','BG'].includes(s)?2:['BH','BJ'].includes(s)?3:['BK','BL','AR'].includes(s)?4:5;
+ if(stage(to)<stage(from))throw Error('Rota para índice de geração anterior não possui regra reversa nesta referência.');
+ if(from==='AR'&&to!=='AR')throw Error('AR é específico do Jetta Hybrid; exige análise de compatibilidade fora deste roteiro.');
+ if(from===to)return {bytes:[...bytes],steps:[],warnings:['Origem e destino iguais; nenhum byte alterado.']};
+ const knownTarget=['AH','AJ','BH','BJ','BK','BL','CC'].includes(to);
+ if(!knownTarget)throw Error('Destino sem roteiro explícito no post #1. Use importação e confira o LBL específico; não será aplicado um mapa presumido.');
+ let out=[...bytes],steps=[],warnings=[];
+ function set(i,value,reason){const before=out[i];if(before!==value){out[i]=value;steps.push({index:i,before:before===undefined?null:before,after:value,reason});}}
+ while(out.length<b)set(out.length,0,'Acréscimo de byte para o comprimento de destino');
+ if(['BH','BJ','BK','BL'].includes(to)&&a===18){if(settings.nira===undefined)throw Error('Informe se NIRA iTPMS será usado.');if(!settings.nira)set(16,out[16]&0x7F,'18→19: limpar bit 7 do byte 16, exceto NIRA iTPMS');}
+ if(['BK','BL'].includes(to)&&!['BK','BL'].includes(from)&&(out[17]&16)){if(settings.awv===undefined)throw Error('Informe se o carro tinha Stopping Distance Shortening (AWV).');if(settings.awv)set(17,out[17]&0xEF,'BK/BL: função do bit 4 mudou; limpar AWV antigo');}
+ if(to==='CC'&&a<20){if(!Number.isInteger(settings.tpms)||settings.tpms<0||settings.tpms>3)throw Error('Escolha a variante iTPMS do destino.');if(![16,32,48,64,80,96,112,128,144].includes(settings.esc))throw Error('Escolha a configuração do botão ESC no destino.');if(typeof settings.noMcb!=='boolean')throw Error('Informe se o airbag tem suporte a MCB.');
+ set(6,out[6]&0x7F,'CC: remover ESC OFF antigo do byte 6');set(14,out[14]&0xFE,'CC: remover espelho do ESC OFF antigo');set(16,out[16]&0xE1,'CC: limpar bits 1–4 do byte 16');set(16,masked(out[16],128,settings.noMcb?128:0),'CC: bit 7 conforme suporte MCB do airbag');
+ if(!['BK','BL'].includes(from)&&(out[17]&16)){if(settings.awv===undefined)throw Error('Informe se o carro tinha AWV.');if(settings.awv)set(17,out[17]&0xEF,'CC: limpar AWV antigo anterior a BK/BL');}
+ set(19,(settings.tpms&3)|settings.esc,'CC: iTPMS e botão ESC escolhidos explicitamente');warnings.push('Confira Auto-Hold/Avoidance, MCB, iTPMS e botão ESC no equipamento real.');}
+ if(a===20&&to==='CC'&&from!=='CC')throw Error('Conversão entre firmwares H46 sem roteiro específico neste post. Nenhum mapa automático será aplicado.');
+ warnings.push('Migração de coding não verifica compatibilidade da bomba, sensores, firmware ou chicote.');return {bytes:out,steps,warnings};}
+function simpleFunctions(hw,suffix){
+ const len=lengthFor(hw),f=(id,label,byte,mask,options,help='',group='Assistências')=>({id,label,byte,mask,options:options.map(([value,label])=>({value,label})),help,group});
+ let list=[
+ f('button','Botão de estabilidade',len===20?19:16,len===20?240:24,len===20?[[16,'Sem botão'],[32,'Curto: desligar tração (ASR)'],[48,'Curto: ESC Sport'],[64,'Curto: ESC OFF'],[112,'Curto: ASR OFF / longo: ESC OFF'],[96,'Curto: ESC Sport / longo: ESC OFF (Cupra)'],[128,'Curto: ESC Sport / longo: ESC OFF (A3/Golf R)'],[144,'Curto: ASR OFF / longo: ESC Sport (GTI)']]:[[0,'Sem configuração / conforme firmware'],[8,'Desligar estabilidade (ESC OFF)'],[16,'Desligar tração (ASR OFF) · base Jetta'],[24,len===18?'ESC OFF · possível modo em 2 estágios':'ESC OFF · aviso intermitente']],len===18?'A opção em dois estágios é descrita com dúvida no LBL; depende do firmware.':'O comportamento depende do índice e software do módulo.'),
+ f('hhc','Assistência de saída em rampa (HHC)',16,1,[[0,'Desativada'],[1,'Ativada']],moduleInfo(suffix)?.g251===false?'A referência deste índice não indica o sensor G251 necessário ao HHC.':''),
+ f('tpms','Aviso de pressão dos pneus',len===20?19:16,len===20?3:6,len===20?[[0,'Desativado'],[1,'Ativado · ECE-R64 / PR-7K1'],[2,'Ativado · FMVSS138 / PR-7K6'],[3,'Ativado · padrão / PR-7K9']]:[[0,'Desativado'],[2,'Continental DDS'],[4,'Continental DDS+'],...(len===19?[[6,'NIRA TPI']]:[])],'Escolha de acordo com o sistema instalado e o firmware.'),
+ f('acc','Cruise control adaptativo / Front Assist',16,32,[[32,'Não instalado'],[0,'Instalado']]),
+ f('brakewarning','Aviso de frenagem de emergência',16,64,[[0,'Habilitado'],[64,'Desabilitado']],'A aplicação deste bit é limitada a determinadas versões; confira o LBL.'),
+ f('dsr','Recomendação de direção (DSR)',15,32,[[0,'Habilitada'],[32,'Desabilitada']]),
+ f('xds','Bloqueio eletrônico em curva (XDS)',17,8,[[0,'Desativado'],[8,'Ativado']],['AD','AE','AN','AP','CD','CE'].includes(suffix)?'A referência inicial não indica XDS para este índice. Confirme o firmware antes de ativar.':''),
+ f('drive','Lado do volante',15,192,[[64,'Esquerda (LHD)'],[128,'Direita (RHD)']],'','Perfil do carro'),
+ f('engine','Motorização / torque de arrancada',15,7,[[0,'EDS 1 · motores 1.2–1.6 com DSG/manual'],[1,'EDS 2 · 2.5 MPI e outros motores'],[2,'EDS 3 · 2.0 TDI'],[4,'EDS 4 · híbrido (H46)']],'Os presets 2.5 MPI e 2.0 TSI usam EDS 2. Confirme a motorização instalada.','Perfil do carro'),
+ f('frontbrake','Freios dianteiros',2,224,[[32,'280 mm'],[64,'288 mm'],[96,'312 mm'],[128,'345 mm'],[160,'340 mm'],[192,'312 mm · pinça FN3-57']],'Confirme também os códigos PR e a pinça instalada.','Perfil do carro'),
+ f('suspension','Suspensão',4,7,[[1,'Padrão / esportiva'],[2,'Conforto · base Jetta']],'Mantém as demais configurações de HBV e TSA.','Perfil do carro'),
+ f('rearbrake','Freios traseiros',2,28,[[0,'Discos'],[4,'Tambor']],'O perfil Jetta 2.5 usa 253 mm; nos TSI, confirme o diâmetro traseiro e os códigos PR.','Perfil do carro')];
+ if(len===19&&['BH','BJ','BK','BL'].includes(suffix))list.splice(1,0,f('longpress','ESC OFF em dois estágios',6,128,[[0,'Desativado'],[128,'Ativado · pressão longa']],'Requer software 0120+ e versão compatível.'));
+ if(len>18){list.push(f('frontsensors','Sensores ABS dianteiros',18,15,[[0,'Padrão'],[5,'Ativos AK'],[15,'Ativos AK com direção invertida']],'','Sensores das rodas'));list.push(f('rearsensors','Sensores ABS traseiros',18,240,[[0,'Padrão'],[80,'Ativos AK'],[240,'Ativos AK com direção invertida']],'','Sensores das rodas'));}
+ return list;
+}
+const VEHICLE_PRESETS=Object.freeze({
+ 'jetta25':{id:'jetta25',name:'Jetta 2.5 MPI',subtitle:'Mk5 · PQ35 / 1K',platforms:['1K'],engine:'2.5 MPI',defaultGearbox:'automatic09g',gearboxes:['automatic09g','manual'],chassis:0x11,comfort:true,front:0x40,defaultRearAxle:'original'},
+ 'jetta-tsi':{id:'jetta-tsi',name:'Jetta 2.0 TSI',subtitle:'Mk6 · MK60EC1 / PQ35',platforms:['16','AJ'],engine:'2.0 TSI',defaultGearbox:'dsg',gearboxes:['dsg','manual'],chassis:0xA4,torsion:0xB4,comfort:false,front:0x60,defaultRearAxle:'multilink'},
+ 'fusca-tsi':{id:'fusca-tsi',name:'Fusca 2.0 TSI',subtitle:'5C / AT · MK60EC1',platforms:['16','AT'],engine:'2.0 TSI',defaultGearbox:'dsg',gearboxes:['dsg','manual'],chassis:0xF4,torsion:0xE4,comfort:false,front:0x60,defaultRearAxle:'multilink'}
+});
+const GEARBOX_LABELS=Object.freeze({automatic09g:'Automático 09G / Tiptronic',dsg:'Automático DSG',manual:'Manual · original ou swap',unknown:'Não informado'});
+function normalizePresetConfig(config={}){const id=config.preset||'jetta25';const preset=Object.hasOwn(VEHICLE_PRESETS,id)?VEHICLE_PRESETS[id]:null;if(!preset)throw Error('Preset de veículo não reconhecido.');const gearbox=config.gearbox||preset.defaultGearbox;if(!preset.gearboxes.includes(gearbox))throw Error('Câmbio incompatível com este preset.');const rearAxle=config.rearAxle||preset.defaultRearAxle;if(preset.torsion&&!['multilink','torsion'].includes(rearAxle)||!preset.torsion&&rearAxle!=='original')throw Error('Eixo traseiro não reconhecido para este preset.');return {preset:preset.id,gearbox,rearAxle};}
+function configureTransmission(bytes,config,hw){const normalized=normalizePresetConfig(config);if(bytes.length!==lengthFor(hw))throw Error('Confira o hardware antes de configurar o câmbio.');const out=[...bytes];
+ // Current 2.5 MPI and 2.0 TSI profiles share EDS2. Never repurpose byte16 bit7 as a universal manual/automatic flag.
+ out[15]=masked(out[15],7,1);
+ return {bytes:out,gearbox:normalized.gearbox,notes:['EDS 2 é compartilhado pelos câmbios disponíveis nestes perfis.','HBV, sensores, interfaces e adaptações de ECU/Gateway precisam ser conferidos no conjunto instalado.']};
+}
+function vehiclePreview(vin,hw,config={}){const cfg=normalizePresetConfig(config),preset=VEHICLE_PRESETS[cfg.preset],normalized=normalizeVin(vin);vinValues(normalized);if(!preset.platforms.includes(normalized.slice(6,8)))throw Error(`O VIN identifica ${normalized.slice(6,8)}. O preset ${preset.name} atende ${preset.platforms.join(' / ')}; confira o modelo ou use o coding original.`);
+ const b=new Array(lengthFor(hw)).fill(0);b[0]=cfg.rearAxle==='torsion'?preset.torsion:preset.chassis;b[2]=preset.front;b[4]=preset.comfort?0x0A:0x09;b[6]=0;b[15]=0x41;b[16]=lengthFor(hw)===20?0x20:0x30;if(b.length>19)b[19]=0x20;
+ const configured=configureTransmission(applyVin(b,normalized),cfg,hw);const bytes=syncMirrors(configured.bytes);
+ return {bytes,config:cfg,pending:[0,2,4,6,16,17,18,19].filter(i=>i<bytes.length),vin:normalized,label:`${preset.name} · ${GEARBOX_LABELS[cfg.gearbox]} · LHD · ${preset.comfort?'conforto':'padrão/esportiva'} · sem HHC`,
+ assumptions:[`Plataforma/servo: ${hex(bytes[0])}; confirme eixo traseiro, cilindro mestre e servo.`,`Freio dianteiro de ${preset.front===0x40?'288':'312'} mm; traseiro a disco. Confirme dimensões e códigos PR.`,`Suspensão ${preset.comfort?'conforto':'padrão/esportiva'}, sem HBV e TSA com intervenção na direção: byte 4 = ${hex(bytes[4])}.`,'FWD, sem ROP nem G85 físico na coluna. Confirme o conjunto de direção.','HHC, XDS, PLA, AWV e monitoramento dos pneus inicialmente desativados.','Sensores padrão e sem interface ACC; MCB, protocolo das rodas e botão exigem revisão.',...configured.notes]};
+}
+function jettaMk5Preview(vin,hw){
+ const normalized=normalizeVin(vin);vinValues(normalized);
+ if(normalized.slice(6,8)!=='1K')throw Error('O perfil automático é Jetta Mk5 / 1K. Este VIN identifica '+normalized.slice(6,8)+': confira a plataforma antes de usar esta base.');
+ const bytes=new Array(lengthFor(hw)).fill(0);
+ bytes[0]=0x11; // 1K/PQ35, LHD, D22.2 / servo 10 polegadas (base provisoria).
+ bytes[2]=0x40; // Freios dianteiros 288 mm; conjunto traseiro disco conforme perfil.
+ bytes[4]=0x0A; // Perfil solicitado: suspensao conforto, sem HBV, TSA com intervencao.
+ bytes[6]=0x00; // Hipotese inicial: FWD, sem ROP/G85 fisico na coluna.
+ bytes[15]=0x41; // EDS2 (2.5 MPI) + PR-L0L.
+ bytes[16]=lengthFor(hw)===20?0x20:0x30; // Base solicitada: ASR-OFF + sem ACC + HHC off. H46 move o botao ao byte19.
+ if(bytes.length>17)bytes[17]=0; // XDS/PLA/AWV nao presumidos ativos.
+ if(bytes.length>18)bytes[18]=0; // Hipotese inicial: protocolo standard.
+ if(bytes.length>19)bytes[19]=0x20; // Hipotese inicial: botao curto ASR OFF, iTPMS off.
+ return {bytes:syncMirrors(applyVin(bytes,normalized)),pending:[0,4,6,16,17,18,19].filter(i=>i<bytes.length),vin:normalized,
+ label:'Jetta Mk5 / 1K · LHD · 288/253 · 2.5 MPI · sem HHC'};
+}
+const MK60=Object.freeze({HW_LENGTH,MODULES,MIRRORS,VIN_BYTES,NAMES,VEHICLE_PRESETS,GEARBOX_LABELS,normalizePresetConfig,configureTransmission,vehiclePreview,simpleFunctions,jettaMk5Preview,hex,format,parseCoding,mirror,syncMirrors,masked,moduleInfo,lengthFor,normalizeVin,vinValues,applyVin,parseScan,getFields,validate,migrate});
+if(typeof window!=='undefined')window.MK60=MK60;
 
-    .field { margin-bottom: 0.85rem; }
-    .field:last-child { margin-bottom: 0; }
-    .field label {
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--muted);
-      margin-bottom: 0.35rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .field input[type='text'],
-    .field select,
-    .field textarea {
-      width: 100%;
-      padding: 0.6rem 0.7rem;
-      font-size: 0.9375rem;
-      font-family: var(--mono);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text);
-    }
-    .field textarea { resize: vertical; min-height: 2.75rem; font-size: 0.8125rem; }
-    .field input:focus, .field select:focus, .field textarea:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 1px;
-    }
-    .hint { margin: 0.3rem 0 0; font-size: 0.75rem; color: var(--muted); }
-
-    .chk-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-      margin-bottom: 0.75rem;
-      cursor: pointer;
-    }
-    .chk-row input { width: 1rem; height: 1rem; accent-color: var(--accent); }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5rem 0.85rem;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      background: var(--surface2);
-      color: var(--text);
-      cursor: pointer;
-      transition: border-color 0.15s;
-    }
-    .btn:hover:not(:disabled) { border-color: var(--accent); }
-    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-primary {
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 0.875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .btn-primary:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
-    .btn-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.65rem; }
-
-    .hex-bar {
-      display: block;
-      padding: 0.7rem 0.8rem;
-      font-family: var(--mono);
-      font-size: 0.8125rem;
-      white-space: nowrap;
-      overflow-x: auto;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      line-height: 1.55;
-      letter-spacing: 0.02em;
-    }
-    .hex-meta { margin: 0.35rem 0 0; font-size: 0.6875rem; color: var(--muted); }
-
-    .alert { padding: 0.65rem 0.85rem; border-radius: 6px; font-size: 0.8125rem; margin-top: 0.65rem; }
-    .alert.hidden { display: none; }
-    .alert-warning { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.35); color: #fcd34d; }
-    .alert-error { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.35); color: #fca5a5; }
-    .alert-info { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; }
-
-    /* Editor */
-    .editor-panel { padding: 1rem 1.1rem; min-width: 0; }
-    .editor-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem 1rem;
-      margin-bottom: 0.75rem;
-    }
-    .editor-head h2 { margin: 0; font-size: 1rem; font-weight: 600; }
-    .legend { display: flex; flex-wrap: wrap; gap: 0.75rem 1rem; font-size: 0.6875rem; color: var(--muted); }
-    .legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .dot-vin { background: var(--vin); }
-    .dot-mirror { background: var(--mirror); }
-    .dot-edit { background: var(--success); }
-
-    .editor-intro { margin: 0 0 0.85rem; font-size: 0.8125rem; color: var(--muted); }
-
-    /* Bytes VIN / espelho - faixa compacta, sem cards */
-    .auto-bytes {
-      margin-bottom: 0.85rem;
-      padding: 0.65rem 0.85rem;
-      background: rgba(99, 102, 241, 0.07);
-      border: 1px solid rgba(99, 102, 241, 0.22);
-      border-radius: 8px;
-    }
-    .auto-bytes.hidden { display: none; }
-    .auto-bytes-head {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.35rem 0.65rem;
-      margin-bottom: 0.5rem;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--vin);
-    }
-    .auto-bytes-note { font-weight: 400; text-transform: none; letter-spacing: normal; color: var(--muted); font-size: 0.75rem; }
-    .auto-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem 0.5rem;
-    }
-    .auto-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.2rem 0.45rem;
-      font-size: 0.75rem;
-      font-family: var(--mono);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      line-height: 1.3;
-    }
-    .auto-chip.mirror { border-color: rgba(139, 92, 246, 0.45); }
-    .auto-chip-idx { color: var(--muted); font-size: 0.625rem; font-family: var(--font); font-weight: 600; }
-    .auto-chip-val { color: var(--text); font-weight: 700; }
-
-    /* Grid wide: 3 colunas em notebook, 4 em telas maiores */
-    .byte-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.65rem;
-    }
-    @media (min-width: 1400px) {
-      .byte-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    }
-    @media (max-width: 1100px) {
-      .byte-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    .byte-card {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.7rem 0.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-      min-width: 0;
-      position: relative;
-      overflow: visible;
-    }
-    .byte-card.vin { border-left: 3px solid var(--vin); }
-    .byte-card.mirror { border-left: 3px solid var(--mirror); }
-    .byte-card.editable { border-left: 3px solid var(--success); }
-    .byte-card.span-2 { grid-column: span 2; }
-    @media (max-width: 1100px) { .byte-card.span-2 { grid-column: span 1; } }
-
-    .byte-head {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 0.5rem;
-    }
-    .byte-label {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--muted);
-    }
-    .byte-name-row {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      flex-wrap: wrap;
-      margin-top: 0.1rem;
-    }
-    .byte-name { font-size: 0.8125rem; font-weight: 600; line-height: 1.25; }
-    .byte-hex-input {
-      width: 3rem;
-      padding: 0.2rem 0.35rem;
-      font-family: var(--mono);
-      font-size: 0.875rem;
-      font-weight: 700;
-      text-align: center;
-      background: var(--surface3);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--accent);
-      flex-shrink: 0;
-    }
-    .byte-hex-input:disabled { color: var(--muted); opacity: 0.75; cursor: not-allowed; }
-
-    .bit-list { display: flex; flex-direction: column; gap: 0.3rem; }
-    .bit-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.45rem;
-      font-size: 0.75rem;
-      line-height: 1.35;
-      cursor: pointer;
-    }
-    .bit-row input { width: 0.875rem; height: 0.875rem; margin-top: 0.12rem; accent-color: var(--accent); flex-shrink: 0; }
-    .bit-row.disabled { opacity: 0.55; cursor: default; }
-    .bit-text { flex: 1; min-width: 0; }
-    .bit-mask { font-family: var(--mono); font-size: 0.625rem; color: var(--muted); margin-left: 0.2rem; }
-
-    .wss-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-    }
-
-    .enum-select {
-      width: 100%;
-      padding: 0.4rem 0.5rem;
-      font-size: 0.75rem;
-      background: var(--surface3);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--text);
-    }
-
-    .byte-decode {
-      font-size: 0.6875rem;
-      color: var(--muted);
-      padding-top: 0.35rem;
-      border-top: 1px solid var(--border);
-      line-height: 1.4;
-    }
-
-    /* Tooltip - abre para baixo para não cortar no scroll */
-    .tip-wrap { position: relative; display: inline-flex; vertical-align: middle; }
-    .tip-btn {
-      width: 15px;
-      height: 15px;
-      padding: 0;
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      background: var(--surface3);
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 700;
-      line-height: 1;
-      cursor: help;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .tip-btn:hover, .tip-btn:focus-visible {
-      border-color: var(--accent);
-      color: var(--accent);
-      outline: none;
-    }
-    .tip-popup {
-      display: none;
-      position: absolute;
-      z-index: 200;
-      left: 50%;
-      top: calc(100% + 5px);
-      transform: translateX(-50%);
-      width: max-content;
-      max-width: 260px;
-      padding: 0.5rem 0.65rem;
-      font-size: 0.75rem;
-      font-weight: 400;
-      line-height: 1.45;
-      text-transform: none;
-      letter-spacing: normal;
-      color: var(--text);
-      background: #1e2838;
-      border: 1px solid var(--accent);
-      border-radius: 6px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-      pointer-events: none;
-      white-space: normal;
-    }
-    .tip-wrap:hover .tip-popup,
-    .tip-wrap:focus-within .tip-popup { display: block; }
-
-    details.help {
-      padding: 0.75rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--surface);
-      font-size: 0.8125rem;
-    }
-    details.help summary { cursor: pointer; font-weight: 600; color: var(--muted); }
-    details.help ol { margin: 0.65rem 0 0; padding-left: 1.25rem; line-height: 1.6; }
-    details.help code { font-family: var(--mono); font-size: 0.75rem; color: var(--accent); }
-
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
-    .migrate-log {
-      margin-top: 0.65rem;
-      padding: 0.65rem;
-      font-family: var(--mono);
-      font-size: 0.6875rem;
-      background: var(--surface2);
-      border-radius: 6px;
-      max-height: 160px;
-      overflow: auto;
-      white-space: pre-wrap;
-      color: var(--muted);
-    }
-    .badge-common {
-      display: inline-block;
-      margin-left: 0.35rem;
-      padding: 0.1rem 0.35rem;
-      font-size: 0.625rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--success);
-      border: 1px solid rgba(34, 197, 94, 0.4);
-      border-radius: 4px;
-      vertical-align: middle;
-    }
-    .glossary { margin: 0.65rem 0 0; }
-    .glossary dt { font-weight: 600; font-size: 0.75rem; margin-top: 0.45rem; color: var(--text); }
-    .glossary dd { margin: 0.15rem 0 0; font-size: 0.75rem; color: var(--muted); line-height: 1.45; }
-    .checklist {
-      margin-top: 0.65rem;
-      padding: 0.65rem 0.75rem;
-      font-size: 0.75rem;
-      background: rgba(245, 158, 11, 0.08);
-      border: 1px solid rgba(245, 158, 11, 0.28);
-      border-radius: 6px;
-      line-height: 1.5;
-    }
-    .checklist.hidden { display: none; }
-    .checklist-title { font-weight: 700; color: #fcd34d; margin-bottom: 0.35rem; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; }
-    .checklist ul { margin: 0; padding-left: 1.1rem; color: var(--muted); }
-    .checklist li { margin-bottom: 0.2rem; }
-    .editor-empty {
-      grid-column: 1 / -1;
-      padding: 2rem 1.25rem;
-      text-align: center;
-      font-size: 0.875rem;
-      color: var(--muted);
-      background: var(--surface2);
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      line-height: 1.55;
-    }
-    .byte-section {
-      grid-column: 1 / -1;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: rgba(0, 0, 0, 0.12);
-      overflow: hidden;
-    }
-    .byte-section summary {
-      cursor: pointer;
-      padding: 0.55rem 0.75rem;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--muted);
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .byte-section summary::-webkit-details-marker { display: none; }
-    .byte-section summary::before {
-      content: '▸';
-      font-size: 0.6875rem;
-      transition: transform 0.15s;
-    }
-    .byte-section[open] summary::before { transform: rotate(90deg); }
-    .byte-section-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.65rem;
-      padding: 0.65rem;
-      border-top: 1px solid var(--border);
-    }
-    @media (min-width: 1400px) {
-      .byte-section-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    }
-    @media (max-width: 1100px) {
-      .byte-section-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    .byte-section-grid .byte-card.span-2 { grid-column: span 2; }
-    @media (max-width: 1100px) {
-      .byte-section-grid .byte-card.span-2 { grid-column: span 1; }
-    }
-    .byte-plain {
-      font-size: 0.75rem;
-      color: var(--muted);
-      line-height: 1.4;
-      margin: 0;
-    }
-    .byte-note {
-      font-size: 0.6875rem;
-      color: var(--accent);
-      line-height: 1.35;
-      padding: 0.35rem 0.45rem;
-      background: rgba(59, 130, 246, 0.08);
-      border-radius: 4px;
-      border: 1px solid rgba(59, 130, 246, 0.2);
-    }
-    .byte-card.byte-diff {
-      border-color: rgba(245, 158, 11, 0.55);
-      box-shadow: inset 0 0 0 1px rgba(245, 158, 11, 0.15);
-    }
-    .byte-diff-badge {
-      font-size: 0.625rem;
-      font-family: var(--mono);
-      color: #fcd34d;
-      padding: 0.15rem 0.35rem;
-      background: rgba(245, 158, 11, 0.12);
-      border-radius: 3px;
-      line-height: 1.3;
-    }
-    .bit-advanced {
-      margin-top: 0.25rem;
-      padding-top: 0.35rem;
-      border-top: 1px dashed var(--border);
-    }
-    .bit-advanced summary {
-      cursor: pointer;
-      font-size: 0.6875rem;
-      color: var(--muted);
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-    }
-    .mirror-pairs {
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-    }
-    .mirror-pair {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.35rem 0.5rem;
-      font-size: 0.75rem;
-    }
-    .mirror-pair-label {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      color: var(--mirror);
-      min-width: 5.5rem;
-    }
-    .hex-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-      margin-bottom: 0.75rem;
-      padding: 0.45rem;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-    }
-    .hex-strip.hidden { display: none; }
-    .hex-strip-cell {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.1rem;
-      padding: 0.2rem 0.25rem;
-      min-width: 1.75rem;
-      font-family: var(--mono);
-      font-size: 0.6875rem;
-      background: var(--surface3);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      color: var(--text);
-    }
-    .hex-strip-cell:hover { border-color: var(--accent); }
-    .hex-strip-cell.diff { border-color: rgba(245, 158, 11, 0.55); color: #fcd34d; }
-    .hex-strip-cell.auto { opacity: 0.75; }
-    .hex-strip-idx { font-size: 0.5625rem; color: var(--muted); font-family: var(--font); }
-    .footer-note { margin-top: 1rem; font-size: 0.75rem; color: var(--muted); text-align: center; }
-  </style>
-</head>
-<body>
-  <div class="app">
-    <header class="header">
-      <div>
-        <h1>MK60EC1 Long Code Editor</h1>
-        <p class="header-note">Jetta 2009–2016 · edição byte a byte</p>
-      </div>
-      <p id="module-badge" class="hint"></p>
-    </header>
-
-    <div class="layout">
-      <aside class="sidebar">
-        <details class="help" open>
-          <summary>Como usar</summary>
-          <ol>
-            <li>Cole o <strong>VIN</strong> e escolha o part number do módulo (CC/BL/AD)</li>
-            <li>Clique <strong>Calcular</strong> (ou <strong>Importar hex</strong> se já tem coding)</li>
-            <li>Ajuste bytes <strong>16+</strong> se necessário</li>
-            <li>Compare com o hex lido no VCDS (campo opcional abaixo)</li>
-            <li><strong>Copie</strong> e grave no <strong>03-ABS</strong> · login <strong>20795</strong></li>
-          </ol>
-        </details>
-
-        <details class="help">
-          <summary>Termos comuns</summary>
-          <dl class="glossary">
-            <dt>G85</dt><dd>Sensor de ângulo do volante - o ESP usa para saber para onde você está virando.</dd>
-            <dt>Espelho</dt><dd>Byte calculado automaticamente a partir de outro (ex.: byte 14 espelha o 6).</dd>
-            <dt>VIN (bytes 1–13)</dt><dd>Parte do long code derivada do chassi - recalculada ao informar o VIN.</dd>
-            <dt>HHC</dt><dd>Hill Hold Control - segura o carro em ladeira por alguns segundos.</dd>
-            <dt>PLA (byte 17 ABS)</dt><dd>Assistente que <strong>estaciona sozinho</strong> (módulo J791, PLA 2.0+) - NÃO é sensor que apita. Jetta BR com 8K/OPS tem sensores no módulo 09, PLA aqui fica OFF.</dd>
-            <dt>ACC</dt><dd>Cruise adaptativo - radar dianteiro; desmarque se o carro não tiver.</dd>
-            <dt>XDS</dt><dd>Controle de tração extra em curva - comum no CC.</dd>
-            <dt>MCB</dt><dd>Multi-Collision Braking - frenagem automática pós-colisão via módulo airbag.</dd>
-            <dt>AK / byte 18</dt><dd>Sensores ABS direcionais (ativos) - só com PLA 2.0 ou ACC. Errado = DTC de roda.</dd>
-            <dt>EPS / J500</dt><dd>Direção elétrica - G85 integrado na caixa de direção (não na coluna).</dd>
-            <dt>Long code</dt><dd>Sequência hex gravada no módulo 03 via Coding-07 no VCDS.</dd>
-            <dt>MK60EC1</dt><dd>Família ABS/ESP 1K0907379 usada no Jetta importado BR.</dd>
-          </dl>
-        </details>
-
-        <section class="panel">
-          <h3 class="panel-title">Entrada</h3>
-          <div class="field">
-            <label for="vin">VIN (17 caracteres)</label>
-            <input id="vin" type="text" maxlength="17" placeholder="9BWZZZ1KZAT000001" autocomplete="off" spellcheck="false" />
-            <p id="profile-hint" class="hint"></p>
-          </div>
-          <div class="field">
-            <label for="module">Módulo ABS</label>
-            <select id="module">
-              <option value="CC" selected>1K0907379CC - 20 bytes (H46)</option>
-              <option value="BL">1K0907379BL - 19 bytes (H31)</option>
-              <option value="AD">1K0907379AD - 17 bytes (H35)</option>
-            </select>
-          </div>
-          <label class="chk-row">
-            <input type="checkbox" id="extra-variant" />
-            <span>Variant (perua)</span>
-          </label>
-          <button type="button" id="btn-calc" class="btn btn-primary">Calcular long code</button>
-          <div id="alert-error" class="alert alert-error hidden"></div>
-          <div id="alert-info" class="alert alert-info hidden"></div>
-        </section>
-
-        <section class="panel">
-          <h3 class="panel-title">Long code</h3>
-          <div class="field">
-            <label for="car-hex">Hex lido no VCDS (opcional)</label>
-            <textarea id="car-hex" rows="2" placeholder="Coding-07 do carro - para comparar diferenças"></textarea>
-            <p class="hint">Bytes diferentes ficam destacados no editor.</p>
-          </div>
-          <div id="checklist" class="checklist hidden"></div>
-          <output id="hex-out" class="hex-bar">-</output>
-          <p id="hex-meta" class="hex-meta"></p>
-          <div class="btn-row">
-            <button type="button" id="btn-copy" class="btn" disabled>Copiar</button>
-            <button type="button" id="btn-load-hex" class="btn">Importar hex</button>
-            <button type="button" id="btn-sync-mirrors" class="btn">Recalcular espelhos</button>
-          </div>
-          <div id="alert-unverified" class="alert alert-warning hidden">
-            Confira bytes 16+ antes de gravar no VCDS.
-          </div>
-        </section>
-
-        <details class="help">
-          <summary>Gravar no VCDS</summary>
-          <ol>
-            <li>Conectar VCDS → chassi → <strong>03 - ABS/ESP</strong></li>
-            <li><strong>Coding-07</strong> · login <strong>20795</strong> (CC/BM+)</li>
-            <li>Colar hex <strong>sem espaços</strong></li>
-            <li>Conferir byte a byte · Basic Settings <strong>G85</strong> após troca</li>
-          </ol>
-        </details>
-
-        <details class="help">
-          <summary>Migrar long code</summary>
-          <p class="hint" style="margin:0.5rem 0 0.65rem">Rotas comuns BR<span class="badge-common">mais comum</span>: <strong>AD→CC</strong>, <strong>AD→BL</strong>, <strong>BJ→BL</strong>, <strong>BJ→CC</strong>, <strong>BL→CC</strong>. AH ≈ AD.</p>
-          <div class="field" style="margin-top:0.65rem">
-            <label for="migrate-hex">Hex atual</label>
-            <textarea id="migrate-hex" rows="2" placeholder="113B400C492300FD…"></textarea>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="migrate-from">De (módulo antigo)</label>
-              <select id="migrate-from">
-                <optgroup label="Comuns BR">
-                  <option value="AD" selected>AD - 17B H35 (problemático)</option>
-                  <option value="BJ">BJ - 18B H31</option>
-                  <option value="BL">BL - 19B H31 (G251)</option>
-                  <option value="CC">CC - 20B H46</option>
-                </optgroup>
-                <optgroup label="Outros">
-                  <option value="AH">AH - 18B H35 (≈ AD)</option>
-                  <option value="BC">BC - 18B</option>
-                  <option value="AT">AT - 18B</option>
-                  <option value="BM">BM - 20B H46</option>
-                </optgroup>
-              </select>
-            </div>
-            <div class="field">
-              <label for="migrate-to">Para (módulo novo)</label>
-              <select id="migrate-to">
-                <optgroup label="Recomendado">
-                  <option value="CC" selected>CC - 20B H46 (top)</option>
-                </optgroup>
-                <optgroup label="Comuns BR">
-                  <option value="BL">BL - 19B H31</option>
-                  <option value="BJ">BJ - 18B H31</option>
-                  <option value="AD">AD - 17B H35</option>
-                </optgroup>
-                <optgroup label="Outros">
-                  <option value="AH">AH - 18B H35</option>
-                  <option value="BM">BM - 20B H46</option>
-                </optgroup>
-              </select>
-            </div>
-          </div>
-          <button type="button" id="btn-migrate" class="btn">Migrar</button>
-          <p class="hint" style="margin-top:0.5rem">Após migrar, o resultado é aplicado automaticamente no editor abaixo.</p>
-          <pre id="migrate-log" class="migrate-log"></pre>
-        </details>
-      </aside>
-
-      <main class="panel editor-panel">
-        <div class="editor-head">
-          <h2>Long Coding Helper</h2>
-          <div class="legend">
-            <span><span class="dot dot-vin"></span> VIN</span>
-            <span><span class="dot dot-mirror"></span> Espelho</span>
-            <span><span class="dot dot-edit"></span> Editável</span>
-          </div>
-        </div>
-        <p class="editor-intro">Três tipos de byte: <strong style="color:var(--vin)">VIN</strong> (1,3,5,7,9,11,13) vêm do chassi · <strong style="color:var(--mirror)">espelho</strong> (8,10,12,14) copiam 0,2,4,6 · <strong style="color:var(--success)">editável</strong> (cards abaixo). A faixa automática recalcula ao calcular ou alterar bytes fonte.</p>
-        <div id="hex-strip" class="hex-strip hidden"></div>
-        <div id="auto-bytes" class="auto-bytes hidden"></div>
-        <div id="byte-grid" class="byte-grid"></div>
-      </main>
-    </div>
-
-    <p class="footer-note">Padrão Jetta: botão ESP · HHC · PLA off (8K OPS) · Dados não saem do navegador</p>
-  </div>
-  <script>
-(function () {
-  'use strict';
-
-  const MIRROR_PAIRS = [[0, 8], [2, 10], [4, 12], [6, 14]];
-  const VIN_DERIVED = new Set([1, 3, 5, 7, 9, 11, 13]);
-
-  /** Padrão HW Jetta BR - bytes 16+ (ref. codings reais fórum + etz2k/DRIVE2) */
-  const JETTA_HW = {
-    CC: { 16: 0xE1, 17: 0x08, 18: 0x00, 19: 0x20 },
-    BL: { 16: 0xE1, 17: 0x08, 18: 0x00 },
-    AD: { 16: 0x35 },
-  };
-
-  /** Byte 18 - presets comuns (etz2k / DRIVE2 MK60EC1) */
-  const WSS_PRESETS = [
-    { v: 0x00, l: 'Standard - 4× só velocidade', help: 'Factory Jetta 2.5/TSI BR sem ACC. Evita DTC de sensor se não tiver sensores AK.' },
-    { v: 0x55, l: 'Ativo 4 rodas (AK)', help: 'Direção + detecção parado nas 4 rodas - ACC, PLA 2.0, Golf GTI.' },
-    { v: 0x50, l: 'Ativo só traseiras', help: 'Sensores direcionais traseiros (AK).' },
-    { v: 0xf0, l: 'Traseiras invertidas', help: 'Direção invertida traseira - conferir MVB 113/114.' },
-    { v: 0xff, l: '4 rodas invertidas', help: 'Raro - só se MVB 111–114 confirmar rotação invertida.' },
-  ];
-
-  /** Máscaras etz2k por roda: std / ativo / invertido */
-  const WSS_ETZ = [
-    { l: 'Dianteiro esq. (FL)', help: 'MVB 111 - sentido rotação.', std: 0x00, active: 0x01, inv: 0x03 },
-    { l: 'Dianteiro dir. (FR)', help: 'MVB 112.', std: 0x00, active: 0x04, inv: 0x0c },
-    { l: 'Traseiro esq. (RL)', help: 'MVB 113.', std: 0x00, active: 0x10, inv: 0x30 },
-    { l: 'Traseiro dir. (RR)', help: 'MVB 114.', std: 0x00, active: 0x40, inv: 0xc0 },
-  ];
-
-  const MIRROR_PAIR_LABELS = [
-    { src: 0, dst: 8, label: 'Chassis' },
-    { src: 2, dst: 10, label: 'Freios' },
-    { src: 4, dst: 12, label: 'G85 / G608' },
-    { src: 6, dst: 14, label: 'Direção / ROP' },
-  ];
-
-  const BYTE_GROUPS = {
-    AD: [
-      { id: 'chassis', title: 'Carro, freios e direção', bytes: [0, 2, 4, 6, 15] },
-      { id: 'features', title: 'Equipamentos (HHC, ACC…)', bytes: [16] },
-    ],
-    BL: [
-      { id: 'chassis', title: 'Carro, freios e direção', bytes: [0, 2, 4, 6, 15] },
-      { id: 'features', title: 'Equipamentos (HHC, XDS, PLA 2.0…)', bytes: [16, 17] },
-      { id: 'sensors', title: 'Sensores de roda ABS', bytes: [18] },
-    ],
-    CC: [
-      { id: 'chassis', title: 'Carro, freios e direção', bytes: [0, 2, 4, 6, 15] },
-      { id: 'features', title: 'Equipamentos (HHC, XDS, PLA 2.0…)', bytes: [16, 17] },
-      { id: 'sensors', title: 'Sensores de roda ABS', bytes: [18] },
-      { id: 'esp', title: 'Botão ESP', bytes: [19] },
-    ],
-  };
-
-  const BYTE_DEFS = {
-    1: { name: 'VIN pos. 7 - plataforma', help: 'Calculado automaticamente a partir do VIN (par 7–8).', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
-    3: { name: 'VIN pos. 8 - motor', help: 'Calculado do 8º caractere do VIN.', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
-    5: { name: 'VIN pos. 13', help: 'Fórmula: 0x22 + dígito VIN pos. 13.', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
-    7: { name: 'VIN pos. 14', help: 'Fórmula: 0xFA + dígito VIN pos. 14.', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
-    8: { name: 'Espelho de byte 0', help: 'Bits espelhados de byte 0 - recalculado automaticamente.', kind: 'mirror', modules: ['AD', 'BL', 'CC'] },
-    9: { name: 'VIN pos. 15', help: 'Fórmula: 0x0B + dígito VIN pos. 15.', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
-    10: { name: 'Espelho de byte 2', help: 'Bits espelhados de byte 2 (freios).', kind: 'mirror', modules: ['AD', 'BL', 'CC'] },
-    11: { name: 'VIN pos. 16', help: 'Fórmula: 0xE4 + dígito VIN pos. 16.', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
-    12: { name: 'Espelho de byte 4', help: 'Bits espelhados de byte 4 (G85/G608).', kind: 'mirror', modules: ['AD', 'BL', 'CC'] },
-    13: { name: 'Checksum VIN', help: 'Fórmula: 0x19 + dígito VIN pos. 17.', kind: 'vin', modules: ['AD', 'BL', 'CC'] },
-    14: { name: 'Espelho de byte 6', help: 'Calculado do byte 6 (espelho de bits). LBL LC,14: bit4=G85 coluna, bits6–7=ROP. Jetta factory = 0x00.', kind: 'mirror', modules: ['AD', 'BL', 'CC'] },
-    0: {
-      name: 'Chassis / freio / direção',
-      plain: 'Identifica plataforma PQ35, volante à esquerda e tipo de freio. Jetta 2.5 BR = 0x11.',
-      help: 'Define plataforma PQ35, cilindro mestre e lado do volante. Jetta 2.5 BR = 0x11.',
-      kind: 'enum',
-      modules: ['AD', 'BL', 'CC'],
-      values: [
-        { v: 0x11, l: 'PQ35 LHD 2.5 Jetta', help: 'Sedan/Variant 2.5 importado BR Mk5.' },
-        { v: 0xA4, l: 'PQ35 TSI Mk6', help: 'Jetta/Golf TSI a partir de ~2011.' },
-        { v: 0xA6, l: 'Variant TDI', help: 'Perua diesel europeia.' },
-      ],
-    },
-    2: {
-      name: 'Freios F / R',
-      plain: 'Tamanho dos discos dianteiro e traseiro. Sedan 2.5 = 288/253 mm.',
-      help: 'Diâmetro dos discos. Sedan 2.5 BR = 288/253 mm (0x40). Variant = 312/253 (0x60).',
-      kind: 'enum',
-      modules: ['AD', 'BL', 'CC'],
-      values: [
-        { v: 0x20, l: '280 / 253 mm', help: 'Discos menores (Golf base).' },
-        { v: 0x40, l: '288 / 253 mm', help: 'Padrão Jetta sedan 2.5 BR.' },
-        { v: 0x60, l: '312 / 253 mm', help: 'Variant / freio dianteiro maior.' },
-        { v: 0x44, l: '288 / tambor TR', help: 'Dianteiro disco, traseiro tambor.' },
-      ],
-    },
-    4: {
-      name: 'G608 / G85',
-      plain: 'Diz ao ABS se tem sensor de vácuo (G608) e sensor de volante (G85). Jetta 2.5 = tem G85, sem G608 → 0x4A.',
-      help: 'G608 = sensor de vácuo do freio. G85 = sensor de ângulo do volante. Jetta 2.5 tem G85 integrado na direção elétrica, sem G608 = 0x4A.',
-      kind: 'enum',
-      modules: ['AD', 'BL', 'CC'],
-      values: [
-        { v: 0x4A, l: 'G85 sim, G608 não', help: 'Configuração típica Jetta 2.5 BR.' },
-        { v: 0x49, l: 'Variant 2.5', help: 'Perua 2.5 com setup específico.' },
-        { v: 0x21, l: 'Setup TSI', help: 'Motor turbo - vácuo diferente.' },
-      ],
-    },
-    6: {
-      name: 'ROP / EDS / G85 coluna',
-      plain: 'Jetta com direção elétrica (EPS): deixe tudo desmarcado (0x00). Bit G85 na coluna só para rack hidráulico antigo.',
-      note: 'Byte 14 = espelho automático deste byte. Jetta EPS = ambos 0x00.',
-      help: 'Ref. LBL LC,06. Byte 14 espelha este byte. Jetta 2.5 padrão = 0x00 (G85 integrado na caixa EPS). 0x08 aqui → byte 14 vira 0x10.',
-      kind: 'bits',
-      modules: ['AD', 'BL', 'CC'],
-      advancedLabel: 'Opções para Touran/Caddy/Yeti',
-      bits: [
-        { m: 0x08, l: 'G85 na coluna', help: 'Bit 3 - G85 externo no volante/coluna. Jetta EPS = G85 na caixa → deixar OFF.' },
-        { m: 0x01, l: 'ROP-1 (Yeti)', help: 'Bits 0–1: Roll-Over Prevention. Jetta = 00.', advanced: true },
-        { m: 0x02, l: 'ROP-2/3', help: 'Use só Touran/Caddy - Jetta deixa desmarcado.', advanced: true },
-        { m: 0x04, l: 'EDS Touran/Yeti', help: 'Bit 2 - variante EDS. Não usar no Jetta.', advanced: true },
-      ],
-    },
-    15: {
-      name: 'Tração / CBC / volante',
-      plain: 'Lado do volante, CBC e DSR. Jetta importado BR = 0x41.',
-      help: 'LHD, CBC, DSR. Base Jetta BR importado = 0x41.',
-      kind: 'enum',
-      modules: ['AD', 'BL', 'CC'],
-      values: [
-        { v: 0x41, l: 'Base Jetta BR', help: 'LHD + CBC - padrão sedan importado.' },
-        { v: 0x82, l: 'Variant alt.', help: 'Alternativa para perua.' },
-      ],
-    },
-    16: {
-      name: 'HHC / TPMS / ACC',
-      plain: 'O que o ABS espera do carro: ladeira (HHC), ACC, aviso de frenada forte, MCB…',
-      help: 'Ref. LBL CC 60EC1. Jetta 2.5 BR = 0xE1 (HHC + sem ACC + MCB off + sem aviso frenagem emerg.).',
-      kind: 'bits',
-      modules: ['AD', 'BL', 'CC'],
-      advancedLabel: 'Opções avançadas',
-      bits: [
-        { m: 0x01, l: 'HHC', help: 'Hill Hold Control (segura em ladeira) [PR-UG1/UG4]. Bit 0 - LBL LC,16,0.' },
-        { m: 0x20, l: 'Sem ACC / Front Assist', help: 'Bit 5=1 desativa interface ACC -J428. Marque se não tiver ACC.' },
-        { m: 0x40, l: 'Sem aviso frenagem emerg.', help: 'Bit 6=1 desliga flash rápido do brake light em frenagem forte.' },
-        { m: 0x80, l: 'Airbag sem MCB', help: 'Bit 7=1 se módulo airbag não suporta Multi-Collision Braking.' },
-        { m: 0x02, l: 'Auto-Hold EPB', help: 'Freio estacionamento eletromecânico -J540. Bit 1 - LBL LC,16,1.', advanced: true },
-        { m: 0x04, l: 'Avoidance Feature', help: 'Ausweich Feature. Bit 2 - raro Jetta BR.', advanced: true },
-      ],
-      enums: {
-        AD: [{ v: 0x35, l: 'AD + HHC', help: '0x34 base AD com HHC.' }],
-        BL: [{ v: 0xE1, l: 'BL 2.5 BR (0xE1)', help: 'HHC + sem ACC + MCB + sem aviso frenagem - preset Jetta.' }],
-        CC: [{ v: 0xE1, l: 'CC 2.5 BR (0xE1)', help: 'Preset Jetta importado BR.' }, { v: 0xA1, l: 'CC alternativo (0xA1)', help: 'Sem bit6 aviso frenagem off.' }],
-      },
-    },
-    17: {
-      name: 'PLA 2.0 / ACC / XDS',
-      plain: 'Jetta importado com sensores dianteiros/traseiros (8K/OPS) NÃO tem PLA aqui - deixe PLA desmarcado. Padrão = só XDS (0x08).',
-      note: 'PLA ≠ sensores que apitam. Sensores 8K/OPS ficam no módulo 09 (BCM). Este bit é só para PLA 2.0+ (J791) que estaciona o carro sozinho - raro no Jetta BR.',
-      help: 'Bit 0 = PLA 2.0+ com intervenção de freio (J791, PR-7X5). Bit 3 = XDS. Jetta 2.5 BR com 8K = 0x08 (XDS on, PLA off). Só marque PLA se o carro estacionar semi-automaticamente de fábrica.',
-      kind: 'bits',
-      modules: ['BL', 'CC'],
-      advancedLabel: 'Opções avançadas',
-      bits: [
-        { m: 0x01, l: 'PLA 2.0 (estaciona sozinho)', help: 'NÃO marque se só tem sensores 8K/OPS (bip ao estacionar). Só para PLA de fábrica com módulo J791 - o carro vira o volante sozinho na vaga.' },
-        { m: 0x08, l: 'XDS', help: 'Expansão controle tração em curva - padrão Jetta CC (0x08 = só XDS).' },
-        { m: 0x02, l: 'ACC Follow-To-Stop', help: 'CC 20B - cruise adaptativo (raro BR).', advanced: true },
-        { m: 0x04, l: 'Reset iTPMS no MFA', help: 'RKA+ via painel - CC/BL recentes.', advanced: true },
-        { m: 0x10, l: 'AWV / EDF', help: 'Alerta colisão - raro Jetta BR.', advanced: true },
-      ],
-    },
-    18: {
-      name: 'Sensores de velocidade das rodas',
-      plain: 'Tipo de sensor em cada roda. Jetta sem PLA/ACC = 0x00. Valor errado = DTC de roda traseira.',
-      help: 'NÃO confundir com byte 18 do módulo 09 (BCM)! No ABS MK60EC1: tipo de sensor de velocidade. Jetta BR factory = 0x00 (standard). 0x55 só com sensores AK (ACC/PLA2). Errar aqui gera DTC roda traseira.',
-      kind: 'wss',
-      modules: ['BL', 'CC'],
-      presets: WSS_PRESETS,
-      wheels: WSS_ETZ,
-    },
-    19: {
-      name: 'Botão ESP',
-      plain: 'O botão no console é gravado ESP (não ASR OFF). Jetta BR = Com botão ESP (0x20).',
-      help: 'Só CC 20B. Nibble alto (bits 4–7): o que o botão ESP (E256) no console faz. Jetta BR = Com botão ESP (0x20). iTPMS = checkbox abaixo.',
-      kind: 'byte19',
-      modules: ['CC'],
-      advancedLabel: 'Opções avançadas',
-      escModes: [
-        { v: 0x20, l: 'Com botão ESP', help: 'Padrão Jetta BR - botão gravado ESP no console. Pressão curta (~1s) desliga tração (ASR); ESP permanece ativo.' },
-        { v: 0x60, l: 'Ciclos sport', help: 'Pressão curta (~1s) → ESP Sport · longa (~3s) → ESP OFF. Config sport (GTI, Leon Cupra).' },
-        { v: 0x00, l: 'Sem botão', help: 'Sem E256 no console. Nibble alto zerado. Nota: 0x10 clássico costuma falhar no CC H46.' },
-      ],
-      bits: [
-        { m: 0x02, l: 'iTPMS ativo', help: 'PR-7K6 - pressão indireta via ABS (bit separado do botão).' },
-        { m: 0x08, l: 'Lane Assist J1086', help: 'Assistente de faixa - raro no Jetta.', advanced: true },
-      ],
-    },
-  };
-
-  const MODULE_PROFILE = { AD: 'len17', BL: 'len19', CC: 'len20' };
-  const PROFILE_LEN = { len17: 17, len18: 18, len19: 19, len20: 20 };
-
-  const BYTE1_VIN_PAIR = {
-    '3B': 0x3b, '3C': 0x3c, '3D': 0x3d, '3F': 0x3f, '42': 0x42, '4B': 0x4b,
-    '1K': 0x3b, '5K': 0x3b, AJ: 0x4b, '16': 0x3b, AT: 0x3b,
-  };
-  const BYTE3_VIN_CHAR = {
-    '3': 0xf5, '4': 0xf6, '5': 0xf7, '6': 0xf8, F: 0x08, H: 0x0a, J: 0x0c,
-    K: 0x0d, L: 0x0e, M: 0x0f, P: 0x12, T: 0x16, Z: 0x1c, A: 0x03, B: 0x04,
-    C: 0x05, D: 0x06, E: 0x07,
-  };
-  const VIN_MODEL_YEAR = {
-    A: 2010, B: 2011, C: 2012, D: 2013, E: 2014, F: 2015, G: 2016,
-    '9': 2009, '8': 2008, '7': 2007,
-  };
-  const VIN_FORMULA_BYTES = [
-    { index: 1, formula: 'byte1_map' }, { index: 3, formula: 'byte3_map' },
-    { index: 5, formula: 'add_0x22' }, { index: 7, formula: 'add_0xFA' },
-    { index: 9, formula: 'add_0x0B' }, { index: 11, formula: 'add_0xE4' },
-    { index: 13, formula: 'add_0x19' },
-  ];
-  const VIN_CHARS = /^[A-HJ-NPR-Z0-9]{17}$/;
-
-  function toHexByte(n) { return (n & 0xff).toString(16).toUpperCase().padStart(2, '0'); }
-  function normalizeVin(v) { return v.replace(/\s/g, '').toUpperCase(); }
-  function isValidVin(v) { return VIN_CHARS.test(normalizeVin(v)); }
-  function vinDigitAt(vin, i) { const ch = vin[i]; return ch >= '0' && ch <= '9' ? parseInt(ch, 10) : 0; }
-
-  function bitMirrorByte(b) {
-    let out = 0;
-    for (let i = 0; i < 8; i++) if (b & (1 << i)) out |= 1 << (7 - i);
-    return out & 0xff;
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+let state={bytes:[],original:[],hw:'35',suffix:'AD',sw:'',vin:'',selected:0,origin:'',pending:[],preset:'jetta25',gearbox:'automatic09g',rearAxle:'original',appliedConfig:null},undo=[],redo=[],preview=null,toastTimer,appliedPreviewKey='';
+const snapshot=()=>JSON.parse(JSON.stringify(state));
+function toast(text){$('toast').textContent=text;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,4200);}
+function attempt(fn){try{fn();}catch(e){toast(e.message);}}
+function commit(fn){const before=snapshot();fn();if(JSON.stringify(before)!==JSON.stringify(state)){undo.push(before);if(undo.length>100)undo.shift();redo=[];}render();}
+function el(tag,text,cls){const e=document.createElement(tag);if(text!==undefined)e.textContent=text;if(cls)e.className=cls;return e;}
+function option(value,text){const o=el('option',text);o.value=value;return o;}
+function fillModules(select,selected){select.replaceChildren(...MODULES.map(m=>option(m.suffix,`${m.suffix} · H${m.hw} · ${lengthFor(m.hw)} bytes`)));select.value=selected;}
+function validLength(){return state.bytes.length===lengthFor(state.hw);}
+function selectedIsMirror(){return MIRRORS.some(([,dst])=>dst===state.selected);}
+function diffIndices(){let rows=[];for(let i=0;i<Math.max(state.bytes.length,state.original.length);i++)if(state.bytes[i]!==state.original[i])rows.push(i);return rows;}
+function setByte(i,value){if(!validLength())throw Error('Selecione o hardware correspondente ao coding antes de editar.');if(MIRRORS.some(([,dst])=>dst===i))throw Error('Este byte é um espelho. Edite o byte fonte ou use Corrigir espelhos.');commit(()=>{state.bytes[i]=value;const pair=MIRRORS.find(([src])=>src===i);if(pair)state.bytes[pair[1]]=mirror(value);state.pending=state.pending.filter(x=>x!==i);});}
+function setSelection(i){state.selected=Math.max(0,Math.min(state.bytes.length-1,i));renderEditor();}
+function status(){if(!state.bytes.length)return 'Aguardando entrada';if(!validLength())return 'Comprimento incompatível';if(state.pending.length)return 'Rascunho · '+state.pending.length+' a conferir';return state.origin==='Exemplo sintético'?'Exemplo de bancada':'Edição local';}
+function currentConfig(){return {preset:state.preset||'jetta25',gearbox:state.gearbox||VEHICLE_PRESETS[state.preset||'jetta25'].defaultGearbox,rearAxle:state.rearAxle||VEHICLE_PRESETS[state.preset||'jetta25'].defaultRearAxle};}
+function previewKey(vin=state.vin,hw=state.hw){return normalizeVin(vin)+':'+hw+':'+JSON.stringify(currentConfig());}
+function renderPresetControls(){
+ const cfg=currentConfig(),preset=VEHICLE_PRESETS[cfg.preset];for(const button of document.querySelectorAll('[data-preset]'))button.setAttribute('aria-pressed',String(button.dataset.preset===cfg.preset));
+ $('gearbox').replaceChildren(...preset.gearboxes.map(g=>option(g,GEARBOX_LABELS[g])));$('gearbox').value=cfg.gearbox;$('rear-axle-field').hidden=!preset.torsion;$('rear-axle').value=preset.torsion?cfg.rearAxle:'multilink';
+ $('preset-summary').textContent=preset.name+' · '+(preset.comfort?'suspensão conforto':'suspensão padrão/esportiva')+' · sem HHC';
+ $('gearbox-help').textContent=cfg.gearbox==='manual'?'Manual selecionado: use a configuração do conjunto instalado após o swap. A seleção não altera o VIN.':'Use o câmbio que está instalado hoje no carro.';
+}
+function refreshVinPreview(){
+ const vin=normalizeVin($('vin').value);$('vin-preview-panel').hidden=true;$('vin-inline').hidden=true;$('vin-preview-error').hidden=true;
+ if(vin.length!==17||appliedPreviewKey===previewKey(vin))return;
+ try{const p=vehiclePreview(vin,state.hw,currentConfig());$('preview-title').textContent=VEHICLE_PRESETS[p.config.preset].name;$('preview-chips').replaceChildren(...[GEARBOX_LABELS[p.config.gearbox],'LHD',p.config.rearAxle==='torsion'?'Eixo de torção':p.config.rearAxle==='multilink'?'Multilink':'Mk5 / 1K','Sem HHC'].map(t=>el('span',t)));$('preview-assumptions').replaceChildren(...p.assumptions.map(t=>el('p',t)));$('vin-preview-panel').hidden=false;$('vin-inline').hidden=false;$('vin-inline-code').textContent=format(p.bytes);$('vin-inline-count').textContent='H'+state.hw+' · '+p.bytes.length+' bytes · confirme as hipóteses de equipamento.';$('vin-preview-code').textContent=format(p.bytes);$('vin-preview-count').textContent='H'+state.hw+' · '+p.bytes.length+' bytes';$('vin-preview-detail').textContent='Aplicar substitui a edição atual; você pode desfazer.';}
+ catch(e){$('vin-preview-error').hidden=false;$('vin-preview-error').textContent=e.message;}
+}
+function renderNotices(){
+ const notices=state.bytes.length?validate(state.bytes,state.hw,state.suffix,state.sw,state.vin):[];if(state.pending.length)notices.unshift({type:'info',text:'Base provisória: confirme os bytes de equipamento '+state.pending.join(', ')+'. Os bytes pendentes não foram identificados pelo VIN.'});if(state.origin==='Exemplo sintético')notices.unshift({type:'info',text:'Dados sintéticos de demonstração. Não representam o seu veículo.'});
+ const wasOpen=$('notices').querySelector('details')?.open||false;const errors=notices.filter(x=>x.type==='error'),rest=notices.filter(x=>x.type!=='error');$('notices').replaceChildren(...errors.map(x=>el('div',x.text,'notice error')));if(rest.length){const details=el('details',undefined,'review-notices');details.open=wasOpen;details.append(el('summary',rest.length+' ponto'+(rest.length===1?'':'s')+' para conferir'));const body=el('div',undefined,'detail-body');body.append(...rest.map(x=>el('div',x.text,'notice '+x.type)));details.append(body);$('notices').append(details);}
+}
+function render(){
+ renderPresetControls();$('module').value=moduleInfo(state.suffix)?state.suffix:'CUSTOM';$('hardware').value=state.hw;$('software-detail').textContent=state.sw?'Software identificado na importação: '+state.sw:'A versão de software será lida ao importar o Auto-Scan.';$('vin').value=state.vin;
+ $('vin-count').textContent=normalizeVin(state.vin).length+' / 17 caracteres';const info=moduleInfo(state.suffix);$('hardware-summary').replaceChildren(el('b',`H${state.hw} · ${lengthFor(state.hw)} bytes`),document.createElement('br'),document.createTextNode(info?`${lengthFor(state.hw)*2} dígitos hexadecimais · comprimento automático`:'Índice não catalogado; confira o hardware na importação.'));
+ $('hex-out').textContent=state.bytes.length?format(state.bytes):'—';$('origin-label').textContent=state.origin||'Nenhum coding carregado';$('status-badge').textContent=status();$('meta-hw').textContent='H'+state.hw;$('meta-length').textContent=state.bytes.length?`${state.bytes.length} bytes / ${state.bytes.length*2} hex`:'—';$('meta-diffs').textContent=state.original.length?diffIndices().length+' bytes':'Sem original';
+ $('copy').disabled=!state.bytes.length||!validLength();$('report').disabled=!state.bytes.length;$('mirror-all').disabled=!state.bytes.length||!validLength();$('open-advanced').disabled=!state.bytes.length;$('advanced-shortcut').disabled=!state.bytes.length;$('apply-gearbox').disabled=!state.bytes.length||!validLength();$('restore').disabled=!state.original.length;$('undo').disabled=!undo.length;$('redo').disabled=!redo.length;$('save-session').disabled=!state.bytes.length;
+ renderNotices();
+ renderEditor();renderCompare();updateInputCount();refreshVinPreview();
+}
+function updateInputCount(){const text=$('original').value.trim(),raw=text.replace(/\s/g,'');$('input-count').textContent=raw?`${raw.length} dígitos · ${raw.length%2?'byte incompleto':raw.length/2+' bytes'} · H${state.hw} espera ${lengthFor(state.hw)} bytes`:`H${state.hw}: ${lengthFor(state.hw)} bytes = ${lengthFor(state.hw)*2} dígitos.`;}
+function renderFunctions(){
+ const active=document.activeElement?.id,box=$('function-controls');box.hidden=!state.bytes.length;$('advanced-editor').hidden=!state.bytes.length;box.replaceChildren();if(!state.bytes.length)return;
+ const functions=simpleFunctions(state.hw,state.suffix),groups=[...new Set(functions.map(f=>f.group))];
+ for(const group of groups){box.append(el('h3',group,'function-group'));const grid=el('div',undefined,'function-grid');
+  for(const f of functions.filter(f=>f.group===group&&f.byte<state.bytes.length)){
+   const card=el('div',undefined,'function-card'),label=el('label',f.label),select=document.createElement('select');select.id='function-'+f.id;label.htmlFor=select.id;select.disabled=!validLength();const current=state.bytes[f.byte]&f.mask;
+   if(!f.options.some(o=>o.value===current))select.append(option(current,'Configuração importada · preservar'));
+   for(const o of f.options)select.append(option(o.value,o.label));select.value=String(current);select.addEventListener('change',()=>attempt(()=>setByte(f.byte,masked(state.bytes[f.byte],f.mask,Number(select.value)))));card.append(label,select);if(f.help){const help=el('details',undefined,'function-help');help.append(el('summary','Detalhes'),el('p',f.help,'hint'));card.append(help);}grid.append(card);
+  }box.append(grid);
+ }if(active?.startsWith('function-'))document.getElementById(active)?.focus({preventScroll:true});
+}
+function renderEditor(){
+ renderFunctions();const active=document.activeElement?.id;const populated=!!state.bytes.length;$('empty').hidden=populated;$('editor-content').hidden=!populated;$('empty').querySelector('.schematic').textContent=`[ 00 → ${lengthFor(state.hw)-1} ]`;if(!populated)return;
+ state.selected=Math.max(0,Math.min(state.selected,state.bytes.length-1));const i=state.selected,val=state.bytes[i],isMirror=selectedIsMirror(),isVin=VIN_BYTES.includes(i),editable=validLength()&&!isMirror;
+ $('byte-strip').replaceChildren(...state.bytes.map((b,idx)=>{const kind=VIN_BYTES.includes(idx)?'vin':MIRRORS.some(([,dst])=>dst===idx)?'mirror':'';const button=el('button',undefined,'byte '+kind+(i===idx?' selected':'')+(state.original.length&&state.original[idx]!==b?' changed':'')+(state.pending.includes(idx)?' pending':''));button.id='byte-'+idx;button.setAttribute('aria-label',`Byte ${idx}: ${hex(b)} · ${NAMES[idx]}`);button.setAttribute('aria-pressed',String(i===idx));button.append(el('small',String(idx).padStart(2,'0')),el('b',hex(b)));button.addEventListener('click',()=>setSelection(idx));return button;}));
+ $('byte-eyebrow').textContent='Byte '+String(i).padStart(2,'0')+' / '+(state.bytes.length-1);$('byte-title').textContent=NAMES[i];$('byte-meta').textContent=`${isMirror?'Espelho · somente leitura':isVin?'Identificação pelo VIN · edição manual disponível':'Configuração de equipamento'} · ${val} decimal`+(state.original[i]!==undefined?` · original ${hex(state.original[i])}`:'');$('byte-hex').value=hex(val);$('byte-hex').disabled=!editable;
+ $('bit-strip').replaceChildren(...Array.from({length:8},(_,p)=>{const bit=7-p,button=el('button',undefined,'bit');button.id='bit-'+bit;button.setAttribute('aria-label',`Bit ${bit}: ${(val>>bit)&1}`);button.setAttribute('aria-pressed',String(!!(val&(1<<bit))));button.disabled=!editable;button.append(el('span','bit '+bit),el('b',String((val>>bit)&1)));button.addEventListener('click',()=>attempt(()=>setByte(i,state.bytes[i]^(1<<bit))));return button;}));
+ let message='Editar um campo preserva os outros bits. Bytes fonte 0, 2, 4 e 6 atualizam somente o próprio espelho.';
+ if(isMirror){const src=MIRRORS.find(([,dst])=>dst===i)[0];message=`Espelho do byte ${src}: ${hex(state.bytes[src])} (${state.bytes[src].toString(2).padStart(8,'0')}) → ${hex(mirror(state.bytes[src]))}. Para preservar a importação, divergências só são corrigidas ao editar a fonte ou clicar em Corrigir espelhos.`;}
+ if(isVin)message=`Byte associado à posição ${i===1?7:i===3?8:i===5?13:i===7?14:i===9?15:i===11?16:17} do VIN. Aplicar bytes VIN altera apenas os sete bytes de identificação. A edição hexadecimal manual também está disponível.`;
+ if(!validLength())message='O coding tem comprimento incompatível com o hardware selecionado. Ajuste o hardware ou use uma migração com prévia.';
+ $('byte-info').textContent=message;$('fields').replaceChildren();
+ if(!isMirror&&!isVin)for(const field of getFields(i,state.hw,state.suffix)){
+  const key=i+':'+field.mask,label=field.label||FIELD_NAMES[key]||'Campo técnico';const title=field.label&&i===16?field.label:FIELD_NAMES[key]||label;const wrap=el('div',undefined,'control');const mask=`bits ${field.bits} · ${hex(field.mask)}`;
+  if(field.type==='checkbox'){
+   const row=el('label',undefined,'check'),check=document.createElement('input');check.type='checkbox';check.id='field-'+field.mask;check.checked=!!(val&field.mask);check.disabled=!editable;const box=el('span');box.append(el('span',title),el('div',mask,'hint'));
+   // Full technical source remains accessible without replacing the localized field name.
+   if(label!==title)box.append(el('div',label,'hint'));row.append(check,box);check.addEventListener('change',()=>attempt(()=>setByte(i,masked(state.bytes[i],field.mask,check.checked?field.mask:0))));wrap.append(row);
+  }else{
+   const labelNode=el('label',undefined,'control-label');labelNode.htmlFor='field-'+field.mask;labelNode.append(el('span',title),el('span',mask,'mask'));const select=document.createElement('select');select.id='field-'+field.mask;select.disabled=!editable;let current=val&field.mask;
+   if(!field.options.some(x=>x.value===current))select.append(option(current,hex(current)+' · Valor importado / fora das opções conhecidas'));
+   for(const o of field.options)select.append(option(o.value,hex(o.value)+' · '+o.label.replace(/^[0-9A-F]{2} · /,'')));select.value=String(current);const detail=el('div',select.selectedOptions[0]?.textContent||'','choice-summary');
+   select.addEventListener('change',()=>attempt(()=>setByte(i,masked(state.bytes[i],field.mask,Number(select.value)))));wrap.append(labelNode,select,detail);
   }
-
-  function applyMirrorPairs(bytes) {
-    const out = [...bytes];
-    for (const [src, dst] of MIRROR_PAIRS) {
-      if (src < out.length && dst < out.length) out[dst] = bitMirrorByte(out[src]);
-    }
-    return out;
-  }
-
-  function computeVinByte(formula, vin) {
-    const v = normalizeVin(vin);
-    if (!isValidVin(v)) return null;
-    switch (formula) {
-      case 'byte1_map': return BYTE1_VIN_PAIR[v.slice(6, 8)] ?? 0x3b;
-      case 'byte3_map': return v.slice(6, 8) === 'AJ' ? 0x0c : (BYTE3_VIN_CHAR[v[7]] ?? 0x0a);
-      case 'add_0x22': return (0x22 + vinDigitAt(v, 12)) & 0xff;
-      case 'add_0xFA': return (0xfa + vinDigitAt(v, 13)) & 0xff;
-      case 'add_0x0B': return (0x0b + vinDigitAt(v, 14)) & 0xff;
-      case 'add_0xE4': return (0xe4 + vinDigitAt(v, 15)) & 0xff;
-      case 'add_0x19': return (0x19 + vinDigitAt(v, 16)) & 0xff;
-      default: return null;
-    }
-  }
-
-  function applyVinBytes(bytes, vin) {
-    const out = [...bytes];
-    for (const { index, formula } of VIN_FORMULA_BYTES) {
-      const val = computeVinByte(formula, vin);
-      if (val !== null && index < out.length) out[index] = val;
-    }
-    return applyMirrorPairs(out);
-  }
-
-  function parseHexCoding(input) {
-    const hex = input.replace(/[^0-9a-fA-F]/g, '');
-    if (!hex.length || hex.length % 2) return null;
-    const bytes = [];
-    for (let i = 0; i < hex.length; i += 2) bytes.push(parseInt(hex.slice(i, i + 2), 16));
-    return bytes;
-  }
-
-  function formatHexCoding(bytes) { return bytes.map(toHexByte).join(''); }
-
-  function isBrImportJettaCandidate(vin) {
-    const wmi = vin.slice(0, 3);
-    const platform = vin.slice(6, 8);
-    if (!['3VW', '9BW', 'WVW'].includes(wmi)) return false;
-    if (!['1K', '5K', '16', 'AJ'].includes(platform)) return false;
-    const year = VIN_MODEL_YEAR[vin[9]];
-    return year !== undefined && year >= 2009 && year <= 2016;
-  }
-
-  function detectBrBodyFromVin(vin, year) {
-    const vds = vin.slice(3, 9);
-    const platform = vin.slice(6, 8);
-    if (platform === 'AJ' || platform === 'AV' || vds.includes('VAR')) return { body: 'VARIANT', confidence: 'alta' };
-    if (vds.startsWith('RE1') || vds.startsWith('RE2')) return { body: 'SEDAN', confidence: 'alta' };
-    return { body: 'SEDAN', confidence: 'baixa' };
-  }
-
-  function decodeVinProfile(vin, bodyOverride) {
-    const v = normalizeVin(vin);
-    if (!isValidVin(v) || !isBrImportJettaCandidate(v)) return null;
-    const modelYear = VIN_MODEL_YEAR[v[9]];
-    const body = bodyOverride ?? detectBrBodyFromVin(v, modelYear).body;
-    const gen = modelYear >= 2011 && v.slice(6, 8) !== '1K' ? 'MK6' : 'MK5';
-    const engine = modelYear <= 2010 || v.slice(6, 8) === '1K' ? '2.5' : '2.5';
-    return {
-      modelYear, generation: gen, body, engine,
-      label: `Jetta ${body === 'VARIANT' ? 'Variant' : 'Sedan'} ${gen === 'MK5' ? 'Mk5' : 'Mk6'} ${modelYear} - 2.5 BR`,
-    };
-  }
-
-  function getChassisPreset(profile) {
-    return {
-      0: 0x11,
-      2: profile.body === 'VARIANT' ? 0x60 : 0x40,
-      4: profile.body === 'VARIANT' ? 0x49 : 0x4a,
-      6: 0x00,
-      15: 0x41,
-    };
-  }
-
-  function applyJettaHwDefaults(bytes, module) {
-    const hw = JETTA_HW[module];
-    if (!hw) return bytes;
-    const out = [...bytes];
-    for (const [k, v] of Object.entries(hw)) {
-      const i = Number(k);
-      if (i < out.length) out[i] = v;
-    }
-    return out;
-  }
-
-  function buildBaseFromVin(vin, suffix, variantChecked) {
-    const profile = decodeVinProfile(vin, variantChecked ? 'VARIANT' : undefined);
-    if (!profile) return { error: 'VIN fora do escopo - Jetta BR 2009–2016 (3VW/9BW/WVW).' };
-
-    const s = suffix.toUpperCase();
-    const len = PROFILE_LEN[MODULE_PROFILE[s]];
-    let bytes = new Array(len).fill(0);
-
-    const chassis = getChassisPreset(profile);
-    for (const [k, v] of Object.entries(chassis)) bytes[Number(k)] = v;
-
-    bytes = applyJettaHwDefaults(bytes, s);
-    bytes = applyVinBytes(bytes, vin);
-    return { bytes, profile, suffix: s };
-  }
-
-  function migrateCoding(hexInput, oldSuffix, newSuffix) {
-    const bytes = parseHexCoding(hexInput);
-    if (!bytes) return { error: 'Hex inválido' };
-
-    const os = oldSuffix.toUpperCase();
-    const ns = newSuffix.toUpperCase();
-    if (os === ns) return { error: 'Origem e destino iguais - selecione módulos diferentes.' };
-
-    const fromLen = moduleByteLen(os);
-    const toLen = moduleByteLen(ns);
-    if (!fromLen || !toLen) return { error: `Módulo desconhecido: ${!fromLen ? os : ns}` };
-
-    const work = normalizeForMigration([...bytes], os);
-    const steps = [];
-    const warnings = [];
-
-    if (work.length !== fromLen) {
-      warnings.push(`Hex tem ${work.length} bytes - esperado ${fromLen} para ${os}. Ajustando…`);
-      while (work.length > fromLen) work.pop();
-      while (work.length < fromLen) work.push(0);
-    }
-
-    // Rotas nomeadas BR / etz2k / lprot
-    if (os === 'BC' && ns === 'AD') return migrateBcToAd(work);
-    if (os === 'AT' && ns === 'BM') return migrateAtToBm(work);
-
-    let result;
-    if (toLen > fromLen) {
-      result = migrateUpgrade(work, os, ns, fromLen, toLen, steps, warnings);
-    } else if (toLen < fromLen) {
-      result = migrateDowngrade(work, os, ns, toLen, steps, warnings);
-    } else {
-      warnings.push('Mesmo comprimento - revisão manual de equipamentos.');
-      result = [...work];
-    }
-
-    result = applyMirrorPairs(result);
-    if (JETTA_HW[ns]) result = applyJettaHwDefaults(result, ns);
-
-    return { bytes: result, steps, warnings };
-  }
-
-  /* ─── Catálogo módulos BR ─── */
-  const MODULE_LEN = {
-    AD: 17, // H35 - problemático, sem G251
-    AH: 18, // H35 - raro, ≈ AD + 0x00
-    BJ: 18, // H31 - comum
-    BC: 18, AT: 18, AP: 18, AS: 18,
-    BL: 19, // H31 - comum, G251
-    BK: 19,
-    CC: 20, // H46 - top
-    BM: 20, BR: 20, BS: 20, CA: 20, CB: 20,
-  };
-
-  const MIGRATE_BR_NOTE = {
-    AD: 'AD 17B - original BR problemático (sem G251)',
-    AH: 'AH 18B - raro, tratar como AD + byte extra',
-    BJ: 'BJ 18B - comum, predecessor do BL',
-    BL: 'BL 19B - comum, G251',
-    CC: 'CC 20B - H46, recomendado',
-  };
-
-  function moduleByteLen(suffix) {
-    return MODULE_LEN[suffix.toUpperCase()] ?? null;
-  }
-
-  /** AH ≈ AD: se 18B e último byte 0x00, usa core 17B */
-  function normalizeForMigration(bytes, suffix) {
-    const s = suffix.toUpperCase();
-    if ((s === 'AH' || s === 'AD') && bytes.length === 18 && bytes[17] === 0x00) {
-      return bytes.slice(0, 17);
-    }
-    return bytes;
-  }
-
-  function makeMigrator() {
-    const steps = [];
-    const warnings = [];
-    const step = (arr, idx, after, reason) => {
-      if (idx >= arr.length || arr[idx] === after) return;
-      steps.push({ byteIndex: idx, before: toHexByte(arr[idx]), after: toHexByte(after), reason });
-      arr[idx] = after;
-    };
-    const clearBit = (arr, idx, bit, reason) => step(arr, idx, arr[idx] & ~bit, reason);
-    const setBit = (arr, idx, bit, reason) => step(arr, idx, arr[idx] | bit, reason);
-    const padEnd = (arr, n, reason) => {
-      while (arr.length < n) {
-        arr.push(0);
-        steps.push({ byteIndex: arr.length - 1, before: '-', after: '00', reason });
-      }
-    };
-    const truncate = (arr, n, reason) => {
-      while (arr.length > n) {
-        const removed = arr.pop();
-        steps.push({ byteIndex: arr.length, before: toHexByte(removed), after: '-', reason });
-      }
-    };
-    return { steps, warnings, step, clearBit, setBit, padEnd, truncate };
-  }
-
-  function migrateBcToAd(bytes) {
-    const m = makeMigrator();
-    const work = [...bytes];
-    m.truncate(work, 18, 'BC→AD: remover byte extra');
-    if (work.length === 18) m.truncate(work, 17, 'BC→AD: formato 17B');
-    if (work.length >= 17) {
-      m.clearBit(work, 16, 0x01, 'AD sem HHC');
-      m.clearBit(work, 16, 0x02, 'AD sem TPMS MFA');
-      m.step(work, 16, 0x34, 'Byte 16 AD padrão (0x34)');
-    }
-    m.warnings.push('Flash recomendado: 1K0907379CD_0120.sgo');
-    m.warnings.push('Faça log adaptações 03 e 44 antes.');
-    return { bytes: applyMirrorPairs(work.slice(0, 17)), steps: m.steps, warnings: m.warnings };
-  }
-
-  function migrateAtToBm(bytes) {
-    const m = makeMigrator();
-    const work = [...bytes];
-    m.padEnd(work, 19, 'AT→BM: pad 19B');
-    m.clearBit(work, 15, 0x10, 'Start-Stop BM+');
-    m.clearBit(work, 16, 0x04, 'RDW → byte 19');
-    m.clearBit(work, 16, 0x10, 'MCB bit4 off');
-    m.setBit(work, 16, 0x80, 'MCB bit7 BM+');
-    m.step(work, 18, (work[18] & 0xf0) | 0x12, 'Byte 19: RDKS + botão ESC (0x12)');
-    m.warnings.push('Flash recomendado: 1K0907379CC_0175.sgo');
-    return { bytes: applyMirrorPairs(work.slice(0, 20)), steps: m.steps, warnings: m.warnings };
-  }
-
-  function migrate18To19(work, m) {
-    m.padEnd(work, 19, '18→19: acrescentar byte 0x00');
-    if (work[16] & 0x80) {
-      m.clearBit(work, 16, 0x80, 'iTPMS bit7 off (salvo NIRA)');
-      m.warnings.push('Se usar NIRA iTPMS, reconfigure byte 16/18 manualmente.');
-    }
-  }
-
-  function migrate18To20(work, m) {
-    m.padEnd(work, 20, '18→20: acrescentar bytes');
-    m.clearBit(work, 6, 0x80, 'ESP off legado → byte 19');
-    m.clearBit(work, 14, 0x01, 'Espelho ESP off byte 14');
-    for (const b of [0x02, 0x04, 0x08, 0x10]) m.clearBit(work, 16, b, 'Funções movidas → byte 19');
-    m.setBit(work, 16, 0x80, 'MCB bit7 CC');
-    m.clearBit(work, 17, 0x10, 'AWV byte 17 bit4');
-    if (work.length >= 20 && work[19] === 0) m.step(work, 19, 0x20, 'Byte 19 mínimo CC (botão ESP 0x20)');
-    m.warnings.push('Revise byte 19 (iTPMS + botão ESP).');
-  }
-
-  function migrate19To20(work, m) {
-    m.padEnd(work, 20, '19→20: acrescentar byte');
-    migrate18To20(work, m);
-  }
-
-  /** AD/AH 17B → destino */
-  function migrateFromAd(work, ns, toLen, m) {
-    m.warnings.push(MIGRATE_BR_NOTE.AD);
-    if (ns === 'AH') {
-      m.padEnd(work, 18, 'AD→AH: +0x00 final');
-      return work.slice(0, 18);
-    }
-    if (ns === 'BJ') {
-      m.padEnd(work, 18, 'AD→BJ: +1 byte');
-      m.warnings.push('AD→BJ incomum - confira byte 16/17 manualmente.');
-      return work.slice(0, 18);
-    }
-    if (ns === 'BL') {
-      m.padEnd(work, 19, 'AD→BL: +2 bytes');
-      // BL sem byte 19 - ESP/TPMS legado ficam em byte 16
-      if (work[16] === 0x34) m.step(work, 16, 0xe1, 'BL Jetta 2.5 BR (0xE1)');
-      if (work.length >= 18) m.step(work, 17, work[17] ?? 0x08, 'Byte 17 - XDS on, PLA off (0x08 Jetta)');
-      if (work.length >= 19) m.step(work, 18, work[18] ?? 0x00, 'Byte 18 sensores standard (0x00 Jetta BR)');
-      m.warnings.push('G251 presente no BL - faça Basic Settings G85 após instalar.');
-      return work.slice(0, 19);
-    }
-    if (ns === 'CC' || ns === 'BM' || ns === 'BR' || ns === 'BS') {
-      m.padEnd(work, 20, 'AD→CC: expandir 17→20');
-      migrate18To20(work, m);
-      m.warnings.push('Troca AD→CC muito comum no BR - instale G251 + G85.');
-      m.warnings.push('Flash CC recomendado se módulo usado.');
-      return work.slice(0, 20);
-    }
-    m.padEnd(work, toLen, `AD→${ns}: pad ${toLen}B`);
-    return work.slice(0, toLen);
-  }
-
-  /** BJ 18B → destino */
-  function migrateFromBj(work, ns, toLen, m) {
-    m.warnings.push(MIGRATE_BR_NOTE.BJ);
-    if (ns === 'AD') {
-      m.truncate(work, 17, 'BJ→AD: remover byte 18');
-      m.step(work, 16, 0x34, 'Byte 16 AD');
-      return work.slice(0, 17);
-    }
-    if (ns === 'AH') {
-      m.warnings.push('BJ→AH: mesmo tamanho - copiar bytes 0–16.');
-      return work.slice(0, 18);
-    }
-    if (ns === 'BL') {
-      migrate18To19(work, m);
-      m.warnings.push('BJ→BL: rota comum - verifique byte 16/17/18.');
-      return work.slice(0, 19);
-    }
-    if (toLen === 20) {
-      migrate18To20(work, m);
-      m.warnings.push('BJ→CC: upgrade top - G85 obrigatório.');
-      return work.slice(0, 20);
-    }
-    m.padEnd(work, toLen, `BJ→${ns}`);
-    return work.slice(0, toLen);
-  }
-
-  /** BL 19B → destino */
-  function migrateFromBl(work, ns, toLen, m) {
-    m.warnings.push(MIGRATE_BR_NOTE.BL);
-    if (ns === 'AD') {
-      m.truncate(work, 17, 'BL→AD downgrade');
-      m.step(work, 16, 0x34, 'Byte 16 AD');
-      m.warnings.push('Downgrade BL→AD: alto risco - sem G251 no coding.');
-      return work.slice(0, 17);
-    }
-    if (ns === 'BJ' || ns === 'AH') {
-      m.truncate(work, 18, `BL→${ns} downgrade 19→18`);
-      m.warnings.push('Downgrade - faça backup do coding original.');
-      return work.slice(0, 18);
-    }
-    if (toLen === 20) {
-      migrate19To20(work, m);
-      m.warnings.push('BL→CC: rota muito comum no BR.');
-      return work.slice(0, 20);
-    }
-    m.padEnd(work, toLen, `BL→${ns}`);
-    return work.slice(0, toLen);
-  }
-
-  /** CC 20B → downgrade */
-  function migrateFromCc(work, ns, toLen, m) {
-    m.warnings.push(MIGRATE_BR_NOTE.CC);
-    m.warnings.push('Downgrade de CC - backup obrigatório.');
-    if (ns === 'BL') {
-      m.truncate(work, 19, 'CC→BL: remover byte 19');
-      m.warnings.push('Byte 19 (ESP/iTPMS) perdido - reconfigure byte 16 BL.');
-      return work.slice(0, 19);
-    }
-    if (ns === 'BJ' || ns === 'AH') {
-      m.truncate(work, 18, `CC→${ns}: 20→18`);
-      return work.slice(0, 18);
-    }
-    if (ns === 'AD') {
-      m.truncate(work, 17, 'CC→AD: 20→17');
-      m.step(work, 16, 0x34, 'Byte 16 AD');
-      return work.slice(0, 17);
-    }
-    m.truncate(work, toLen, `CC→${ns}`);
-    return work.slice(0, toLen);
-  }
-
-  function migrateUpgrade(work, os, ns, fromLen, toLen, steps, warnings) {
-    const m = makeMigrator();
-    m.steps = steps;
-    m.warnings = warnings;
-    let result;
-
-    if (os === 'AD' || os === 'AH') result = migrateFromAd(work, ns, toLen, m);
-    else if (os === 'BJ') result = migrateFromBj(work, ns, toLen, m);
-    else if (os === 'BL' || os === 'BK') result = migrateFromBl(work, ns, toLen, m);
-    else if (fromLen === 18 && toLen === 19) {
-      migrate18To19(work, m);
-      result = work.slice(0, 19);
-    } else if (fromLen === 18 && toLen === 20) {
-      migrate18To20(work, m);
-      result = work.slice(0, 20);
-    } else if (fromLen === 19 && toLen === 20) {
-      migrate19To20(work, m);
-      result = work.slice(0, 20);
-    } else {
-      m.padEnd(work, toLen, `${os}→${ns}: ${fromLen}→${toLen} bytes`);
-      m.warnings.push(`Migração ${os}→${ns}: revise bytes 16+ manualmente (etz2k).`);
-      result = work.slice(0, toLen);
-    }
-
-    steps.push(...m.steps);
-    warnings.push(...m.warnings);
-    return result;
-  }
-
-  function migrateDowngrade(work, os, ns, toLen, steps, warnings) {
-    const m = makeMigrator();
-    m.steps = steps;
-    m.warnings = warnings;
-    warnings.push('Downgrade de firmware - alto risco. Faça backup.');
-
-    let result;
-    if (os === 'CC' || os === 'BM' || os === 'BR') result = migrateFromCc(work, ns, toLen, m);
-    else if (os === 'BL') result = migrateFromBl(work, ns, toLen, m);
-    else if (os === 'BJ') result = migrateFromBj(work, ns, toLen, m);
-    else {
-      m.truncate(work, toLen, `${os}→${ns}: truncar ${work.length}→${toLen}`);
-      result = work.slice(0, toLen);
-    }
-
-    steps.push(...m.steps);
-    warnings.push(...m.warnings);
-    return result;
-  }
-
-  function wssWheelType(val, w) {
-    if (val & w.inv) return 2;
-    if (val & w.active) return 1;
-    return 0;
-  }
-
-  function setWssWheel(byteVal, w, type) {
-    let v = byteVal & ~(w.active | w.inv);
-    if (type === 1) v |= w.active;
-    else if (type === 2) v |= w.inv;
-    return v;
-  }
-
-  function decodeWssByte(val) {
-    const preset = WSS_PRESETS.find((p) => p.v === val);
-    if (preset) return preset.l;
-    const types = ['standard', 'ativo AK', 'invertido'];
-    const parts = WSS_ETZ.map((w) => {
-      const t = wssWheelType(val, w);
-      return t ? `${w.l.split(' ')[0]}:${types[t]}` : null;
-    }).filter(Boolean);
-    return parts.length ? parts.join(' · ') : `Custom 0x${val.toString(16).toUpperCase()}`;
-  }
-
-  function decodeByteValue(def, val, module) {
-    if (!def) return '-';
-    const lines = [];
-    if (def.values) {
-      const hit = def.values.find((e) => e.v === val);
-      if (hit) lines.push(hit.l);
-    }
-    if (def.kind === 'byte19') {
-      const hi = val & 0xf0;
-      const hit = def.escModes?.find((e) => (e.v & 0xf0) === hi || (e.v === 0x00 && hi === 0x00));
-      if (hit) lines.push(hit.l);
-      else if (hi) lines.push(`Modo ESC 0x${hi.toString(16).toUpperCase()}`);
-    }
-    if (def.kind === 'wss') {
-      lines.push(decodeWssByte(val));
-    }
-    def.bits?.forEach((b) => { if (val & b.m) lines.push(b.l); });
-    return lines.length ? lines.join(' · ') : '-';
-  }
-
-  function isAutoByte(index) {
-    return VIN_DERIVED.has(index) || MIRROR_PAIRS.some(([, d]) => d === index);
-  }
-
-  function isByteEditable(index) {
-    return !isAutoByte(index);
-  }
-
-  /** Índices com card editável por módulo */
-  const EDITABLE_INDICES = {
-    AD: [0, 2, 4, 6, 15, 16],
-    BL: [0, 2, 4, 6, 15, 16, 17, 18],
-    CC: [0, 2, 4, 6, 15, 16, 17, 18, 19],
-  };
-
-  /* ─── UI ─── */
-  let state = { bytes: [], module: 'CC', profile: null, referenceBytes: null, ready: false };
-
-  const $ = (id) => document.getElementById(id);
-
-  function makeTip(help) {
-    const wrap = document.createElement('span');
-    wrap.className = 'tip-wrap';
-    const btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'tip-btn';
-    btn.setAttribute('aria-label', 'Ajuda');
-    btn.textContent = '?';
-    const pop = document.createElement('span');
-    pop.className = 'tip-popup';
-    pop.textContent = help;
-    wrap.append(btn, pop);
-    return wrap;
-  }
-
-  function getModuleLen() { return PROFILE_LEN[MODULE_PROFILE[state.module]]; }
-
-  function syncReferenceBytes() {
-    const raw = $('car-hex')?.value.trim();
-    if (!raw) { state.referenceBytes = null; return; }
-    const parsed = parseHexCoding(raw);
-    state.referenceBytes = parsed && parsed.length ? parsed : null;
-  }
-
-  function byteDiff(i) {
-    if (!state.referenceBytes || i >= state.referenceBytes.length || i >= state.bytes.length) return null;
-    if (state.referenceBytes[i] === state.bytes[i]) return null;
-    return { car: toHexByte(state.referenceBytes[i]), edit: toHexByte(state.bytes[i]) };
-  }
-
-  function buildChecklistWarnings() {
-    const items = [];
-    const b = state.bytes;
-    const mod = state.module;
-    if (!b.length || !state.ready) return items;
-
-    items.push('Confira bytes 16+ antes de gravar no VCDS.');
-
-    if ((mod === 'BL' || mod === 'CC') && b.length > 18 && b[18] !== 0x00) {
-      const pla = b.length > 17 && (b[17] & 0x01);
-      const acc = b.length > 17 && (b[17] & 0x02);
-      if (!pla && !acc) items.push('Byte 18 ≠ 0x00 sem PLA/ACC - risco de DTC de sensor de roda.');
-    }
-
-    if (b.length > 6 && (b[6] & 0x08)) {
-      items.push('Byte 6: G85 na coluna ligado - provável erro em Jetta com direção elétrica (EPS).');
-    }
-
-    if (state.referenceBytes) {
-      const diffsLow = [];
-      for (let i = 0; i < Math.min(15, b.length, state.referenceBytes.length); i++) {
-        if (b[i] !== state.referenceBytes[i]) diffsLow.push(i);
-      }
-      if (diffsLow.length) {
-        items.push(`Diferença vs carro nos bytes ${diffsLow.join(', ')} - confira VIN e espelhos (0–14).`);
-      }
-    }
-
-    if (state.migratedModule) {
-      items.push('Após troca de módulo: faça Basic Settings G85 (40168) se necessário.');
-    }
-
-    return items;
-  }
-
-  function updateChecklist() {
-    const box = $('checklist');
-    if (!box) return;
-    const items = buildChecklistWarnings();
-    if (!items.length || !state.ready) {
-      box.classList.add('hidden');
-      box.innerHTML = '';
-      return;
-    }
-    box.classList.remove('hidden');
-    box.innerHTML = '<div class="checklist-title">Antes de copiar</div><ul>'
-      + items.map((t) => `<li>${t}</li>`).join('') + '</ul>';
-  }
-
-  function syncOutput() {
-    $('hex-out').textContent = state.bytes.length ? formatHexCoding(state.bytes) : '-';
-    $('btn-copy').disabled = !state.bytes.length || !state.ready;
-    const meta = [];
-    if (state.profile) meta.push(state.profile.label);
-    meta.push(`${state.bytes.length}B · ${state.module} · HW Jetta`);
-    $('hex-meta').textContent = meta.join(' · ');
-    $('module-badge').textContent = `1K0907379${state.module}`;
-    updateChecklist();
-  }
-
-  function renderHexStrip() {
-    const strip = $('hex-strip');
-    if (!strip || !state.bytes.length || !state.ready) {
-      if (strip) strip.classList.add('hidden');
-      return;
-    }
-    strip.classList.remove('hidden');
-    strip.innerHTML = '';
-    for (let i = 0; i < state.bytes.length; i++) {
-      const cell = document.createElement('button');
-      cell.type = 'button';
-      cell.className = 'hex-strip-cell';
-      if (isAutoByte(i)) cell.classList.add('auto');
-      const diff = byteDiff(i);
-      if (diff) cell.classList.add('diff');
-      cell.innerHTML = `<span class="hex-strip-idx">${i}</span>${toHexByte(state.bytes[i])}`;
-      cell.title = diff ? `Carro: ${diff.car} · Editor: ${diff.edit}` : `Byte ${i}`;
-      cell.addEventListener('click', () => {
-        const target = document.getElementById(`byte-card-${i}`);
-        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
-      strip.appendChild(cell);
-    }
-  }
-
-  function renderAutoBytes() {
-    const box = $('auto-bytes');
-    if (!box || !state.bytes.length || !state.ready) {
-      if (box) box.classList.add('hidden');
-      return;
-    }
-    box.classList.remove('hidden');
-    box.innerHTML = '';
-
-    const head = document.createElement('div');
-    head.className = 'auto-bytes-head';
-    head.append(document.createTextNode('Bytes automáticos (VIN + espelhos)'));
-    head.append(makeTip('Bytes 1,3,5,7,9,11,13 vêm do VIN. Bytes 8,10,12,14 espelham 0,2,4,6. Atualizam ao calcular ou ao editar os bytes fonte.'));
-    const note = document.createElement('span');
-    note.className = 'auto-bytes-note';
-    note.textContent = '- somente leitura';
-    head.append(note);
-    box.appendChild(head);
-
-    const pairsWrap = document.createElement('div');
-    pairsWrap.className = 'mirror-pairs';
-    for (const { src, dst, label } of MIRROR_PAIR_LABELS) {
-      if (src >= state.bytes.length || dst >= state.bytes.length) continue;
-      const row = document.createElement('div');
-      row.className = 'mirror-pair';
-      const lbl = document.createElement('span');
-      lbl.className = 'mirror-pair-label';
-      lbl.textContent = label;
-      const srcChip = document.createElement('span');
-      srcChip.className = 'auto-chip';
-      srcChip.innerHTML = `<span class="auto-chip-idx">${src}</span><span class="auto-chip-val">${toHexByte(state.bytes[src])}</span>`;
-      const arrow = document.createElement('span');
-      arrow.textContent = '↔';
-      arrow.style.color = 'var(--muted)';
-      const dstChip = document.createElement('span');
-      dstChip.className = 'auto-chip mirror';
-      dstChip.innerHTML = `<span class="auto-chip-idx">${dst}</span><span class="auto-chip-val">${toHexByte(state.bytes[dst])}</span>`;
-      row.append(lbl, srcChip, arrow, dstChip);
-      pairsWrap.appendChild(row);
-    }
-    box.appendChild(pairsWrap);
-
-    const vinHead = document.createElement('div');
-    vinHead.className = 'auto-bytes-head';
-    vinHead.style.marginTop = '0.5rem';
-    vinHead.textContent = 'Bytes VIN';
-    box.appendChild(vinHead);
-
-    const row = document.createElement('div');
-    row.className = 'auto-chips';
-    for (let i = 1; i < state.bytes.length && i <= 14; i++) {
-      if (!VIN_DERIVED.has(i)) continue;
-      const chip = document.createElement('span');
-      chip.className = 'auto-chip';
-      chip.title = 'Derivado do VIN';
-      chip.innerHTML = `<span class="auto-chip-idx">${i}</span><span class="auto-chip-val">${toHexByte(state.bytes[i])}</span>`;
-      row.appendChild(chip);
-    }
-    box.appendChild(row);
-  }
-
-  function appendOneBitRow(list, bit, i, val) {
-    const row = document.createElement('label');
-    row.className = 'bit-row';
-    const cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.checked = (val & bit.m) === bit.m;
-    const txt = document.createElement('span');
-    txt.className = 'bit-text';
-    txt.append(document.createTextNode(bit.l + ' '));
-    if (bit.help) txt.append(makeTip(bit.help));
-    const mask = document.createElement('span');
-    mask.className = 'bit-mask';
-    mask.textContent = toHexByte(bit.m);
-    txt.append(mask);
-    row.append(cb, txt);
-    cb.addEventListener('change', () => {
-      setByte(i, cb.checked ? (state.bytes[i] | bit.m) : (state.bytes[i] & ~bit.m));
-    });
-    list.appendChild(row);
-  }
-
-  function renderByteCard(i, mod) {
-    const def = BYTE_DEFS[i];
-    if (!def || !def.modules.includes(mod) || i >= state.bytes.length) return null;
-
-    const val = state.bytes[i] ?? 0;
-    const diff = byteDiff(i);
-    const card = document.createElement('article');
-    card.id = `byte-card-${i}`;
-    card.className = 'byte-card editable' + (i === 18 ? ' span-2' : '') + (diff ? ' byte-diff' : '');
-
-    const head = document.createElement('div');
-    head.className = 'byte-head';
-
-    const title = document.createElement('div');
-    const lbl = document.createElement('div');
-    lbl.className = 'byte-label';
-    lbl.textContent = 'Byte ' + i;
-    const nameRow = document.createElement('div');
-    nameRow.className = 'byte-name-row';
-    const name = document.createElement('span');
-    name.className = 'byte-name';
-    name.textContent = def.name;
-    nameRow.append(name);
-    if (def.help) nameRow.append(makeTip(def.help));
-    title.append(lbl, nameRow);
-
-    const hexInput = document.createElement('input');
-    hexInput.className = 'byte-hex-input';
-    hexInput.type = 'text';
-    hexInput.maxLength = 2;
-    hexInput.value = toHexByte(val);
-    hexInput.setAttribute('aria-label', 'Hex byte ' + i);
-
-    head.append(title, hexInput);
-    card.appendChild(head);
-
-    if (def.plain) {
-      const plain = document.createElement('p');
-      plain.className = 'byte-plain';
-      plain.textContent = def.plain;
-      card.appendChild(plain);
-    }
-
-    if (def.note) {
-      const note = document.createElement('div');
-      note.className = 'byte-note';
-      note.textContent = def.note;
-      card.appendChild(note);
-    }
-
-    if (diff) {
-      const badge = document.createElement('div');
-      badge.className = 'byte-diff-badge';
-      badge.textContent = `Carro: ${diff.car} · Editor: ${diff.edit}`;
-      card.appendChild(badge);
-    }
-
-    if (def.values) {
-      const sel = document.createElement('select');
-      sel.className = 'enum-select';
-      for (const opt of def.values) {
-        const o = document.createElement('option');
-        o.value = toHexByte(opt.v);
-        o.textContent = `${toHexByte(opt.v)} - ${opt.l}`;
-        if (opt.v === val) o.selected = true;
-        sel.appendChild(o);
-      }
-      sel.addEventListener('change', () => setByte(i, parseInt(sel.value, 16)));
-      card.appendChild(sel);
-    }
-
-    if (def.kind === 'byte19') {
-      const sel = document.createElement('select');
-      sel.className = 'enum-select';
-      const hi = val & 0xf0;
-      for (const m of def.escModes) {
-        const o = document.createElement('option');
-        o.value = toHexByte(m.v);
-        o.textContent = m.l;
-        const match = m.v === 0x00 ? hi === 0x00 : (hi === (m.v & 0xf0));
-        if (match) o.selected = true;
-        sel.appendChild(o);
-      }
-      sel.addEventListener('change', () => {
-        const cur = state.bytes[i];
-        const pick = parseInt(sel.value, 16);
-        setByte(i, (cur & 0x0f) | (pick & 0xf0));
-      });
-      card.appendChild(sel);
-    }
-
-    if (def.enums?.[mod]) {
-      const q = document.createElement('select');
-      q.className = 'enum-select';
-      q.innerHTML = '<option value="">Preset…</option>';
-      for (const e of def.enums[mod]) {
-        const o = document.createElement('option');
-        o.value = toHexByte(e.v);
-        o.textContent = e.l;
-        q.appendChild(o);
-      }
-      q.addEventListener('change', () => { if (q.value) setByte(i, parseInt(q.value, 16)); });
-      card.appendChild(q);
-    }
-
-    if (def.kind === 'wss' && def.wheels) {
-      if (def.presets?.length) {
-        const q = document.createElement('select');
-        q.className = 'enum-select';
-        const custom = document.createElement('option');
-        custom.value = '';
-        custom.textContent = '- preset -';
-        q.appendChild(custom);
-        for (const p of def.presets) {
-          const o = document.createElement('option');
-          o.value = toHexByte(p.v);
-          o.textContent = `${toHexByte(p.v)} - ${p.l}`;
-          if (p.v === val) o.selected = true;
-          q.appendChild(o);
-        }
-        q.addEventListener('change', () => { if (q.value) setByte(i, parseInt(q.value, 16)); });
-        card.appendChild(q);
-      }
-      const row = document.createElement('div');
-      row.className = 'bit-list';
-      for (const w of def.wheels) {
-        const curN = wssWheelType(val, w);
-        const wrap = document.createElement('div');
-        wrap.className = 'wss-row';
-        const lblW = document.createElement('span');
-        lblW.className = 'bit-text';
-        lblW.textContent = w.l + ' ';
-        if (w.help) lblW.append(makeTip(w.help));
-        const sel = document.createElement('select');
-        sel.className = 'enum-select';
-        ['0 - standard', '1 - ativo (AK)', '2 - invertido'].forEach((lbl, t) => {
-          const o = document.createElement('option');
-          o.value = String(t);
-          o.textContent = lbl;
-          if (t === curN) o.selected = true;
-          sel.appendChild(o);
-        });
-        sel.addEventListener('change', () => {
-          setByte(i, setWssWheel(state.bytes[i], w, parseInt(sel.value, 10)));
-        });
-        wrap.append(lblW, sel);
-        row.appendChild(wrap);
-      }
-      card.appendChild(row);
-    }
-
-    if (def.bits && def.kind !== 'wss') {
-      const list = document.createElement('div');
-      list.className = 'bit-list';
-      const mainBits = def.bits.filter((b) => !b.advanced);
-      const advBits = def.bits.filter((b) => b.advanced);
-      mainBits.forEach((bit) => appendOneBitRow(list, bit, i, val));
-      if (advBits.length) {
-        const advDetails = document.createElement('details');
-        advDetails.className = 'bit-advanced';
-        const sum = document.createElement('summary');
-        sum.textContent = def.advancedLabel || 'Opções avançadas';
-        advDetails.appendChild(sum);
-        const inner = document.createElement('div');
-        inner.className = 'bit-list';
-        advBits.forEach((bit) => appendOneBitRow(inner, bit, i, val));
-        advDetails.appendChild(inner);
-        list.appendChild(advDetails);
-      }
-      card.appendChild(list);
-    }
-
-    const dec = document.createElement('div');
-    dec.className = 'byte-decode';
-    dec.textContent = decodeByteValue(def, val, mod);
-    card.appendChild(dec);
-
-    hexInput.addEventListener('change', () => {
-      const p = parseInt(hexInput.value, 16);
-      if (!Number.isNaN(p)) setByte(i, p);
-      else hexInput.value = toHexByte(state.bytes[i]);
-    });
-
-    return card;
-  }
-
-  function renderByteGrid() {
-    const grid = $('byte-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-    renderHexStrip();
-    renderAutoBytes();
-
-    if (!state.ready) {
-      const empty = document.createElement('div');
-      empty.className = 'editor-empty';
-      empty.innerHTML = 'Informe o VIN e clique <strong>Calcular</strong>,<br>ou use <strong>Importar hex</strong> se já tem o coding do carro.';
-      grid.appendChild(empty);
-      return;
-    }
-
-    const mod = state.module;
-    const groups = BYTE_GROUPS[mod] || [{ title: 'Bytes editáveis', bytes: EDITABLE_INDICES[mod] || [] }];
-
-    for (const group of groups) {
-      const visible = group.bytes.filter((i) => i < state.bytes.length && BYTE_DEFS[i]?.modules.includes(mod));
-      if (!visible.length) continue;
-
-      const section = document.createElement('details');
-      section.className = 'byte-section';
-      section.open = true;
-      const sum = document.createElement('summary');
-      sum.textContent = group.title;
-      section.appendChild(sum);
-
-      const inner = document.createElement('div');
-      inner.className = 'byte-section-grid';
-      for (const i of visible) {
-        const card = renderByteCard(i, mod);
-        if (card) inner.appendChild(card);
-      }
-      section.appendChild(inner);
-      grid.appendChild(section);
-    }
-  }
-
-  function setByte(index, value) {
-    state.bytes[index] = value & 0xff;
-    state.bytes = applyMirrorPairs(state.bytes);
-    renderByteGrid();
-    syncOutput();
-  }
-
-  function calculateBase() {
-    hideAlerts();
-    syncReferenceBytes();
-    const vin = normalizeVin($('vin').value);
-    state.module = $('module').value;
-    if (!isValidVin(vin)) {
-      showError(vin.length < 17 ? `${vin.length}/17` : 'VIN inválido');
-      return;
-    }
-    const result = buildBaseFromVin(vin, state.module, $('extra-variant')?.checked);
-    if (result.error) { showError(result.error); return; }
-    state.bytes = result.bytes;
-    state.profile = result.profile;
-    state.ready = true;
-    state.migratedModule = false;
-    $('profile-hint').textContent = result.profile.label;
-    renderByteGrid();
-    syncOutput();
-    $('alert-info').textContent = 'Padrão Jetta: byte 16 = 0xE1, byte 17 = 0x08 (XDS), PLA off, sensores 0x00, botão ESP 0x20.';
-    $('alert-info').classList.remove('hidden');
-  }
-
-  function hideAlerts() { $('alert-error')?.classList.add('hidden'); $('alert-info')?.classList.add('hidden'); }
-  function showError(msg) { $('alert-error').textContent = msg; $('alert-error').classList.remove('hidden'); }
-
-  async function copyHex() {
-    const hex = formatHexCoding(state.bytes);
-    try { await navigator.clipboard.writeText(hex); } catch {
-      const ta = document.createElement('textarea');
-      ta.value = hex; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-    }
-  }
-
-  function onVinInput() {
-    const vin = normalizeVin($('vin').value);
-    if (vin.length < 17) { $('profile-hint').textContent = `${vin.length}/17`; return; }
-    if (isValidVin(vin)) {
-      const det = detectBrBodyFromVin(vin, VIN_MODEL_YEAR[vin[9]]);
-      if (det.confidence === 'alta') $('extra-variant').checked = det.body === 'VARIANT';
-      calculateBase();
-    }
-  }
-
-  function loadFromHex() {
-    syncReferenceBytes();
-    const raw = ($('migrate-hex')?.value.trim() || $('hex-out')?.textContent.trim() || '').replace(/^-$/, '');
-    const parsed = parseHexCoding(raw);
-    if (!parsed) { showError('Cole hex válido ou calcule primeiro'); return; }
-    if (parsed.length !== getModuleLen()) { showError(`Esperado ${getModuleLen()} bytes - recebeu ${parsed.length}`); return; }
-    hideAlerts();
-    state.bytes = applyMirrorPairs(parsed);
-    state.ready = true;
-    state.migratedModule = false;
-    renderByteGrid();
-    syncOutput();
-  }
-
-  function editorModuleFor(suffix) {
-    const s = suffix.toUpperCase();
-    if (s === 'CC' || s === 'BM' || s === 'BR' || s === 'BS' || s === 'CA' || s === 'CB') return 'CC';
-    if (s === 'BL' || s === 'BK') return 'BL';
-    if (s === 'AD' || s === 'AH') return 'AD';
-    if (s === 'BJ') return 'BL'; // 18B - editor BL com aviso
-    return null;
-  }
-
-  function runMigrate() {
-    const from = $('migrate-from').value;
-    const to = $('migrate-to').value;
-    const r = migrateCoding($('migrate-hex').value, from, to);
-    const log = $('migrate-log');
-    if (r.error) { log.textContent = 'Erro: ' + r.error; return; }
-
-    const lines = [
-      `Resultado (${to}, ${r.bytes.length}B):`,
-      formatHexCoding(r.bytes),
-      '',
-    ];
-    if (r.warnings?.length) {
-      lines.push('Avisos:', ...r.warnings.map((w) => ' • ' + w), '');
-    }
-    if (r.steps?.length) {
-      lines.push('Alterações:', ...r.steps.map((s) => {
-        const label = BYTE_DEFS[s.byteIndex]?.name || `byte ${s.byteIndex}`;
-        return `  ${label}: ${s.before} → ${s.after} (${s.reason})`;
-      }));
-    }
-    log.textContent = lines.join('\n');
-    $('migrate-hex').value = formatHexCoding(r.bytes);
-
-    const editorMod = editorModuleFor(to);
-    if (editorMod && MODULE_PROFILE[editorMod]) {
-      $('module').value = editorMod;
-      state.module = editorMod;
-      const elen = getModuleLen();
-      state.bytes = r.bytes.length === elen ? r.bytes : r.bytes.slice(0, elen);
-      state.ready = true;
-      state.migratedModule = true;
-      if (r.bytes.length !== elen) {
-        lines.push('', `Nota: editor ${editorMod} usa ${elen}B - hex completo (${r.bytes.length}B) está no campo acima.`);
-        log.textContent = lines.join('\n');
-      }
-      renderByteGrid();
-      syncOutput();
-      $('alert-info').textContent = `Migrado ${from}→${to}. Resultado aplicado no editor. Revise bytes 16+ e confira G85 se trocou módulo.`;
-      $('alert-info').classList.remove('hidden');
-    }
-  }
-
-  function onCarHexInput() {
-    syncReferenceBytes();
-    renderByteGrid();
-    syncOutput();
-  }
-
-  function init() {
-    $('btn-calc')?.addEventListener('click', calculateBase);
-    $('btn-copy')?.addEventListener('click', copyHex);
-    $('btn-load-hex')?.addEventListener('click', loadFromHex);
-    $('btn-sync-mirrors')?.addEventListener('click', () => { state.bytes = applyMirrorPairs(state.bytes); renderByteGrid(); syncOutput(); });
-    $('btn-migrate')?.addEventListener('click', runMigrate);
-    $('vin')?.addEventListener('input', onVinInput);
-    $('car-hex')?.addEventListener('input', onCarHexInput);
-    $('module')?.addEventListener('change', () => {
-      state.module = $('module').value;
-      if (state.profile) calculateBase();
-      else {
-        state.bytes = new Array(getModuleLen()).fill(0);
-        state.ready = false;
-        renderByteGrid();
-        syncOutput();
-      }
-    });
-    $('extra-variant')?.addEventListener('change', calculateBase);
-    state.module = $('module').value;
-    state.bytes = new Array(getModuleLen()).fill(0);
-    state.ready = false;
-    renderByteGrid();
-    syncOutput();
-  }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-  else init();
+  $('fields').append(wrap);
+ }
+ $('previous').disabled=i===0;$('next').disabled=i===state.bytes.length-1;$('review-byte').hidden=!state.pending.includes(i);$('review-byte').disabled=!validLength();
+ if(active&&/^(field-|bit-|byte-\d)/.test(active))document.getElementById(active)?.focus({preventScroll:true});
+}
+function buildTable(headers,rows){const wrap=el('div',undefined,'table-wrap'),table=document.createElement('table'),head=document.createElement('thead'),tr=document.createElement('tr');for(const h of headers)tr.append(el('th',h));head.append(tr);table.append(head);const body=document.createElement('tbody');for(const cells of rows){const row=document.createElement('tr');for(const value of cells){const td=el('td',value.text??String(value));if(value.diff)td.className='diff';row.append(td);}body.append(row);}table.append(body);wrap.append(table);return wrap;}
+function renderCompare(){if(!state.original.length||!state.bytes.length){$('compare-table').replaceChildren(el('p','Importe um original ou use o campo da esquerda para definir a comparação.','hint'));return;}const rows=[];for(let i=0;i<Math.max(state.bytes.length,state.original.length);i++){const a=state.original[i],b=state.bytes[i],diff=a!==b;if($('diff-only').checked&&!diff)continue;rows.push([String(i).padStart(2,'0'),NAMES[i]||'Byte '+i,a===undefined?'—':hex(a),{text:b===undefined?'—':hex(b),diff},a===undefined?'Acrescentado':b===undefined?'Removido':diff?'XOR '+hex(a^b)+' · '+(a^b).toString(2).padStart(8,'0'):'Igual']);}$('compare-table').replaceChildren(buildTable(['Byte','Função','Original','Edição','Diferença de bits'],rows));}
+function importBytes(bytes,meta={}){const hw=meta.hw||state.hw;if(bytes.length!==lengthFor(hw))throw Error(`Coding tem ${bytes.length} bytes, mas H${hw} espera ${lengthFor(hw)}. Ajuste o hardware; a importação não completa nem corta bytes.`);appliedPreviewKey=previewKey(meta.vin??state.vin,hw);commit(()=>{state={...state,...meta,hw,bytes:[...bytes],original:[...bytes],selected:0,pending:[],origin:meta.origin||'Coding original importado'};});toast('Importado sem alterar nenhum byte.');}
+function readMigrationSettings(){return {nira:$('mig-nira').value?$('mig-nira').value==='yes':undefined,awv:$('mig-awv').value?$('mig-awv').value==='yes':undefined,noMcb:$('mig-mcb').value?$('mig-mcb').value==='no':undefined,tpms:$('mig-tpms').value===''?undefined:Number($('mig-tpms').value),esc:$('mig-esc').value===''?undefined:Number($('mig-esc').value)};}
+function invalidatePreview(){preview=null;$('migrate-apply').disabled=true;if(!$('migration-log').hidden)$('migration-log').textContent='Entradas alteradas. Gere uma nova prévia para aplicar.';}
+function switchView(name){for(const button of document.querySelectorAll('[data-view]')){const active=button.dataset.view===name;button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;}for(const view of document.querySelectorAll('.view'))view.hidden=view.id!=='view-'+name;}
+function download(name,body,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([body],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1200);}
+function report(){const rows=state.bytes.map((b,i)=>`${String(i).padStart(2,'0')}: ${hex(b)} · ${NAMES[i]}${state.original[i]!==undefined?' · original '+hex(state.original[i]):''}`);const warnings=validate(state.bytes,state.hw,state.suffix,state.sw,state.vin).map(x=>x.type.toUpperCase()+': '+x.text);return ['MK60EC1 Coding Studio 3.0 · Pedro Pandolfi (@pandolfipedro)',new Date().toISOString(),`Índice SW: ${state.suffix||'não identificado'} · Hardware: H${state.hw} · Software: ${state.sw||'não informado'}`,`VIN: ${state.vin||'não informado'}`,`Origem: ${state.origin}`,`Perfil de referência: ${state.appliedConfig?VEHICLE_PRESETS[state.appliedConfig.preset].name:'não informado'}`,`Câmbio registrado: ${state.appliedConfig?GEARBOX_LABELS[state.appliedConfig.gearbox]:'não informado'}`,`Comprimento atual: ${state.bytes.length} bytes / ${state.bytes.length*2} hex`,`Esperado no hardware: ${lengthFor(state.hw)} bytes`,'Coding atual: '+format(state.bytes),'Coding original: '+(state.original.length?format(state.original):'não informado'),'Pendentes de conferência: '+(state.pending.length?state.pending.join(', '):'nenhum marcado'),'','BYTES',...rows,'','CONFERÊNCIA',...warnings,'','Referência: https://forums.ross-tech.com/index.php?threads/31859/','LBL: https://drive.google.com/file/d/1SdginSNSRONFsnsrUl9FuTc-zC2yw92X/view','Validação de software local não confirma aceitação ou compatibilidade no ABS.'].join('\n');}
+function checkedSession(obj){if(!obj||obj.app!=='mk60ec1-studio'||obj.version!==2||!obj.state)throw Error('Arquivo de sessão incompatível.');const v=obj.state;if(!HW_LENGTH[v.hw]||![v.bytes,v.original].every(a=>Array.isArray(a)&&a.length<=20&&a.every(x=>Number.isInteger(x)&&x>=0&&x<=255)))throw Error('Bytes ou hardware inválidos no arquivo.');if(v.bytes.length!==lengthFor(v.hw)||v.original.length&&!['18','19','20'].includes(String(v.original.length)))throw Error('Comprimento inválido na sessão.');const savedConfig=normalizePresetConfig({preset:v.preset||'jetta25',gearbox:v.gearbox||VEHICLE_PRESETS[v.preset||'jetta25']?.defaultGearbox,rearAxle:v.rearAxle||VEHICLE_PRESETS[v.preset||'jetta25']?.defaultRearAxle});const appliedConfig=v.appliedConfig?normalizePresetConfig(v.appliedConfig):null;return {...savedConfig,appliedConfig,bytes:[...v.bytes],original:[...v.original],hw:v.hw,suffix:typeof v.suffix==='string'?v.suffix.slice(0,2):'',sw:typeof v.sw==='string'?v.sw.slice(0,4):'',vin:normalizeVin(v.vin||'').slice(0,17),selected:Math.max(0,Math.min(Number(v.selected)||0,v.bytes.length-1)),origin:typeof v.origin==='string'?v.origin.slice(0,100):'Sessão importada',pending:Array.isArray(v.pending)?v.pending.filter(x=>Number.isInteger(x)&&x>=0&&x<v.bytes.length):[]};}
+function openAdvanced(){if(!state.bytes.length){toast('Importe um coding ou aplique um preset para abrir o editor.');return;}switchView('editor');$('advanced-editor').open=true;$('advanced-editor').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});$('byte-hex').focus({preventScroll:true});}
+function init(){
+ for(const button of document.querySelectorAll('[data-preset]'))button.addEventListener('click',()=>commit(()=>{const preset=VEHICLE_PRESETS[button.dataset.preset];state.preset=preset.id;state.gearbox=preset.defaultGearbox;state.rearAxle=preset.defaultRearAxle;appliedPreviewKey='';}));
+ $('gearbox').addEventListener('change',()=>commit(()=>{state.gearbox=$('gearbox').value;appliedPreviewKey='';}));
+ $('rear-axle').addEventListener('change',()=>commit(()=>{state.rearAxle=$('rear-axle').value;appliedPreviewKey='';}));
+ $('apply-gearbox').addEventListener('click',()=>attempt(()=>{if(!state.bytes.length)throw Error('Importe um coding ou aplique um preset.');const result=configureTransmission(state.bytes,currentConfig(),state.hw);commit(()=>{state.bytes=result.bytes;state.appliedConfig={...currentConfig()};state.origin='Câmbio revisado · '+GEARBOX_LABELS[state.gearbox];});toast('Perfil de câmbio aplicado. EDS 2 é compartilhado por manual e automático nestes motores; os outros bits foram preservados.');}));
+ $('open-advanced').addEventListener('click',openAdvanced);$('advanced-shortcut').addEventListener('click',openAdvanced);
+
+ fillModules($('module'),'AD');$('module').append(option('CUSTOM','Outro índice · informar hardware'));fillModules($('migrate-from'),'AD');fillModules($('migrate-to'),'BL');
+ $('module').addEventListener('change',()=>commit(()=>{state.suffix=$('module').value==='CUSTOM'?'':$('module').value;const info=moduleInfo(state.suffix);if(info){state.hw=info.hw;state.sw='';}}));
+ $('hardware').addEventListener('change',()=>commit(()=>{state.hw=$('hardware').value;}));
+ $('vin').addEventListener('input',()=>{$('vin-count').textContent=normalizeVin($('vin').value).length+' / 17 caracteres';refreshVinPreview();});$('vin').addEventListener('change',()=>{const value=normalizeVin($('vin').value);if(value!==state.vin){undo.push(snapshot());if(undo.length>100)undo.shift();redo=[];state.vin=value;}$('vin').value=value;$('undo').disabled=!undo.length;$('redo').disabled=!redo.length;renderNotices();});
+ $('original').addEventListener('input',updateInputCount);
+ $('import-code').addEventListener('click',()=>attempt(()=>{const bytes=parseCoding($('original').value);importBytes(bytes);}));
+ $('use-reference').addEventListener('click',()=>attempt(()=>{const bytes=parseCoding($('original').value);commit(()=>{state.original=[...bytes];});toast('Referência definida. A edição foi preservada.');}));
+ $('import-scan').addEventListener('click',()=>attempt(()=>{const scan=parseScan($('autoscan').value);importBytes(scan.bytes,{...scan,origin:'Auto-Scan · módulo 03'});$('original').value=format(scan.bytes);updateInputCount();}));
+ $('restore').addEventListener('click',()=>attempt(()=>{if(!state.original.length)return;if(state.original.length!==lengthFor(state.hw))throw Error('O original tem outro comprimento. Selecione o hardware de origem antes de restaurar.');commit(()=>{state.bytes=[...state.original];state.pending=[];state.origin='Coding original restaurado';});}));
+ $('apply-vin-inline').addEventListener('click',()=>$('apply-vin-preview').click());
+ $('apply-vin-preview').addEventListener('click',()=>attempt(()=>{const p=vehiclePreview($('vin').value,state.hw,currentConfig());appliedPreviewKey=previewKey(p.vin);commit(()=>{state.bytes=[...p.bytes];state.vin=p.vin;state.pending=[...p.pending];state.appliedConfig={...p.config};state.origin=p.label+' · perfil aplicado';state.selected=0;});switchView('editor');toast('Preset aplicado, com HHC desativado. Confira os equipamentos marcados.');}));
+ $('apply-vin').addEventListener('click',()=>attempt(()=>{if(!state.bytes.length)throw Error('Importe um coding ou aplique a base Jetta antes de atualizar o VIN.');if(!validLength())throw Error('Ajuste o hardware para o comprimento do coding antes de aplicar o VIN.');const vin=normalizeVin($('vin').value),bytes=applyVin(state.bytes,vin);commit(()=>{state.bytes=bytes;state.vin=vin;});toast('Somente os sete bytes VIN foram atualizados.');}));
+ $('draft-vin').addEventListener('click',()=>{appliedPreviewKey='';refreshVinPreview();if(normalizeVin($('vin').value).length!==17)toast('Complete o VIN para ver a base do preset.');});
+ $('byte-hex').addEventListener('change',()=>{const raw=$('byte-hex').value.trim();if(!/^[0-9a-f]{2}$/i.test(raw)){toast('Informe exatamente dois dígitos hexadecimais.');$('byte-hex').value=hex(state.bytes[state.selected]);return;}attempt(()=>setByte(state.selected,parseInt(raw,16)));});
+ $('previous').addEventListener('click',()=>setSelection(state.selected-1));$('next').addEventListener('click',()=>setSelection(state.selected+1));$('review-byte').addEventListener('click',()=>commit(()=>{state.pending=state.pending.filter(x=>x!==state.selected);}));
+ $('mirror-all').addEventListener('click',()=>commit(()=>{state.bytes=syncMirrors(state.bytes);}));
+ $('undo').addEventListener('click',()=>{if(!undo.length)return;redo.push(snapshot());state=undo.pop();render();});$('redo').addEventListener('click',()=>{if(!redo.length)return;undo.push(snapshot());state=redo.pop();render();});
+ $('copy').addEventListener('click',async()=>{if(!state.bytes.length||!validLength())return;const text=format(state.bytes);try{await navigator.clipboard.writeText(text);toast('Coding copiado · '+state.bytes.length+' bytes.');}catch{const ta=el('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.append(ta);ta.select();const ok=document.execCommand('copy');ta.remove();toast(ok?'Coding copiado.':'Não foi possível copiar. Selecione o coding e use Ctrl+C.');}});
+ $('report').addEventListener('click',()=>download('mk60ec1-revisao.txt',report(),'text/plain;charset=utf-8'));
+ $('save-session').addEventListener('click',()=>download('mk60ec1-sessao.json',JSON.stringify({app:'mk60ec1-studio',version:2,state:snapshot()},null,2),'application/json;charset=utf-8'));
+ $('load-session').addEventListener('click',()=>$('session-file').click());$('session-file').addEventListener('change',async()=>{const file=$('session-file').files[0];if(!file)return;try{if(file.size>100000)throw Error('Sessão grande demais (máximo 100 KB).');const imported=checkedSession(JSON.parse(await file.text()));commit(()=>{state=imported;appliedPreviewKey=previewKey(imported.vin,imported.hw);});$('original').value=format(state.original);toast('Sessão carregada.');}catch(e){toast('Não foi possível abrir: '+e.message);}finally{$('session-file').value='';}});
+ $('diff-only').addEventListener('change',renderCompare);
+ for(const button of document.querySelectorAll('[data-view]')){button.addEventListener('click',()=>switchView(button.dataset.view));button.addEventListener('keydown',e=>{const buttons=[...document.querySelectorAll('[data-view]')],i=buttons.indexOf(button);let next;if(e.key==='ArrowRight')next=(i+1)%buttons.length;else if(e.key==='ArrowLeft')next=(i+buttons.length-1)%buttons.length;else if(e.key==='Home')next=0;else if(e.key==='End')next=buttons.length-1;if(next!==undefined){e.preventDefault();switchView(buttons[next].dataset.view);buttons[next].focus();}});}
+ for(const id of ['migrate-from','migrate-to','mig-nira','mig-awv','mig-mcb','mig-tpms','mig-esc'])$(id).addEventListener('change',invalidatePreview);$('migrate-input').addEventListener('input',invalidatePreview);
+ $('migrate-use-current').addEventListener('click',()=>{if(!state.bytes.length){toast('Não há coding carregado.');return;}$('migrate-input').value=format(state.bytes);if(moduleInfo(state.suffix))$('migrate-from').value=state.suffix;invalidatePreview();});
+ $('migrate-preview').addEventListener('click',()=>{preview=null;$('migrate-apply').disabled=true;$('migration-log').hidden=false;try{const input=parseCoding($('migrate-input').value),from=$('migrate-from').value,to=$('migrate-to').value,r=migrate(input,from,to,readMigrationSettings());preview={...r,input,from,to};$('migration-log').textContent=[`${from} / H${moduleInfo(from).hw} → ${to} / H${moduleInfo(to).hw}`,`${input.length} → ${r.bytes.length} bytes`,format(r.bytes),'',...r.steps.map(x=>`Byte ${x.index}: ${x.before===null?'novo':hex(x.before)} → ${hex(x.after)} · ${x.reason}`),'',...r.warnings].join('\n');$('migrate-apply').disabled=false;}catch(e){$('migration-log').textContent='Prévia não gerada: '+e.message;}});
+ $('migrate-apply').addEventListener('click',()=>{if(!preview)return;const p=preview;commit(()=>{state.bytes=[...p.bytes];state.original=[...p.input];state.hw=moduleInfo(p.to).hw;state.suffix=p.to;state.sw='';state.pending=[];state.origin=`Migração ${p.from} → ${p.to} · prévia aplicada`;state.selected=Math.min(16,p.bytes.length-1);});switchView('compare');toast('Prévia aplicada. Confira todas as diferenças contra a origem.');});
+ $('example').addEventListener('click',()=>{const bytes=jettaMk5Preview('9BWZZZ1KZAT000001','35').bytes;importBytes(bytes,{hw:'35',suffix:'AD',sw:'0109',vin:'',origin:'Exemplo sintético'});});
+ $('theme').addEventListener('click',()=>{const light=document.documentElement.dataset.theme!=='light';document.documentElement.dataset.theme=light?'light':'dark';$('theme').textContent=light?'Tema escuro':'Tema claro';});
+ $('module-table').append(buildTable(['Índice','Hardware','Bytes / hex','G251 na tabela','SW referência'],MODULES.map(m=>[m.suffix,'H'+m.hw,lengthFor(m.hw)+' / '+lengthFor(m.hw)*2,m.g251?'Sim':'Não',m.sw])));
+ render();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 
-</script>
-</body>
-</html>
+</script></body></html>
